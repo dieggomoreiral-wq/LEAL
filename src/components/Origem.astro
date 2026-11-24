@@ -1,0 +1,179 @@
+---
+// Origem do lead. Guarda de onde a visita veio (anúncio do Google, Meta,
+// busca orgânica, rede social ou direto) e, no clique para o WhatsApp,
+// acrescenta um código curto no fim da mensagem (ex.: HKG-7K4Q) e grava o
+// código com a origem na planilha "Leal - Origem dos leads", por um
+// formulário do Google. Quando a venda fechar, o código da conversa diz de
+// qual página, canal e palavra-chave veio o comprador.
+// Nada de nome, telefone ou e-mail: só o código e dados da campanha.
+// Identificadores de clique (gclid, gbraid, wbraid) e a página de origem só
+// vão quando a pessoa aceitou os cookies.
+import { CHAVE_CONSENTIMENTO } from '../data/site';
+const chave = CHAVE_CONSENTIMENTO;
+const formulario =
+  'https://docs.google.com/forms/d/e/1FAIpQLScJEnYDto52s3lZIOUv5vUaO_d0URKbGjXTOh4HBZNGPekGZg/formResponse';
+---
+<script is:inline define:vars={{ chave, formulario }}>
+  (function () {
+    var CAMPOS = {
+      codigo: 'entry.679413696',
+      pagina: 'entry.31583448',
+      canal: 'entry.1384547089',
+      palavra: 'entry.471004120',
+      gclid: 'entry.1266784207',
+      dados: 'entry.1173252924'
+    };
+    var APARELHOS = {
+      'depilacao-a-laser': 'HK',
+      'ultrassom-microfocado': 'UM',
+      'aparelho-laser-co2-fracionado': 'HG',
+      'aparelho-de-radiofrequencia': 'NH',
+      'criolipolise': 'CR',
+      'laser-remocao-de-pigmentos': 'SY'
+    };
+    var CANAIS = { G: 'Google Ads', M: 'Meta Ads', O: 'Busca orgânica', S: 'Rede social', D: 'Direto ou outro' };
+    var ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var CHAVE_SESSAO = 'leal-origem';
+    var CHAVE_PRIMEIRA = 'leal-origem-primeira';
+
+    function consentiu() {
+      try { return localStorage.getItem(chave) === 'sim'; } catch (e) { return false; }
+    }
+    function ler(armazem, k) {
+      try { return JSON.parse(armazem.getItem(k) || 'null'); } catch (e) { return null; }
+    }
+    function gravar(armazem, k, v) {
+      try { armazem.setItem(k, JSON.stringify(v)); } catch (e) {}
+    }
+    function sorteio(n) {
+      var s = '';
+      var bytes = new Uint8Array(n);
+      (window.crypto || window.msCrypto).getRandomValues(bytes);
+      for (var i = 0; i < n; i++) s += ALFABETO.charAt(bytes[i] % ALFABETO.length);
+      return s;
+    }
+    function slugDaPagina() {
+      return location.pathname.replace(/^\/+|\/+$/g, '').replace(/\.html$/, '') || 'inicio';
+    }
+
+    // 1. De onde veio esta visita.
+    function lerOrigemDaUrl() {
+      var p = new URLSearchParams(location.search);
+      var o = {
+        gclid: p.get('gclid') || '',
+        gbraid: p.get('gbraid') || '',
+        wbraid: p.get('wbraid') || '',
+        fbclid: p.get('fbclid') ? 'sim' : '',
+        fonte: (p.get('utm_source') || '').toLowerCase(),
+        meio: (p.get('utm_medium') || '').toLowerCase(),
+        campanha: p.get('utm_campaign') || '',
+        palavra: p.get('utm_term') || '',
+        conteudo: p.get('utm_content') || ''
+      };
+      var ref = '';
+      try {
+        var r = document.referrer ? new URL(document.referrer).hostname : '';
+        if (r && r !== location.hostname) ref = r;
+      } catch (e) {}
+      var temCampanha = o.gclid || o.gbraid || o.wbraid || o.fbclid || o.fonte;
+      if (!temCampanha && !ref) return null;
+
+      var social = /(^|\.)(facebook|instagram|fb|threads)\.(com|me)$|l\.instagram|lm\.facebook/;
+      var busca = /(^|\.)(google|bing|yahoo|duckduckgo|ecosia)\./;
+      var canal = 'D';
+      if (o.gclid || o.gbraid || o.wbraid || (o.fonte === 'google' && /cpc|ppc|paid/.test(o.meio))) canal = 'G';
+      else if (o.fbclid || /facebook|instagram|meta|^fb$|^ig$/.test(o.fonte)) canal = /cpc|paid|ads|pago/.test(o.meio) || o.fbclid ? 'M' : 'S';
+      else if (o.fonte) canal = 'D';
+      else if (busca.test(ref)) canal = 'O';
+      else if (social.test(ref)) canal = 'S';
+
+      o.canal = canal;
+      o.ref = ref;
+      o.entrada = slugDaPagina();
+      o.quando = new Date().toISOString();
+      return o;
+    }
+
+    var atual = lerOrigemDaUrl();
+    var sessao = ler(sessionStorage, CHAVE_SESSAO);
+    if (atual) {
+      sessao = { origem: atual, sorteio: (sessao && sessao.sorteio) || sorteio(4) };
+      gravar(sessionStorage, CHAVE_SESSAO, sessao);
+    }
+    if (!sessao) {
+      sessao = { origem: null, sorteio: sorteio(4) };
+      gravar(sessionStorage, CHAVE_SESSAO, sessao);
+    }
+    // Primeiro contato guardado por 90 dias, só com cookies aceitos: quem volta
+    // dias depois digitando o endereço continua com a origem do anúncio.
+    function primeira() {
+      if (!consentiu()) return null;
+      var f = ler(localStorage, CHAVE_PRIMEIRA);
+      if (f && f.quando && Date.now() - Date.parse(f.quando) > 90 * 864e5) f = null;
+      if (!f && sessao.origem) { f = sessao.origem; gravar(localStorage, CHAVE_PRIMEIRA, f); }
+      return f;
+    }
+
+    // 2. No clique para o WhatsApp: código na mensagem e registro na planilha.
+    var enviados = {};
+    function registrar(codigo, link) {
+      var o = sessao.origem || primeira() || { canal: 'D' };
+      var aceitou = consentiu();
+      var porta = link.getAttribute('data-porta') || '';
+      var dados = [
+        'fonte=' + (o.fonte || ''),
+        'meio=' + (o.meio || ''),
+        'campanha=' + (o.campanha || ''),
+        'conteudo=' + (o.conteudo || ''),
+        'entrada=' + (o.entrada || ''),
+        'botao=' + porta,
+        'tela=' + (window.matchMedia('(max-width: 767px)').matches ? 'celular' : 'computador'),
+        'cookies=' + (aceitou ? 'aceitos' : 'nao'),
+        aceitou ? 'origem_site=' + (o.ref || '') : '',
+        aceitou ? 'gbraid=' + (o.gbraid || '') : '',
+        aceitou ? 'wbraid=' + (o.wbraid || '') : '',
+        'primeiro_contato=' + ((primeira() || {}).canal ? CANAIS[primeira().canal] : '')
+      ].filter(Boolean).join(' | ');
+
+      var corpo = new URLSearchParams();
+      corpo.append(CAMPOS.codigo, codigo);
+      corpo.append(CAMPOS.pagina, slugDaPagina());
+      corpo.append(CAMPOS.canal, CANAIS[o.canal] || CANAIS.D);
+      corpo.append(CAMPOS.palavra, o.palavra || '');
+      corpo.append(CAMPOS.gclid, aceitou ? o.gclid || '' : '');
+      corpo.append(CAMPOS.dados, dados);
+
+      var chaveEnvio = codigo + '|' + porta;
+      if (enviados[chaveEnvio]) return;
+      enviados[chaveEnvio] = true;
+      var ok = false;
+      try { ok = navigator.sendBeacon && navigator.sendBeacon(formulario, corpo); } catch (e) {}
+      if (!ok) {
+        try { fetch(formulario, { method: 'POST', mode: 'no-cors', keepalive: true, body: corpo }); } catch (e) {}
+      }
+    }
+
+    function aoClicar(ev) {
+      var alvo = ev.target instanceof Element ? ev.target.closest('a[href*="wa.me/"]') : null;
+      // Só os botões de pedido (que já levam mensagem pronta); o link solto do
+      // canal de privacidade fica como está.
+      if (!alvo || !/[?&]text=/.test(alvo.href)) return;
+      var o =sessao.origem || primeira() || { canal: 'D' };
+      var prefixo = APARELHOS[slugDaPagina()] || 'LL';
+      var codigo = prefixo + (o.canal || 'D') + '-' + sessao.sorteio;
+      try {
+        var url = new URL(alvo.href);
+        var texto = (url.searchParams.get('text') || '').replace(/\n*Código: [A-Z0-9-]+\s*$/, '');
+        url.searchParams.set('text', (texto ? texto + '\n\n' : '') + 'Código: ' + codigo);
+        alvo.href = url.toString();
+      } catch (e) {}
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'codigo_lead', codigo_lead: codigo });
+      registrar(codigo, alvo);
+    }
+    // Fase de captura: roda antes de o navegador seguir o link, inclusive
+    // depois que o formulário da página trocou o link pelo aparelho escolhido.
+    document.addEventListener('click', aoClicar, true);
+    document.addEventListener('auxclick', aoClicar, true);
+  })();
+</script>

@@ -23,7 +23,7 @@ const vende =
     ? `${c.quemVende.valor.razaoSocial}, que vende e emite a nota fiscal`
     : `a empresa da rede que vende e emite a nota fiscal ${c.quemVende.estado === 'trava' ? pilula(c.quemVende) : ''}`;
 ---
-<Documento titulo="Política de privacidade" descricao="Como a Leal Tecnologia e Saúde trata os dados de quem pede proposta de equipamento." atualizado="22/11/2026">
+<Documento titulo="Política de privacidade" descricao="Como a Leal Tecnologia e Saúde trata os dados de quem pede proposta de equipamento." atualizado="24/11/2026">
   <p>Esta página explica como a {contato.marca} ({contato.razaoSocial}, CNPJ {contato.cnpj}), {contato.rede}, trata os dados de quem visita estas páginas e chama no WhatsApp para pedir a proposta de um equipamento.</p>
   <p>Controlador dos dados: <Fragment set:html={controlador} /></p>
 
@@ -31,6 +31,7 @@ const vende =
   <ul>
     <li>Na conversa do WhatsApp: o seu nome, o seu número e o que você contar, como a cidade e o aparelho que procura.</li>
     <li>Na página, se você aceitar os cookies: dados de navegação usados pelo Google para medir os anúncios, como a página visitada, o toque no botão do WhatsApp e, se você marcou, o aparelho e o prazo de compra. Se recusar, o Google recebe só avisos sem cookie. Detalhes no <a href="/cookies">Aviso de cookies</a>.</li>
+    <li>Ao tocar no botão do WhatsApp: um código curto entra no fim da mensagem (por exemplo, “Código: HKG-7K4Q”). Ele é gravado numa planilha nossa junto com a página, o canal de onde você veio (anúncio, busca ou rede social) e a campanha e a palavra pesquisada, quando houver. Não leva nome, telefone nem e-mail. O código do clique no anúncio e o site de onde você veio só entram nessa planilha se você aceitar os cookies. Você pode apagar o código da mensagem antes de enviar.</li>
   </ul>
   <p>Para a proposta, não pedimos documento. Se a compra for adiante, quem emite a nota fiscal pede os dados que ela exige, como CPF ou CNPJ e endereço. Não pedimos dado de saúde nem dado de pacientes: por favor, não envie esse tipo de dado na conversa.</p>
 
@@ -38,6 +39,7 @@ const vende =
   <ul>
     <li>Responder ao seu pedido e preparar a proposta do equipamento.</li>
     <li>Saber quais anúncios trazem pedidos. Com cookies, só se você aceitar.</li>
+    <li>Saber de qual página e de qual anúncio veio cada pedido e cada venda, pelo código da mensagem.</li>
   </ul>
   <p>Não vendemos os seus dados.</p>
 
@@ -50,7 +52,7 @@ const vende =
 
   <h2>Base legal</h2>
   <p>O atendimento e a proposta se apoiam no art. 7º, inciso V, da Lei Geral de Proteção de Dados (Lei 13.709/2018): procedimentos anteriores a um contrato, feitos a seu pedido. Se houver compra, os dados da nota fiscal se apoiam no cumprimento de obrigação legal (art. 7º, inciso II).</p>
-  <p>A medição dos anúncios com cookies se apoia no seu consentimento (art. 7º, inciso I). Você pode retirá-lo quando quiser, de graça, no <a href="/cookies">Aviso de cookies</a>. Os avisos sem cookie, enviados ao Google mesmo quando você recusa, se apoiam no legítimo interesse de saber quais anúncios trazem pedidos (art. 7º, inciso IX).</p>
+  <p>A medição dos anúncios com cookies se apoia no seu consentimento (art. 7º, inciso I). Você pode retirá-lo quando quiser, de graça, no <a href="/cookies">Aviso de cookies</a>. Os avisos sem cookie, enviados ao Google mesmo quando você recusa, se apoiam no legítimo interesse de saber quais anúncios trazem pedidos (art. 7º, inciso IX). O código de origem da mensagem também se apoia nesse legítimo interesse.</p>
 
   <h2>Por quanto tempo guardamos</h2>
   <p>A conversa e os dados da proposta ficam guardados <Fragment set:html={prazo} />. Depois disso, são apagados, salvo o que a lei obriga a manter, como os dados da nota fiscal, se houver compra.</p>

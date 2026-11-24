@@ -10,6 +10,7 @@ import WhatsFixo from '../components/WhatsFixo.astro';
 import Zoom from '../components/Zoom.astro';
 import TagGoogle from '../components/TagGoogle.astro';
 import Consentimento from '../components/Consentimento.astro';
+import Origem from '../components/Origem.astro';
 
 
 interface Props {
@@ -77,6 +78,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/.html$/, ''),
     <WhatsFixo mensagem={mensagem} rotulo={rotuloBarra} href={linkBarra} />
     <Zoom />
     <Consentimento />
+    <Origem />
     <script>
       import '../scripts/interacoes';
       import '../scripts/movimento';
