@@ -34,7 +34,6 @@ export const pigmentos: Nicho = {
       { nome: 'Syrius', foto: f.syrius03, alt: 'Syrius, da Ibramed', encaixe: 'recorte' },
       { nome: 'Magni ICE YAG', foto: f.magni02, alt: 'Magni ICE YAG, da Bioset', encaixe: 'contem', escala: 1.1 },
     ],
-    pendencia: 'CONFIRMAR: autorização das imagens da Ibramed e da Bioset; tirar a que tiver texto, tela com nome de protocolo, pessoa ou acessório solto (sem isso, entram as fotos da loja da rede)',
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -100,8 +99,6 @@ export const pigmentos: Nicho = {
         ],
       },
     ],
-    pendenciaGalerias:
-      'CONFIRMAR: imagens da Ibramed e da Bioset só com a aprovação da rede; abrir cada foto e tirar a que mostrar pessoa, pele, tatuagem, texto, tela com nome de protocolo ou de indicação, ou case, ponteira e acessório fora do aparelho',
     fichaTitulo: 'Ficha curta',
     ficha: [
       {

@@ -32,7 +32,6 @@ export const ultrassom: Nicho = {
       { nome: 'Ultramed MPT', foto: f.mpt02, alt: 'Ultramed MPT, da Medical San, inteiro', encaixe: 'recorte' },
       { nome: 'IÁSIS HIFU MPT', foto: f.iasis01, alt: 'IÁSIS HIFU MPT, da Bioset, visto de frente', encaixe: 'contem', escala: 1.3 },
     ],
-    pendencia: 'CONFIRMAR: autorização do render da Medical San (sem ela, entra a foto da loja da rede) e conferir que a imagem não tem texto embutido',
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -114,8 +113,6 @@ export const ultrassom: Nicho = {
         ],
       },
     ],
-    pendenciaGalerias:
-      'CONFIRMAR: fotos da Medical San e da Bioset só com a aprovação da rede; as fotos 2 a 6 do IÁSIS só se a rede confirmar que o gabinete é o da versão MPT',
     fichaTitulo: 'Ficha curta',
     ficha: [
       {

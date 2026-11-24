@@ -28,7 +28,6 @@ export const depilacao: Nicho = {
       { nome: 'Hakon 4D Premium', foto: fotos.hakonFrente, alt: 'Hakon 4D Premium inteiro, visto de frente', encaixe: 'giro' },
       { nome: 'Ácrus', foto: fotos.acrusLoja3, alt: 'Ácrus com o aplicador no suporte', encaixe: 'contem', escala: 1.1 },
     ],
-    pendencia: 'CONFIRMAR: autorização das fotos da Medical San (sem ela, entra a foto da loja da rede)',
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -90,7 +89,6 @@ export const depilacao: Nicho = {
         ],
       },
     ],
-    pendenciaGalerias: 'CONFIRMAR: fotos e vídeos da Medical San e da HTM só com a aprovação da rede',
     fichaTitulo: 'Ficha curta',
     ficha: [
       {

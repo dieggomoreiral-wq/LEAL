@@ -39,7 +39,6 @@ export const laserCo2: Nicho = {
       { nome: 'Hegon', foto: f.hegon04, alt: 'Hegon, da Medical San', encaixe: 'contem', escala: 1.1 },
       { nome: 'Lunya', foto: f.lunya01, alt: 'Lunya, da Bioset', encaixe: 'contem', escala: 1.05 },
     ],
-    pendencia: `CONFIRMAR: autorização das imagens da Medical San e da Bioset; pedir o kit de imagem às duas pela rede; ${criterioFotos}. NÃO SOBE antes de: (1) a ficha do Lunya conferida no manual da Bioset; (2) a rede corrigir, ou aprovar por escrito, a diferença entre esta ficha e as páginas de CO₂ da loja dela; (3) a rede responder por escrito garantia, assistência e treinamento dos dois; (4) autorização das imagens`,
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -95,7 +94,6 @@ export const laserCo2: Nicho = {
         galeria: [{ src: f.lunya01, alt: 'Lunya, imagem da Bioset' }],
       },
     ],
-    pendenciaGalerias: `CONFIRMAR: imagens da Medical San e da Bioset só com a aprovação da rede; Hegon e Lunya com uma foto cada até chegar o kit de imagem das duas marcas; as outras fotos do Lunya ficam guardadas até serem abertas uma a uma; ${criterioFotos}`,
     fichaTitulo: 'Ficha curta',
     ficha: [
       {

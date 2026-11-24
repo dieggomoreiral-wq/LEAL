@@ -36,7 +36,6 @@ export const radiofrequencia: Nicho = {
       { nome: 'Novo Hooke', foto: f.hooke04, alt: 'Novo Hooke, da Ibramed', encaixe: 'contem', escala: 1.05 },
       { nome: 'Effect', foto: f.effect02, alt: 'Effect, da HTM', encaixe: 'contem', escala: 1.1 },
     ],
-    pendencia: 'CONFIRMAR: autorização das imagens da Ibramed; conferir que a foto do Effect, da loja da rede, é mesmo o Effect; pedir o kit de imagem à HTM; tirar a que tiver pessoa, pele, texto, selo ou frase de venda ("único", "maior potência"), tela com nome de protocolo, região do corpo ou indicação, e aplicador, ponteira, placa ou acessório fora do aparelho. Se o portal não confirmar o 80212480015 para o Effect, ou se a finalidade registrada não for compatível com a página, o Effect sai e entra outro aparelho da rede; H1, título, mensagens e fotos são refeitos',
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -99,8 +98,6 @@ export const radiofrequencia: Nicho = {
         galeria: [{ src: f.effect02, alt: 'Effect, foto da loja da rede' }],
       },
     ],
-    pendenciaGalerias:
-      'CONFIRMAR: imagens da Ibramed só com a aprovação da rede; o kit de imagem do Effect vem da HTM pela rede; abrir cada foto e tirar a que tiver pessoa, pele, texto, selo ou frase de venda ("único", "maior potência"), tela com nome de protocolo, região do corpo ou indicação, e aplicador, ponteira, placa ou acessório fora do aparelho',
     fichaTitulo: 'Ficha curta',
     ficha: [
       {

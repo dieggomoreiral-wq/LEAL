@@ -24,7 +24,6 @@ const a = Astro.props.n.atende;
         <p class="empresa-rotulo">{a.pessoa.rotulo}</p>
         <p class="empresa-nome">{a.pessoa.nome}</p>
         {a.pessoa.linhas.map((l) => <p set:html={marca(l)} />)}
-        {a.pessoa.pendencia && <p class="empresa-pend"><span class="pend">{a.pessoa.pendencia}</span></p>}
       </div>
     </div>
 

@@ -33,7 +33,6 @@ export const criolipolise: Nicho = {
       { nome: 'Polarys', foto: f.polarys02, alt: 'Polarys, da Ibramed, com os aplicadores', encaixe: 'contem', escala: 1.05 },
       { nome: 'Criodermis Smart', foto: f.criodermis02, alt: 'Criodermis Smart, da Medical San', encaixe: 'contem', escala: 1.05 },
     ],
-    pendencia: 'CONFIRMAR: autorização das imagens da Ibramed e da Medical San e conferir que não têm texto embutido (sem isso, entram as fotos da loja da rede)',
   },
   vitrine: {
     titulo: 'O que o preço da vitrine não mostra',
@@ -96,8 +95,6 @@ export const criolipolise: Nicho = {
         ],
       },
     ],
-    pendenciaGalerias:
-      'CONFIRMAR: imagens da Ibramed e da Medical San só com a aprovação da rede. Fora até a rede confirmar o kit: a panorâmica dos aplicadores da Ibramed e o aplicador avulso do Criodermis',
     fichaTitulo: 'Ficha curta',
     ficha: [
       {
