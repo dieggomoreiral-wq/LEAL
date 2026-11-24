@@ -3,10 +3,11 @@
 // Fixa a partir de 900 px, com fundo sólido levemente transparente: sem
 // backdrop-filter, que obriga a recompor a área inteira a cada quadro.
 import { contato } from '../data/contato';
+import LogoLeal from './LogoLeal.astro';
 ---
 <header class="topo" data-topo>
   <div class="wrap topo-in">
-    <p class="marca">{contato.marca}</p>
+    <p class="marca"><LogoLeal class="logo" /></p>
     <p class="rede">{contato.rede}</p>
   </div>
 </header>
@@ -27,11 +28,13 @@ import { contato } from '../data/contato';
     padding-block: 8px;
   }
   .marca {
-    font-weight: 700;
-    font-stretch: 112%;
-    color: var(--petroleo);
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    flex: none;
+    line-height: 0;
+  }
+  .marca :global(.logo) {
+    display: block;
+    height: 32px;
+    width: auto;
   }
   .rede {
     max-width: 15ch;
@@ -66,6 +69,9 @@ import { contato } from '../data/contato';
     }
     .topo-in {
       min-height: 68px;
+    }
+    .marca :global(.logo) {
+      height: 36px;
     }
     .rede {
       font-size: var(--t-sm);
