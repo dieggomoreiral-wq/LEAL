@@ -5,7 +5,11 @@
 import { execSync } from 'node:child_process';
 import { copyFileSync, readdirSync, readFileSync } from 'node:fs';
 
-const [site, gtm = ''] = process.argv.slice(2);
+// Na Vercel (buildCommand do vercel.json) roda sem argumentos: pega SITE_URL e
+// PUBLIC_GTM_ID das variáveis do projeto, ou o endereço de produção da Vercel.
+const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : '';
+const site = process.argv[2] || process.env.SITE_URL || vercel;
+const gtm = process.argv[3] || process.env.PUBLIC_GTM_ID || '';
 if (!/^https:\/\/[^/]+$/.test(site ?? '')) {
   console.error('Uso: node scripts/lancar.mjs https://dominio [GTM-XXXXXXX]');
   process.exit(1);

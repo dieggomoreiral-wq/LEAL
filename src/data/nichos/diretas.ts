@@ -77,7 +77,16 @@ function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<stri
 
   const { aparelhos: _textos, ...resto } = t;
   // Sem vídeo na v2 (só entra assistido), a linha dos vídeos sai do rodapé.
-  const marcas = n.rodapeMarcas.replace(/\s*Vídeos? n[oa]s? canais[^.]*\./, '');
+  // Venda direta (24/11): o rodapé cita só a marca do aparelho vendido, não a do concorrente da v1.
+  const nomePrincipal = aparelhos[0].nome;
+  const marcas = n.rodapeMarcas
+    .replace(/\s*Vídeos? n[oa]s? canais[^.]*\./, '')
+    .split(/(?<=\.)\s+/)
+    .filter((f) => {
+      const m = f.match(/^(.+?) é marca d[ao] /);
+      return !m || nomePrincipal.startsWith(m[1]);
+    })
+    .join(' ');
   return { ...resto, principal, aparelhos, rodape: { marcas, uso: n.rodapeUso } };
 }
 

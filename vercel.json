@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node scripts/lancar.mjs",
+  "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false
 }

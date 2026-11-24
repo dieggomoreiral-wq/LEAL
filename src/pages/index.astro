@@ -11,9 +11,9 @@ const destino = '/depilacao-a-laser';
     <meta http-equiv="refresh" content={`0;url=${destino}`} />
     <meta name="robots" content="noindex" />
     <link rel="canonical" href={destino} />
-    <script is:inline define:vars={{ destino }}>location.replace(destino);</script>
+    <script is:inline define:vars={{ destino }}>location.replace(destino + location.search + location.hash);</script>
   </head>
   <body>
-    <a href={destino}>Máquina de depilação a laser: compare Hakon e Ácrus</a>
+    <a href={destino}>Máquina de depilação a laser Hakon 4D Premium</a>
   </body>
 </html>

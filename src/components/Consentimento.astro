@@ -8,8 +8,8 @@ const chave = CHAVE_CONSENTIMENTO;
 {gtmId && (
   <div class="cookie" id="cookie" role="region" aria-label="Aviso de cookies" hidden>
     <p class="cookie-texto">
-      Usamos cookies do Google para saber quais anúncios trazem pedidos. Você escolhe.
-      <a href="/cookies">Aviso de cookies</a>
+      Cookies do Google medem quais anúncios trazem pedidos.
+      <a href="/cookies">Saiba mais</a>
     </p>
     <div class="cookie-botoes">
       <button type="button" class="botao botao-linha" data-cookie="nao">Recusar</button>
@@ -99,6 +99,41 @@ const chave = CHAVE_CONSENTIMENTO;
   /* A barra fixa do WhatsApp sobe enquanto o aviso estiver aberto. */
   :global(html.cookie-aberto .wa-fixo) {
     bottom: calc(24px + var(--cookie-h, 120px) + env(safe-area-inset-bottom));
+  }
+  /* Celular (24/11): uma linha só, no alto da tela, sobre a faixa do logo.
+     Embaixo ele tapava o botão do WhatsApp do topo (medido em 360x740,
+     375x667 e 390x844). A barra fixa do WhatsApp fica no lugar dela. */
+  @media (max-width: 719px) {
+    :global(html.cookie-aberto .wa-fixo) {
+      bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+    .cookie {
+      left: 6px;
+      right: 6px;
+      top: calc(6px + env(safe-area-inset-top));
+      bottom: auto;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 8px 8px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      line-height: 1.3;
+    }
+    .cookie-texto a {
+      padding-block: 0;
+      margin-block: 0;
+      display: inline;
+    }
+    .cookie-botoes {
+      grid-template-columns: auto auto;
+      gap: 6px;
+    }
+    .cookie-botoes .botao {
+      min-height: 44px;
+      padding-inline: 0.75em;
+      font-size: 0.8rem;
+    }
   }
   @media (min-width: 720px) {
     .cookie {
