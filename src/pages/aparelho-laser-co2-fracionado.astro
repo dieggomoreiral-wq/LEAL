@@ -1,0 +1,11 @@
+---
+// LP 6, versão 1 (comparação). Texto e fotos em src/data/nichos/laser-co2.ts.
+// Publicação (22/11/2026): com MODO=publicacao este endereço limpo serve a v2
+// (venda direta), que é a que vai para o anúncio. A v1 fica só no rascunho.
+import Pagina from '../components/nicho/Pagina.astro';
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import { laserCo2 } from '../data/nichos/laser-co2';
+import { laserCo2Direta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <Pagina n={laserCo2} /> : <PaginaDireta v={laserCo2Direta} />}

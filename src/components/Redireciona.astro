@@ -1,0 +1,18 @@
+---
+// Página que só leva a outro endereço (usada na publicação: o "-v2" leva ao
+// endereço limpo, que passa a servir a versão de venda direta).
+interface Props { para: string; titulo: string }
+const { para, titulo } = Astro.props;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>{titulo}</title>
+    <meta http-equiv="refresh" content={`0;url=${para}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={para} />
+    <script is:inline define:vars={{ para }}>location.replace(para + location.search + location.hash);</script>
+  </head>
+  <body><a href={para}>{titulo}</a></body>
+</html>

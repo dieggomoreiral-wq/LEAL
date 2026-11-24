@@ -1,0 +1,70 @@
+---
+// Faixa rolante com os critérios que a página compara. O laço é um tween de
+// transform; acelera com a rolagem (só com mouse) e pausa fora da tela.
+interface Props {
+  itens: string[];
+  segundos?: number;
+}
+const { itens, segundos = 44 } = Astro.props;
+const grupo = [...itens, ...itens];
+---
+<div class="faixa" data-faixa={segundos}>
+  <p class="sr">{itens.join('. ')}.</p>
+  <div class="faixa-trilho" data-faixa-trilho aria-hidden="true">
+    {[0, 1].map(() => (
+      <div class="faixa-grupo">
+        {grupo.map((item) => <span class="faixa-item">{item}</span>)}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .faixa {
+    position: relative;
+    overflow: hidden;
+    border-block: 1px solid var(--linha-forte);
+    background: var(--papel-2);
+    color: var(--petroleo);
+    padding-block: 0.85rem;
+  }
+  .faixa-trilho {
+    display: flex;
+    width: max-content;
+  }
+  .faixa-grupo {
+    display: flex;
+    flex-shrink: 0;
+  }
+  .faixa-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding-right: 1rem;
+    font-size: var(--t-faixa);
+    font-weight: 600;
+    font-stretch: 112%;
+    letter-spacing: -0.005em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .faixa-item::after {
+    content: '';
+    width: 0.32em;
+    height: 0.32em;
+    border-radius: 50%;
+    border: 1.5px solid var(--cta);
+    flex: 0 0 auto;
+  }
+  @media (min-width: 48rem) {
+    .faixa {
+      padding-block: clamp(1rem, 0.7rem + 0.8vw, 1.6rem);
+    }
+    .faixa-item {
+      gap: clamp(1.25rem, 0.8rem + 1.4vw, 2.5rem);
+      padding-right: clamp(1.25rem, 0.8rem + 1.4vw, 2.5rem);
+      font-weight: 560;
+      font-stretch: 118%;
+    }
+  }
+</style>

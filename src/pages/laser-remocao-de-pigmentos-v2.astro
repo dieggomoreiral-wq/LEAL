@@ -1,0 +1,9 @@
+---
+// LP 4, versão 2 (venda direta), refeita em 21/11/2026. Dados em src/data/nichos/diretas.ts.
+// Na publicação, este endereço só leva ao endereço limpo (/laser-remocao-de-pigmentos).
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import Redireciona from '../components/Redireciona.astro';
+import { pigmentosDireta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <PaginaDireta v={pigmentosDireta} /> : <Redireciona para="/laser-remocao-de-pigmentos" titulo="Leal Tecnologia e Saúde" />}

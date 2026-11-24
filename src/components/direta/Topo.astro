@@ -1,0 +1,221 @@
+---
+// v2, bloco 1. Uma máquina, uma foto grande e o botão na primeira tela do
+// celular. A foto entra por CSS na primeira pintura; o h1 pelo SplitText.
+import Pedestal from '../nicho/Pedestal.astro';
+import { linkDireta, pilula, preencher } from '../../lib/direta';
+import { marca } from '../../lib/rico';
+import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  ap: AparelhoDireto;
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { v, ap, c, comum } = Astro.props;
+const tamanho = '(min-width: 900px) min(40vw, 520px), min(66vw, 300px)';
+const resposta = 'A Leal responde %RESPOSTA%, %HORARIO%.';
+// Mobile first (21/11): a lista do pós-venda depois dos dois-pontos só aparece
+// a partir de 600px. No celular o sub termina em "respostas do pós-venda." e o
+// botão cabe na primeira tela; a lista vem logo abaixo, no bloco do pós-venda.
+const [subAntes, subLista] = v.topo.sub.replace(/\.$/, '').split(/: (.+)/s);
+const pend = ap.fonteDados.estado === 'trava' ? ' ' + pilula(ap.fonteDados) : '';
+---
+<section class="topo" id="hero" aria-labelledby="h1">
+  <div class="wrap topo-grid">
+    <figure class="topo-foto">
+      <div class="topo-quadro">
+        <span class="sombra" aria-hidden="true"></span>
+        <Pedestal p={ap.fotos.destaque} sizes={tamanho} larguras={[320, 480, 640, 800, 1040]} prioridade="alta" />
+      </div>
+      <figcaption class="topo-nome"><span>{ap.nome}</span><span class="topo-fab">Fabricante: {ap.fabricante}</span></figcaption>
+    </figure>
+
+    <div class="topo-texto">
+      <p class="sobre">{v.topo.sobre}</p>
+      <h1 id="h1" data-revelar="linhas" data-abertura>{v.topo.h1}</h1>
+      <p class="topo-sub">{subLista
+        ? <Fragment set:html={marca(subAntes) + '<span class="sub-lista">: ' + marca(subLista) + '</span>.' + pend} />
+        : <Fragment set:html={marca(v.topo.sub) + pend} />}</p>
+      <a class="botao botao-cta" id="cta-hero" data-magnetico="0.25" data-porta="abertura" data-aparelho={ap.id}
+        href={linkDireta(ap.mensagens.topo, c)} target="_blank" rel="noopener">{comum.botaoPrincipal}</a>
+      <p class="topo-resposta" set:html={preencher(resposta, v, c)} />
+      <p class="topo-filtro">{comum.filtro}</p>
+      <p class="topo-fabricante">A Leal não é a fabricante: o {ap.nome} é da {ap.fabricante} e vendido pela Rede ISP.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .topo {
+    position: relative;
+    padding-block: 12px var(--esp);
+    overflow: clip;
+  }
+  .topo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .topo-foto {
+    display: grid;
+    gap: 8px;
+  }
+  .topo-quadro {
+    position: relative;
+    height: min(31svh, 300px);
+    min-height: 200px;
+    border-radius: var(--r-grande);
+    background:
+      radial-gradient(120% 90% at 50% 100%, var(--folha) 0 55%, transparent 56%),
+      var(--folha);
+    border: 1px solid var(--linha);
+    overflow: hidden;
+  }
+  .sombra {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    bottom: 5%;
+    height: 5%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(30 43 47 / 0.22), rgb(30 43 47 / 0));
+    pointer-events: none;
+  }
+  .topo-nome {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-inline: 4px;
+    font-size: var(--t-sm);
+    font-weight: 650;
+    color: var(--petroleo);
+  }
+  .topo-fab {
+    font-weight: 500;
+    color: var(--tinta-2);
+  }
+  .topo-texto {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .sobre {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--petroleo);
+    margin-bottom: 0.6em;
+  }
+  h1 {
+    font-size: var(--t4);
+    font-weight: 700;
+    font-stretch: 96%;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--tinta);
+    text-wrap: balance;
+    max-width: 17ch;
+  }
+  .topo-sub {
+    margin-top: 0.7em;
+    font-size: var(--t1);
+    color: var(--tinta-2);
+    line-height: 1.45;
+    max-width: 46ch;
+  }
+  .topo-texto .botao {
+    margin-top: 1.1em;
+    width: 100%;
+    min-height: 54px;
+    font-size: 1.0625rem;
+  }
+  .topo-resposta {
+    margin-top: 0.7em;
+    font-size: var(--t-sm);
+    color: var(--tinta);
+    line-height: 1.5;
+  }
+  .topo-filtro {
+    margin-top: 0.9em;
+    padding-top: 0.8em;
+    border-top: 1px solid var(--linha);
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    width: 100%;
+    max-width: 46ch;
+  }
+  /* Parecer de plataformas (24/11): a relação com o fabricante fica clara no topo. */
+  .topo-fabricante {
+    margin-top: 0.4em;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    max-width: 46ch;
+  }
+  .topo-sub :global(.sub-lista) {
+    display: none;
+  }
+  @media (min-width: 600px) {
+    .topo-texto .botao {
+      width: auto;
+    }
+    .topo-sub :global(.sub-lista) {
+      display: inline;
+    }
+  }
+  @media (min-width: 900px) {
+    .topo {
+      padding-top: clamp(32px, 4vw, 64px);
+      min-height: calc(100svh - var(--topo));
+      display: flex;
+      align-items: center;
+    }
+    .topo > .wrap {
+      width: 100%;
+    }
+    .topo-grid {
+      grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+      gap: clamp(32px, 5vw, 88px);
+      align-items: center;
+    }
+    .topo-foto {
+      order: 2;
+    }
+    .topo-quadro {
+      height: auto;
+      aspect-ratio: 4 / 5;
+      max-height: calc(100svh - var(--topo) - 140px);
+      margin-right: calc(var(--pad) * -1);
+      border-radius: var(--r-grande) 0 0 var(--r-grande);
+      border-right: 0;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 1rem + 3.4vw, 4.25rem);
+      font-stretch: 92%;
+      line-height: 0.98;
+      max-width: 14ch;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.movimento) .topo-quadro {
+      animation: surge 0.5s var(--curva-saida) backwards;
+    }
+    :global(.movimento) .topo-quadro :global(.produto) {
+      animation: produto 1.3s var(--curva) 0.2s backwards;
+    }
+    :global(.movimento) .topo-nome,
+    :global(.movimento) .topo-texto > :not(h1) {
+      animation: sobe var(--d-revelar) var(--curva) backwards;
+    }
+    :global(.movimento) .topo-texto > :nth-child(1) { animation-delay: 0.45s; }
+    :global(.movimento) .topo-texto > :nth-child(3) { animation-delay: 0.62s; }
+    :global(.movimento) .topo-texto > :nth-child(4) { animation-delay: 0.72s; }
+    :global(.movimento) .topo-texto > :nth-child(5) { animation-delay: 0.8s; }
+    :global(.movimento) .topo-texto > :nth-child(6) { animation-delay: 0.88s; }
+    :global(.movimento) .topo-nome { animation-delay: 0.9s; }
+  }
+  @keyframes surge { from { opacity: 0; } }
+  @keyframes produto { from { opacity: 0; transform: translate3d(0, 6%, 0) scale(1.04); } }
+  @keyframes sobe { from { opacity: 0; transform: translate3d(0, 14px, 0); } }
+</style>

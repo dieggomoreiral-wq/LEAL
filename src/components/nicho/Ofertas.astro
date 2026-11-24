@@ -1,0 +1,140 @@
+---
+// v2 (venda direta): "Escolha o aparelho". Um cartão por aparelho, com foto,
+// nome, fabricante, três destaques da ficha (com pílula) e o botão próprio.
+// Mesmo peso visual para todos: nenhum cartão "vencedor".
+import Foto from '../Foto.astro';
+import { marca } from '../../lib/rico';
+import { linkWhats } from '../../data/contato';
+import type { Nicho, VersaoDireta } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+  v: VersaoDireta;
+}
+const { n, v } = Astro.props;
+const cartoes = v.ofertas.cartoes.map((c) => ({ ...c, ap: n.comparar.aparelhos.find((a) => a.id === c.id)! }));
+const tamanho = '(min-width: 900px) min(40vw, 520px), calc(100vw - 40px)';
+---
+<section class="secao ofertas" id="ofertas" aria-labelledby="t-ofertas">
+  <div class="wrap">
+    <h2 data-revelar="linhas" id="t-ofertas">{v.ofertas.titulo}</h2>
+    {v.ofertas.abertura && <p class="texto ofertas-abertura" data-revelar="subir" set:html={marca(v.ofertas.abertura)} />}
+    <div class="cartoes" data-revelar="subir" data-revelar-filhos style={`--n:${cartoes.length}`}>
+      {cartoes.map((c) => (
+        <article class="cartao" aria-labelledby={`cartao-${c.id}`}>
+          <div class="cartao-foto">
+            <Foto src={c.ap.galeria[0].src} alt={c.ap.galeria[0].alt} larguras={[320, 480, 640, 800]} sizes={tamanho} />
+          </div>
+          <div class="cartao-corpo">
+            <h3 id={`cartao-${c.id}`}>{c.ap.nome}</h3>
+            <p class="cartao-fab">{c.ap.fabricante}</p>
+            <ul>
+              {c.destaques.map((d) => <li set:html={marca(d)} />)}
+            </ul>
+            <a class="botao botao-cta" data-magnetico="0.2" href={linkWhats(c.mensagem)} target="_blank" rel="noopener">{c.botao}</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ofertas {
+    background: var(--papel-2);
+  }
+  .ofertas-abertura {
+    margin-top: 0.9em;
+    font-size: var(--t1);
+    color: var(--tinta-2);
+  }
+  .cartoes {
+    display: grid;
+    gap: 16px;
+    margin-top: var(--esp-int);
+  }
+  .cartao {
+    display: flex;
+    flex-direction: column;
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+    overflow: hidden;
+    transition: translate 0.5s var(--curva), box-shadow 0.5s var(--curva);
+  }
+  .cartao-foto {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--folha);
+    border-bottom: 1px solid var(--linha);
+  }
+  .cartao-foto :global(img) {
+    position: absolute;
+    inset: 6%;
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
+  }
+  .cartao-corpo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+  }
+  .cartao h3 {
+    font-size: var(--t-item);
+    font-stretch: 106%;
+    color: var(--petroleo);
+  }
+  .cartao-fab {
+    margin-top: -6px;
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+  }
+  .cartao ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    margin-block: 6px 10px;
+    border-top: 1px solid var(--linha);
+    padding-top: 12px;
+  }
+  .cartao li {
+    position: relative;
+    padding-left: 1.3em;
+    line-height: 1.45;
+    font-size: var(--t0);
+  }
+  .cartao li::before {
+    content: '';
+    position: absolute;
+    left: 0.15em;
+    top: 0.55em;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 2px;
+    background: var(--petroleo);
+    opacity: 0.75;
+  }
+  .cartao .botao {
+    margin-top: auto;
+    width: 100%;
+    min-height: 52px;
+  }
+  @media (hover: hover) {
+    .cartao:hover {
+      translate: 0 -3px;
+      box-shadow: 0 26px 44px -36px rgb(15 95 102 / 0.6);
+    }
+  }
+  @media (min-width: 900px) {
+    .cartoes {
+      grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+      gap: 24px;
+    }
+    .cartao-corpo {
+      padding: 28px;
+    }
+  }
+</style>

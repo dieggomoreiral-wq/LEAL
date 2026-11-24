@@ -1,0 +1,19 @@
+---
+// Por enquanto o site é a LP de depilação a laser: a raiz redireciona na hora.
+// Quando houver as LPs de MPT, HIFU e CO₂, esta página vira o índice delas.
+const destino = '/depilacao-a-laser';
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>Leal Tecnologia e Saúde</title>
+    <meta http-equiv="refresh" content={`0;url=${destino}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={destino} />
+    <script is:inline define:vars={{ destino }}>location.replace(destino);</script>
+  </head>
+  <body>
+    <a href={destino}>Máquina de depilação a laser: compare Hakon e Ácrus</a>
+  </body>
+</html>

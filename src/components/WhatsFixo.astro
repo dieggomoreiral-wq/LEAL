@@ -1,0 +1,46 @@
+---
+// WhatsApp fixo no celular: aparece depois da abertura e some no CTA final
+// e no rodapé. Entra e sai só por transform e opacity.
+import { linkWhats } from '../data/contato';
+
+interface Props {
+  mensagem: string;
+  /** Rótulo do botão (a versão de venda direta pede orçamento). */
+  rotulo?: string;
+  /** Link pronto (se vier, substitui o montado com a mensagem). */
+  href?: string;
+}
+const { mensagem, rotulo = 'Comparar no WhatsApp', href } = Astro.props;
+---
+<div class="wa-fixo" id="wa-fixo" inert>
+  <a class="botao botao-cta" href={href ?? linkWhats(mensagem)} data-porta="barra" target="_blank" rel="noopener">{rotulo}</a>
+</div>
+
+<style>
+  .wa-fixo {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 30;
+    opacity: 0;
+    transform: translate3d(0, calc(100% + 24px), 0);
+    pointer-events: none;
+    transition: transform 0.5s var(--curva), opacity 0.3s var(--curva-saida);
+  }
+  .wa-fixo:global(.visivel) {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .wa-fixo .botao {
+    width: 100%;
+    min-height: 54px;
+    box-shadow: 0 14px 30px -12px rgb(30 43 47 / 0.55);
+  }
+  @media (min-width: 900px) {
+    .wa-fixo {
+      display: none;
+    }
+  }
+</style>

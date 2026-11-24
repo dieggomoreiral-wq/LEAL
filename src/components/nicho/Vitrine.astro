@@ -1,0 +1,231 @@
+---
+// 2. O que o preço da vitrine não mostra. Abertura em tipo grande, sozinha;
+// lista com ícone de linha por item (entra um a um); três cartões de quem
+// cuida de cada parte (o da Leal se destaca pelo fundo) e o link de texto.
+// "Parcela" fica em tom neutro, nunca em cor de alerta.
+import { marca } from '../../lib/rico';
+import { linkWhats } from '../../data/contato';
+import { icones } from './icones';
+import type { Nicho } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+}
+const v = Astro.props.n.vitrine;
+---
+<section class="secao vitrine" id="vitrine" aria-labelledby="t-vitrine">
+  <div class="wrap">
+    <div class="vitrine-abertura">
+      <h2 data-revelar="linhas" id="t-vitrine">{v.titulo}</h2>
+      <p class="vitrine-grande" data-revelar="subir" set:html={marca(v.grande)} />
+      <p class="vitrine-apoio" data-revelar="subir" set:html={marca(v.apoio)} />
+    </div>
+
+    <div class="lista-bloco" id="lista-preco">
+      <h3 class="lista-titulo" data-revelar="subir">{v.listaTitulo}</h3>
+      <ul class="lista" data-revelar="subir" data-revelar-filhos>
+        {v.itens.map((it) => (
+          <li>
+            <span class="lista-icone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icones[it.icone] ?? icones.ponto} /></span>
+            <p><strong>{it.nome}:</strong> <Fragment set:html={marca(it.texto)} /></p>
+          </li>
+        ))}
+      </ul>
+      <p class="lista-fecho" data-revelar="subir" set:html={marca(v.fecho)} />
+    </div>
+
+    <div class="cuida-bloco" id="quem-cuida">
+      <h3 class="cuida-titulo" data-revelar="subir">{v.cuidaTitulo}</h3>
+      <div class="cuida" data-revelar="subir" data-revelar-filhos>
+        {v.cuida.map((c) => (
+          <div class:list={['cuida-col', { 'cuida-leal': c.destaque }]}>
+            <p class="cuida-nome">{c.nome}</p>
+            <p set:html={marca(c.texto)} />
+            {c.extra && <p class="cuida-logo" set:html={marca(c.extra)} />}
+          </div>
+        ))}
+      </div>
+      <p class="miudo texto cuida-lei" data-revelar="subir" set:html={marca(v.lei)} />
+      <p class="link-leve-linha" data-revelar="subir">
+        <a class="link-leve" href={linkWhats(v.link.mensagem)} target="_blank" rel="noopener">{v.link.texto} <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vitrine {
+    background: var(--papel-2);
+  }
+  /* Abertura: tipo grande, sozinha na tela, sem foto */
+  .vitrine-abertura {
+    display: grid;
+    gap: 1.1em;
+    padding-block: 0.5rem 1rem;
+  }
+  .vitrine-grande {
+    font-size: clamp(1.625rem, 1.1rem + 2.6vw, 3.25rem);
+    font-weight: 560;
+    font-stretch: 100%;
+    line-height: 1.18;
+    letter-spacing: -0.018em;
+    color: var(--tinta);
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+  .vitrine-grande em {
+    font-style: normal;
+    color: var(--petroleo);
+  }
+  .vitrine-apoio {
+    font-size: var(--t1);
+    color: var(--tinta-2);
+    max-width: 48ch;
+  }
+
+  /* Lista */
+  .lista-bloco {
+    margin-top: var(--esp);
+  }
+  .lista-titulo,
+  .cuida-titulo {
+    font-size: var(--t2);
+    font-weight: 650;
+    color: var(--tinta);
+    max-width: 30ch;
+  }
+  .lista {
+    list-style: none;
+    margin-top: var(--esp-int);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 1px solid var(--linha-forte);
+  }
+  .lista li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--linha-forte);
+  }
+  .lista-icone {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    color: var(--petroleo);
+  }
+  .lista-icone svg {
+    width: 24px;
+    height: 24px;
+  }
+  .lista p {
+    padding-top: 9px;
+    line-height: 1.5;
+  }
+  .lista strong {
+    font-weight: 650;
+    color: var(--tinta);
+  }
+  .lista-fecho {
+    margin-top: 18px;
+    font-weight: 600;
+    color: var(--petroleo);
+  }
+  @media (min-width: 900px) {
+    .lista {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 48px;
+      border-top: 0;
+    }
+    .lista li {
+      padding-block: 22px;
+    }
+    .lista li:nth-child(-n + 2) {
+      border-top: 1px solid var(--linha-forte);
+    }
+  }
+
+  /* Quem cuida de cada parte */
+  .cuida-bloco {
+    margin-top: var(--esp);
+  }
+  .cuida {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: var(--esp-int);
+  }
+  .cuida-col {
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+    padding: 22px;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    line-height: 1.5;
+    transition: translate 0.5s var(--curva), border-color 0.3s var(--curva-saida), box-shadow 0.5s var(--curva);
+  }
+  .cuida-nome {
+    font-size: var(--t-item);
+    font-weight: 650;
+    font-stretch: 106%;
+    line-height: 1.2;
+    color: var(--petroleo);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--linha);
+  }
+  .cuida-logo {
+    font-size: var(--t-xs);
+  }
+  .cuida-leal {
+    background: var(--petroleo);
+    border-color: var(--petroleo);
+    color: #eef4f3;
+  }
+  .cuida-leal .cuida-nome {
+    color: #fff;
+    border-bottom-color: rgb(255 255 255 / 0.22);
+  }
+  @media (hover: hover) {
+    .cuida-col:hover {
+      translate: 0 -3px;
+      box-shadow: 0 22px 40px -34px rgb(15 95 102 / 0.6);
+    }
+  }
+  @media (min-width: 900px) {
+    .cuida {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .cuida-col {
+      padding: 28px;
+    }
+  }
+  .cuida-lei {
+    margin-top: 16px;
+  }
+  .link-leve-linha {
+    margin-top: 14px;
+  }
+  .link-leve {
+    font-weight: 600;
+    color: var(--cta-escuro);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.22em;
+  }
+  .link-leve span {
+    display: inline-block;
+    transition: translate 0.4s var(--curva);
+  }
+  .link-leve:hover span {
+    translate: 4px 0;
+  }
+</style>

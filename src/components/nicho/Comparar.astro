@@ -1,0 +1,312 @@
+---
+// 3. Comparação dos aparelhos. Galerias lado a lado no desktop; no celular a
+// chave alterna entre elas. No desktop a mesma chave fica logo acima do
+// botão. É um botão só, cujo texto e link seguem a chave (interacoes.ts,
+// [data-escolha]). Abre no primeiro aparelho. Sem JavaScript, as galerias
+// aparecem todas e o botão fica no primeiro.
+// Tabela: rótulo em cima e os valores embaixo no celular; nenhuma linha com
+// cor de "vencedor"; pílula em cada célula técnica até a conferência.
+import Galeria from '../lp/Galeria.astro';
+import { marca } from '../../lib/rico';
+import { linkWhats } from '../../data/contato';
+import type { Nicho } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+}
+const c = Astro.props.n.comparar;
+const ap = c.aparelhos;
+const primeiro = ap[0];
+const links = JSON.stringify(Object.fromEntries(ap.map((a) => [a.id, linkWhats(a.mensagem)])));
+const tamanho = ap.length > 2
+  ? '(min-width: 900px) min(31vw, 390px), calc(100vw - 40px)'
+  : '(min-width: 900px) min(46vw, 580px), calc(100vw - 40px)';
+
+const chave = (classe: string) => `
+  <div class="chave ${classe}" role="group" aria-label="Escolha o aparelho" data-chave style="--n:${ap.length}">
+    ${ap.map((a, i) => `<button type="button" data-valor="${a.id}" data-nome="${a.nomeBotao ?? a.curto}" aria-pressed="${i === 0}">${a.curto}</button>`).join('')}
+    <span class="chave-marca" aria-hidden="true"></span>
+  </div>`;
+---
+<section class="secao comparar" id="comparar" aria-labelledby="t-comparar" data-escolha={primeiro.id} data-links={links} style="--i:0">
+  <div class="wrap">
+    <h2 data-revelar="linhas" id="t-comparar">{c.titulo}</h2>
+    <p class="texto comparar-abertura" data-revelar="subir" set:html={marca(c.abertura)} />
+    {c.criterio && <p class="texto comparar-criterio" data-revelar="subir" set:html={marca(c.criterio)} />}
+
+    <Fragment set:html={chave('chave-celular')} />
+
+    <div class="galerias" style={`--n:${ap.length}`}>
+      {ap.map((a, i) => (
+        <div class="galeria-col" data-aparelho={a.id} data-ativo={i === 0 ? '' : undefined}>
+          <p class="galeria-nome"><strong>{a.nome}</strong> · {a.fabricante}</p>
+          <Galeria nome={a.nome} fotos={a.galeria} tamanho={tamanho} video={a.video} />
+        </div>
+      ))}
+    </div>
+    {c.pendenciaGalerias && <p class="miudo galerias-pend"><span class="pend">{c.pendenciaGalerias}</span></p>}
+
+    <div class="ficha-bloco" data-revelar="subir">
+      <h3 class="ficha-titulo">{c.fichaTitulo}</h3>
+      <table class="ficha">
+        <thead>
+          <tr>
+            <td></td>
+            {ap.map((a) => <th scope="col">{a.nome}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {c.ficha.map((l) => (
+            <tr>
+              <th scope="row">{l.rotulo}</th>
+              {l.valores.map((v, i) => <td data-marca={ap[i].nome} set:html={marca(v)} />)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="ficha-nota" set:html={marca(c.fichaNota)} />
+    </div>
+
+    <div class="notas" data-revelar="subir" data-revelar-filhos>
+      {c.notas.map((t) => <p set:html={marca(t)} />)}
+    </div>
+
+    <div class="escolha" data-revelar="subir">
+      <Fragment set:html={chave('chave-desktop')} />
+      <a class="botao botao-cta" id="cta-escolha" data-magnetico="0.25" href={linkWhats(primeiro.mensagem)} target="_blank" rel="noopener">{c.botaoPrefixo} <span data-nome-escolha>{primeiro.nomeBotao ?? primeiro.curto}</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .comparar-criterio {
+    margin-top: 0.8em;
+    font-size: var(--t0);
+    padding-left: 14px;
+    border-left: 2px solid var(--petroleo);
+  }
+  .comparar-abertura {
+    margin-top: 1em;
+    font-size: var(--t1);
+    color: var(--tinta-2);
+  }
+
+  /* Chave Hakon | Ácrus */
+  .comparar :global(.chave) {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--papel-2);
+    border: 1px solid var(--linha);
+    isolation: isolate;
+  }
+  .comparar :global(.chave button) {
+    appearance: none;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    font-size: var(--t0);
+    min-width: 7.5rem;
+    min-height: 44px;
+    padding: 0 1.2em;
+    border-radius: 999px;
+    color: var(--tinta-2);
+    cursor: pointer;
+    transition: color 0.35s var(--curva-saida);
+  }
+  .comparar :global(.chave button[aria-pressed='true']) {
+    color: #fff;
+  }
+  .comparar :global(.chave-marca) {
+    position: absolute;
+    z-index: -1;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc((100% - 8px) / var(--n, 2));
+    border-radius: 999px;
+    background: var(--petroleo);
+    box-shadow: 0 6px 14px -8px rgb(15 95 102 / 0.8);
+    translate: calc(100% * var(--i, 0)) 0;
+    transition: translate 0.5s var(--curva);
+  }
+  .comparar :global(.chave-celular) {
+    display: none;
+  }
+  :global(.js) .comparar :global(.chave-celular) {
+    display: inline-grid;
+    margin-top: var(--esp-int);
+  }
+
+  .galerias {
+    display: grid;
+    gap: 32px;
+    margin-top: 20px;
+  }
+  .galeria-nome {
+    margin-bottom: 10px;
+    color: var(--tinta-2);
+  }
+  .galeria-nome strong {
+    color: var(--petroleo);
+    font-weight: 650;
+  }
+  .galerias-pend {
+    margin-top: 12px;
+  }
+  @media (max-width: 899.98px) {
+    :global(.js) .galeria-col:not([data-ativo]) {
+      display: none;
+    }
+    :global(.js) .galerias {
+      margin-top: 16px;
+    }
+  }
+  @media (min-width: 900px) {
+    :global(.js) .comparar :global(.chave-celular) {
+      display: none;
+    }
+    .galerias {
+      grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+      gap: 24px;
+      margin-top: var(--esp-int);
+    }
+  }
+
+  /* Ficha */
+  .ficha-bloco {
+    margin-top: var(--esp);
+  }
+  .ficha-titulo {
+    font-size: var(--t2);
+    margin-bottom: 14px;
+  }
+  .ficha {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--t0);
+    line-height: 1.45;
+  }
+  .ficha thead th {
+    text-align: left;
+    font-weight: 650;
+    color: var(--petroleo);
+    padding: 0 16px 12px 0;
+  }
+  .ficha tbody th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--tinta);
+  }
+  .ficha tbody th,
+  .ficha tbody td {
+    padding: 16px 16px 16px 0;
+    border-top: 1px solid var(--linha-forte);
+    vertical-align: top;
+  }
+  .ficha tbody tr:last-child > * {
+    border-bottom: 1px solid var(--linha-forte);
+  }
+  .ficha thead td,
+  .ficha tbody th {
+    width: 26%;
+  }
+  .ficha :global(.pend) {
+    margin-left: 0.2em;
+  }
+  @media (max-width: 47.99rem) {
+    .ficha thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+    .ficha,
+    .ficha tbody,
+    .ficha tr,
+    .ficha th,
+    .ficha td {
+      display: block;
+      width: 100%;
+    }
+    .ficha tbody tr {
+      padding-block: 16px;
+      border-top: 1px solid var(--linha-forte);
+    }
+    .ficha tbody tr:last-child {
+      border-bottom: 1px solid var(--linha-forte);
+    }
+    .ficha tbody th,
+    .ficha tbody td,
+    .ficha tbody tr:last-child > * {
+      border: 0;
+      padding: 0;
+    }
+    .ficha tbody th {
+      width: 100%;
+      font-size: var(--t-sm);
+      color: var(--tinta-2);
+      margin-bottom: 8px;
+    }
+    .ficha tbody td {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+      gap: 10px;
+      padding-block: 4px;
+    }
+    .ficha tbody td::before {
+      content: attr(data-marca);
+      font-weight: 650;
+      font-size: var(--t-sm);
+      color: var(--petroleo);
+      padding-top: 1px;
+    }
+  }
+  .ficha-nota {
+    margin-top: 14px;
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+    max-width: 80ch;
+    line-height: 1.7;
+  }
+
+  .notas {
+    margin-top: 28px;
+    display: grid;
+    gap: 14px;
+    max-width: 70ch;
+  }
+  .notas strong {
+    color: var(--tinta);
+  }
+
+  .escolha {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .escolha .botao {
+    width: 100%;
+    min-height: 54px;
+    font-size: 1.0625rem;
+  }
+  .escolha :global(.chave-desktop) {
+    display: none;
+  }
+  @media (min-width: 600px) {
+    .escolha .botao {
+      width: auto;
+    }
+  }
+  @media (min-width: 900px) {
+    :global(.js) .escolha :global(.chave-desktop) {
+      display: inline-grid;
+    }
+  }
+</style>

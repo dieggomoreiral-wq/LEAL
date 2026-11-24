@@ -1,0 +1,327 @@
+---
+// v2, bloco 7. O pedido em 2 toques: qual máquina (o carro-chefe já vem
+// marcado) e, se quiser, para quando. A prévia mostra a mensagem que vai
+// para o WhatsApp; o botão funciona sem JavaScript (mensagem do carro-chefe).
+// Todas as mensagens saem prontas do servidor, num JSON no próprio bloco.
+import Foto from '../Foto.astro';
+import { linkDireta, montarMensagem, preencher } from '../../lib/direta';
+import type { ComumDireta, CondicoesRede, Momento, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { v, c, comum } = Astro.props;
+const t = comum.pedido;
+const principal = v.principal;
+// Tráfego (21/11): a página vende um aparelho; o concorrente não entra no
+// seletor. Quem ainda compara marca "Ainda não decidi".
+const ordem = v.aparelhos.filter((a) => a.id === principal);
+const escolhas = [...ordem.map((a) => a.id), 'indeciso'];
+const momentos: (Momento | '')[] = ['', ...comum.momentos.map((m) => m.id)];
+const links: Record<string, string> = {};
+const textos: Record<string, string> = {};
+for (const e of escolhas) {
+  for (const m of momentos) {
+    const msg = montarMensagem(v, e, m || undefined, comum);
+    textos[`${e}|${m}`] = msg;
+    links[`${e}|${m}`] = linkDireta(msg, c);
+  }
+}
+const inicial = `${principal}|`;
+const dados = JSON.stringify({ links, textos });
+---
+<section class="secao pedido" id="pedido" aria-labelledby="t-pedido">
+  <div class="wrap ped-grid">
+    <header class="ped-cabeca">
+      <h2 data-revelar="linhas" id="t-pedido">{v.pedido.titulo}</h2>
+      <p class="ped-texto" data-revelar="subir" set:html={preencher(v.pedido.texto, v, c)} />
+    </header>
+
+    <form class="ped-form" data-pedido={dados} onsubmit="return false">
+      <fieldset class="toque">
+        <legend><span class="toque-n" aria-hidden="true">1</span>{t.tituloToque1}</legend>
+        <div class="opcoes opcoes-maq">
+          {ordem.map((a) => (
+            <label class="opcao opcao-maq">
+              <input type="radio" name="maquina" value={a.id} checked={a.id === principal} />
+              <span class="op-foto">
+                <Foto src={a.fotos.miniatura} alt="" larguras={[96, 160, 240]} sizes="80px" />
+              </span>
+              <span class="op-nome">{a.nome}<small>{a.fabricante}</small></span>
+              <span class="op-marca" aria-hidden="true"></span>
+            </label>
+          ))}
+          <label class="opcao opcao-indeciso">
+            <input type="radio" name="maquina" value="indeciso" />
+            <span class="op-nome">{t.rotuloIndeciso}</span>
+            <span class="op-marca" aria-hidden="true"></span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="toque">
+        <legend><span class="toque-n" aria-hidden="true">2</span>{t.tituloToque2} <span class="opcional">(opcional)</span></legend>
+        <div class="opcoes opcoes-momento">
+          {comum.momentos.map((m) => (
+            <label class="opcao opcao-momento">
+              <input type="radio" name="momento" value={m.id} />
+              <span class="op-nome">{m.rotulo}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="previa">
+        <p class="previa-rotulo">{t.previa}</p>
+        <p class="balao" aria-live="polite" data-previa>{textos[inicial]}</p>
+      </div>
+
+      <a class="botao botao-cta ped-botao" data-magnetico="0.2" data-porta="pedido" data-aparelho={principal} data-momento=""
+        href={links[inicial]} target="_blank" rel="noopener" data-pedido-botao>{t.botao}</a>
+      <p class="ped-nota" set:html={preencher(t.nota, v, c)} />
+    </form>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-pedido]').forEach((form) => {
+    const { links, textos } = JSON.parse(form.dataset.pedido!) as { links: Record<string, string>; textos: Record<string, string> };
+    const botao = form.querySelector<HTMLAnchorElement>('[data-pedido-botao]')!;
+    const previa = form.querySelector<HTMLElement>('[data-previa]')!;
+    const valor = (nome: string) => (form.querySelector<HTMLInputElement>(`input[name="${nome}"]:checked`)?.value ?? '');
+    const atualiza = () => {
+      const chave = `${valor('maquina')}|${valor('momento')}`;
+      if (!links[chave]) return;
+      botao.href = links[chave];
+      botao.dataset.aparelho = valor('maquina');
+      botao.dataset.momento = valor('momento');
+      previa.textContent = textos[chave];
+    };
+    form.addEventListener('change', atualiza);
+    // Segundo toque no mesmo momento desmarca (o toque 2 é opcional).
+    form.querySelectorAll<HTMLInputElement>('input[name="momento"]').forEach((r) => {
+      let estava = false;
+      r.addEventListener('pointerdown', () => (estava = r.checked));
+      r.addEventListener('click', () => {
+        if (estava) {
+          r.checked = false;
+          atualiza();
+        }
+      });
+    });
+    atualiza();
+  });
+</script>
+
+<style>
+  .pedido {
+    position: relative;
+  }
+  .pedido h2 {
+    font-size: var(--t3);
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .ped-texto {
+    margin-top: 0.8em;
+    color: var(--tinta-2);
+    max-width: 48ch;
+  }
+  .ped-grid {
+    display: grid;
+    gap: var(--esp-int);
+  }
+  .ped-form {
+    display: grid;
+    gap: 22px;
+    padding: 18px 16px 20px;
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+    box-shadow: 0 30px 60px -44px rgb(15 95 102 / 0.55);
+  }
+  .toque {
+    border: 0;
+    min-width: 0;
+  }
+  .toque legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: 650;
+    color: var(--tinta);
+  }
+  .toque-n {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--petroleo);
+    color: #fff;
+    font-size: var(--t-xs);
+    font-weight: 700;
+  }
+  .opcional {
+    font-weight: 500;
+    color: var(--tinta-2);
+    font-size: var(--t-sm);
+  }
+  .opcoes {
+    display: grid;
+    gap: 8px;
+  }
+  .opcao {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--linha-forte);
+    border-radius: var(--r-medio);
+    background: var(--papel);
+    cursor: pointer;
+    transition: border-color 0.25s var(--curva-saida), background-color 0.25s var(--curva-saida);
+  }
+  .opcao input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .opcao:has(input:checked) {
+    border-color: var(--petroleo);
+    background: rgb(15 95 102 / 0.06);
+  }
+  .opcao:has(input:focus-visible) {
+    outline: 2px solid var(--petroleo);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) {
+    .opcao:hover {
+      border-color: var(--petroleo);
+    }
+  }
+  .op-foto {
+    width: 56px;
+    height: 56px;
+    flex: none;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .op-foto :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .op-nome {
+    flex: 1;
+    min-width: 0;
+    font-weight: 650;
+    color: var(--tinta);
+    line-height: 1.25;
+  }
+  .op-nome small {
+    display: block;
+    font-size: var(--t-xs);
+    font-weight: 500;
+    color: var(--tinta-2);
+  }
+  .op-marca {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid var(--linha-forte);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .opcao:has(input:checked) .op-marca {
+    border-color: var(--petroleo);
+    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 12px var(--petroleo);
+  }
+  .opcao-indeciso {
+    min-height: 52px;
+  }
+  .opcoes-momento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .opcao-momento {
+    justify-content: center;
+    text-align: center;
+  }
+  .opcao-momento .op-nome {
+    font-weight: 600;
+  }
+
+  .previa {
+    display: grid;
+    gap: 8px;
+  }
+  .previa-rotulo {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--tinta-2);
+  }
+  .balao {
+    position: relative;
+    justify-self: end;
+    max-width: 92%;
+    padding: 10px 14px 12px;
+    background: #d9fdd3;
+    color: #111b21;
+    border-radius: 12px 0 12px 12px;
+    font-size: var(--t-sm);
+    line-height: 1.45;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+  }
+  .balao::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -8px;
+    border-left: 8px solid #d9fdd3;
+    border-bottom: 10px solid transparent;
+  }
+  .ped-botao {
+    width: 100%;
+    min-height: 56px;
+    font-size: 1.0625rem;
+  }
+  .ped-nota {
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    line-height: 1.5;
+  }
+
+  @media (min-width: 600px) {
+    .opcoes-momento {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 900px) {
+    .ped-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: clamp(40px, 5vw, 96px);
+      align-items: start;
+    }
+    .ped-cabeca {
+      position: sticky;
+      top: calc(var(--topo) + 40px);
+    }
+    .ped-form {
+      padding: 28px 28px 26px;
+    }
+  }
+</style>

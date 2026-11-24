@@ -1,0 +1,80 @@
+---
+// Versão 2 (venda direta) de uma LP de equipamento, refeita em 21/11/2026.
+// Não herda nada da v1: um aparelho carro-chefe, as condições numa faixa,
+// o pós-venda perguntado antes de fechar e o pedido em 2 toques.
+// Fica fora do Google (noindex): é página de campanha.
+import Base from '../../layouts/Base.astro';
+import Faixa from '../fx/Faixa.astro';
+import Topo from './Topo.astro';
+import Condicoes from './Condicoes.astro';
+import PosVenda from './PosVenda.astro';
+import Maquina from './Maquina.astro';
+import Compra from './Compra.astro';
+import Perguntas from './Perguntas.astro';
+import Pedido from './Pedido.astro';
+import Pendencias from './Pendencias.astro';
+import { condicoes } from '../../data/condicoes';
+import { comumDireta } from '../../data/nichos/textos-direta';
+import { exigirPublicavel, linkDireta } from '../../lib/direta';
+import type { CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  c?: CondicoesRede;
+}
+const { v, c = condicoes } = Astro.props;
+exigirPublicavel(v, c);
+const comum = comumDireta;
+const ap = v.aparelhos.find((a) => a.id === v.principal)!;
+const limpa = (t: string) => t.replace(/%PECA%/g, v.nicho.peca.toLowerCase()).replace(/[{}]|\[\[|\]\]/g, '');
+const faixa = [...Object.values(comum.posVenda).map((x) => limpa(x.rotulo)), 'Perguntado antes de fechar'];
+const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : undefined;
+const politicas = c.politicas.estado === 'confirmado' ? c.politicas.valor : undefined;
+const nicho = v.slug.replace(/-v2$/, '');
+---
+<Base
+  titulo={v.seo.titulo}
+  descricao={v.seo.descricao}
+  mensagem={v.mensagemBarra}
+  linkBarra={linkDireta(v.mensagemBarra, c)}
+  rotuloBarra={comum.botaoPrincipal}
+  rodapeMarcas={v.rodape.marcas}
+  rodapeUso={v.rodape.uso}
+  endereco={endereco}
+  politicas={politicas}
+>
+  <meta slot="head" name="robots" content="noindex, follow" />
+  <Topo v={v} ap={ap} c={c} comum={comum} />
+  <Condicoes c={c} comum={comum} />
+  <PosVenda v={v} ap={ap} c={c} comum={comum} />
+  <div class="faixa-pos"><Faixa itens={faixa} segundos={38} /></div>
+  <Maquina v={v} ap={ap} c={c} comum={comum} />
+  <Compra v={v} c={c} comum={comum} />
+  <Perguntas v={v} c={c} comum={comum} />
+  <Pedido v={v} c={c} comum={comum} />
+  <Pendencias v={v} c={c} />
+</Base>
+
+<script is:inline define:vars={{ nicho }}>
+  // Conversão: todo clique que abre o WhatsApp vai para o dataLayer com a
+  // porta (abertura, docs, pedido, barra), o aparelho e o momento.
+  document.addEventListener('click', function (e) {
+    var a = e.target instanceof Element ? e.target.closest('a[data-porta]') : null;
+    if (!a || !/^https:\/\/wa\.me\//.test(a.getAttribute('href') || '')) return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'pedido_whatsapp',
+      versao: 'v2',
+      nicho: nicho,
+      porta: a.getAttribute('data-porta'),
+      aparelho: a.getAttribute('data-aparelho') || '',
+      momento: a.getAttribute('data-momento') || '',
+    });
+  });
+</script>
+
+<style>
+  .faixa-pos {
+    border-block: 1px solid var(--linha);
+  }
+</style>

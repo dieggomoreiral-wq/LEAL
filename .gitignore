@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+medicoes/*.json
+# Fora do repositório público (24/11/2026): notas internas e material de trabalho.
+_arquivo-v3/
+medicoes/
+*.log
+.env*
+.vercel/
+src/assets/**/FONTES.md
+scripts/baixar-fotos-*.ps1

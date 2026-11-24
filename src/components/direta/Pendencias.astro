@@ -1,0 +1,125 @@
+---
+// Só no rascunho: painel "Faltam N respostas", fixo no canto, com cada trava
+// e o dono. Na publicação não é renderizado (e o build já falhou antes).
+import { rascunho, travas } from '../../lib/direta';
+import type { CondicoesRede, Dono, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  c: CondicoesRede;
+}
+const { v, c } = Astro.props;
+const lista = rascunho ? travas(v, c) : [];
+const nome: Record<Dono, string> = { rede: 'Rede ISP', diego: 'Leal', vinicius: 'Shark', shark: 'Shark' };
+const grupos = (['rede', 'diego', 'vinicius', 'shark'] as Dono[])
+  .map((d) => ({ d, itens: lista.filter((x) => x.dono === d) }))
+  .filter((g) => g.itens.length);
+// Shark aparece uma vez só (vinicius + shark).
+const juntos = grupos.reduce<{ titulo: string; itens: typeof lista }[]>((acc, g) => {
+  const titulo = nome[g.d];
+  const ja = acc.find((x) => x.titulo === titulo);
+  if (ja) ja.itens.push(...g.itens);
+  else acc.push({ titulo, itens: [...g.itens] });
+  return acc;
+}, []);
+---
+{lista.length > 0 && (
+  <details class="pendencias">
+    <summary>
+      <span class="pd-n">{lista.length}</span>
+      <span>Faltam {lista.length} respostas para publicar</span>
+    </summary>
+    <div class="pd-corpo">
+      <p class="pd-aviso">Rascunho. Este painel e as pílulas amarelas não vão ao ar: o build de publicação falha enquanto houver item aqui.</p>
+      {juntos.map((g) => (
+        <div class="pd-grupo">
+          <h3>{g.titulo} <span>({g.itens.length})</span></h3>
+          <ul role="list">
+            {g.itens.map((x) => (
+              <li><strong>{x.onde}</strong>{x.pergunta}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </details>
+)}
+
+<style>
+  .pendencias {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+    z-index: 60;
+    max-width: min(420px, calc(100vw - 24px));
+    background: var(--pend);
+    color: var(--pend-tinta);
+    border: 1px solid var(--pend-borda);
+    border-radius: 14px;
+    box-shadow: 0 18px 40px -20px rgb(0 0 0 / 0.45);
+    font-size: var(--t-sm);
+  }
+  .pendencias summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 6px 14px 6px 8px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 650;
+  }
+  .pendencias summary::-webkit-details-marker {
+    display: none;
+  }
+  .pd-n {
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding-inline: 6px;
+    border-radius: 99px;
+    background: var(--pend-tinta);
+    color: var(--pend);
+    font-variant-numeric: tabular-nums;
+  }
+  .pd-corpo {
+    max-height: min(70svh, 560px);
+    overflow: auto;
+    padding: 4px 16px 16px;
+    display: grid;
+    gap: 14px;
+  }
+  .pd-aviso {
+    font-size: var(--t-xs);
+  }
+  .pd-grupo h3 {
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .pd-grupo h3 span {
+    font-weight: 500;
+  }
+  .pd-grupo ul {
+    margin-top: 6px;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+  }
+  .pd-grupo li {
+    font-size: var(--t-xs);
+    line-height: 1.45;
+  }
+  .pd-grupo strong {
+    display: block;
+  }
+  @media (min-width: 900px) {
+    .pendencias {
+      top: auto;
+      bottom: 16px;
+      left: 16px;
+    }
+  }
+</style>

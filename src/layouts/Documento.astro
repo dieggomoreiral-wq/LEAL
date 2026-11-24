@@ -1,0 +1,116 @@
+---
+// Página de texto (privacidade, cookies): mesmo cabeçalho, rodapé, tag e
+// aviso de cookies das LPs, sem movimento nem barra do WhatsApp.
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import TagGoogle from '../components/TagGoogle.astro';
+import Consentimento from '../components/Consentimento.astro';
+import { condicoes } from '../data/condicoes';
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  atualizado: string;
+}
+const { titulo, descricao, atualizado } = Astro.props;
+const c = condicoes;
+const politicas = c.politicas.estado === 'confirmado' ? c.politicas.valor : undefined;
+const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : undefined;
+const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo} · Leal Tecnologia e Saúde</title>
+    <meta name="description" content={descricao} />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#FAF7F2" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <TagGoogle />
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <Cabecalho />
+    <main id="conteudo" class="doc">
+      <div class="wrap doc-in">
+        <h1>{titulo}</h1>
+        <p class="doc-data">Atualizado em {atualizado}.</p>
+        <slot />
+      </div>
+    </main>
+    <Rodape marcas="" endereco={endereco} politicas={politicas} />
+    <Consentimento />
+  </body>
+</html>
+
+<style>
+  .pular {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 100;
+    background: var(--tinta);
+    color: var(--papel);
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+  .pular:focus {
+    top: 12px;
+  }
+  .doc {
+    padding-block: clamp(2.5rem, 1.6rem + 4vw, 5rem);
+  }
+  .doc-in {
+    max-width: 68ch;
+  }
+  .doc h1 {
+    font-size: var(--t4);
+    font-weight: 700;
+    font-stretch: 92%;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--tinta);
+  }
+  .doc-data {
+    margin-top: 10px;
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+  }
+  .doc :global(h2) {
+    margin-top: 2.2em;
+    font-size: var(--t2);
+    font-weight: 700;
+    color: var(--petroleo-escuro);
+  }
+  .doc :global(p),
+  .doc :global(li) {
+    margin-top: 0.8em;
+    font-size: var(--t0);
+    line-height: 1.6;
+    color: var(--tinta);
+  }
+  .doc :global(ul) {
+    padding-left: 1.2em;
+  }
+  .doc :global(a) {
+    color: var(--petroleo);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .doc :global(.pend) {
+    background: var(--pend);
+    color: var(--pend-tinta);
+    border: 1px dashed var(--pend-borda);
+    border-radius: 6px;
+    padding: 0 6px;
+    font-size: var(--t-sm);
+  }
+  .doc :global(.botao) {
+    margin-top: 16px;
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+// 6. Fechamento. Os aparelhos pequenos, lado a lado, acima do título. Um
+// botão só, sobre o fundo de destaque. A barra fixa do celular some aqui
+// (id="final", interacoes.ts).
+import Pedestal from './Pedestal.astro';
+import { marca } from '../../lib/rico';
+import { contato, linkWhats } from '../../data/contato';
+import type { Nicho } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+}
+const f = Astro.props.n.final;
+const tamanho = '(min-width: 48rem) 150px, 32vw';
+---
+<section class="secao final" id="final" aria-labelledby="t-final">
+  <div class="wrap final-in">
+    <div class="final-par" data-revelar="subir" data-revelar-filhos style={`--n:${f.pedestais.length}`}>
+      {f.pedestais.map((p) => (
+        <div class="mini-pedestal">
+          <Pedestal p={p} sizes={tamanho} larguras={[160, 240, 320]} />
+        </div>
+      ))}
+    </div>
+    <h2 data-revelar="linhas" id="t-final">{f.titulo}</h2>
+    <p class="final-texto" data-revelar="subir" set:html={marca(f.texto)} />
+    <div data-revelar="subir">
+      <a class="botao botao-cta botao-final" id="cta-final" data-magnetico="0.25" href={linkWhats(f.mensagem)} target="_blank" rel="noopener">{f.botao}</a>
+    </div>
+    <p class="final-rodape">{contato.marca} · {contato.rede}</p>
+  </div>
+</section>
+
+<style>
+  .final {
+    position: relative;
+    overflow: clip;
+    background: var(--petroleo);
+    color: #f4f1eb;
+    padding-block: calc(var(--esp) * 1.1) var(--esp);
+  }
+  .final-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .final-par {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr));
+    gap: 12px;
+    width: min(100%, calc(160px * var(--n, 2)));
+    margin-bottom: 28px;
+  }
+  .mini-pedestal {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    background: var(--folha);
+    border-radius: var(--r-medio);
+    overflow: hidden;
+    box-shadow: 0 22px 36px -26px rgb(0 0 0 / 0.75);
+  }
+  .final h2 {
+    color: #fff;
+    max-width: 18ch;
+    font-size: var(--t-final);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    margin-inline: auto;
+  }
+  .final-texto {
+    margin-top: 1em;
+    color: #e2ecea;
+    font-size: var(--t1);
+    max-width: 48ch;
+  }
+  .botao-final {
+    margin-top: 28px;
+    min-height: 58px;
+    font-size: 1.0625rem;
+    padding-inline: 1.8em;
+    box-shadow: 0 0 0 4px rgb(255 255 255 / 0.12), 0 18px 30px -16px rgb(0 0 0 / 0.6);
+  }
+  .final-rodape {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid rgb(244 241 235 / 0.22);
+    width: 100%;
+    font-size: var(--t-sm);
+    color: #d3e2e0;
+  }
+  .final :focus-visible {
+    outline-color: var(--pend);
+  }
+  @media (max-width: 599.98px) {
+    .final-in > div:has(.botao-final) {
+      width: 100%;
+    }
+    .botao-final {
+      width: 100%;
+    }
+  }
+</style>

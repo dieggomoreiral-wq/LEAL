@@ -1,0 +1,52 @@
+---
+// Versão 2 (venda direta) de uma LP de equipamento, para o teste A/B com a
+// versão de comparação (Pagina.astro). Junta os dados do nicho (aparelhos,
+// fotos, ficha, quem atende, rodapé) com os textos da versão direta.
+// Fica fora do Google (noindex): é página de campanha, e a de comparação é a
+// que concorre na busca orgânica.
+import Base from '../../layouts/Base.astro';
+import Abertura from './Abertura.astro';
+import Ofertas from './Ofertas.astro';
+import Comparar from './Comparar.astro';
+import Atende from './Atende.astro';
+import Confira from './Confira.astro';
+import Fechamento from './Fechamento.astro';
+import type { Nicho, VersaoDireta } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+  v: VersaoDireta;
+}
+const { n, v } = Astro.props;
+const msg = Object.fromEntries(v.ofertas.cartoes.map((c) => [c.id, c.mensagem]));
+
+const d: Nicho = {
+  ...n,
+  slug: v.slug,
+  seo: v.seo,
+  mensagemPrincipal: v.mensagemPrincipal,
+  mensagemBarra: v.mensagemBarra,
+  hero: { ...n.hero, ...v.hero },
+  comparar: {
+    ...n.comparar,
+    titulo: v.ficha.titulo,
+    abertura: v.ficha.abertura,
+    criterio: undefined,
+    notas: v.ficha.notas,
+    botaoPrefixo: v.ficha.botaoPrefixo,
+    aparelhos: n.comparar.aparelhos.map((a) => ({ ...a, mensagem: msg[a.id] ?? a.mensagem })),
+  },
+  atende: { ...n.atende, titulo: v.compra.titulo, passosTitulo: v.compra.passosTitulo, passos: v.compra.passos },
+  confira: { titulo: v.perguntas.titulo, perguntas: v.perguntas.itens },
+  final: { ...n.final, ...v.final },
+};
+---
+<Base titulo={d.seo.titulo} descricao={d.seo.descricao} mensagem={d.mensagemBarra ?? d.mensagemPrincipal} rodapeMarcas={d.rodapeMarcas} rodapeUso={d.rodapeUso} rotuloBarra="Pedir orçamento no WhatsApp">
+  <meta slot="head" name="robots" content="noindex, follow" />
+  <Abertura n={d} />
+  <Ofertas n={d} v={v} />
+  <Comparar n={d} />
+  <Atende n={d} />
+  <Confira n={d} />
+  <Fechamento n={d} />
+</Base>

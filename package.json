@@ -1,0 +1,26 @@
+{
+  "name": "site-leal-tecnologia-e-saude",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --port 4330",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.2.0",
+    "astro": "7.3.8",
+    "gsap": "3.15.0",
+    "lenis": "1.3.26"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
+  }
+}

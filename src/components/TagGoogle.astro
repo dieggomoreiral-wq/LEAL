@@ -1,0 +1,31 @@
+---
+// Google Tag Manager com Consent Mode v2 (22/11/2026). Vai no <head>.
+// Começa tudo negado; a escolha guardada no aparelho (Consentimento.astro)
+// libera a medição dos anúncios. Sem PUBLIC_GTM_ID não renderiza nada.
+import { gtmId, CHAVE_CONSENTIMENTO } from '../data/site';
+const chave = CHAVE_CONSENTIMENTO;
+---
+{gtmId && (
+  <script is:inline define:vars={{ gtmId, chave }}>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    var escolha = null;
+    try { escolha = localStorage.getItem(chave); } catch (e) {}
+    var sim = escolha === 'sim' ? 'granted' : 'denied';
+    window.gtag('consent', 'default', {
+      ad_storage: sim,
+      ad_user_data: sim,
+      ad_personalization: 'denied',
+      analytics_storage: sim,
+      wait_for_update: 500,
+    });
+    window.gtag('set', 'url_passthrough', true);
+    (function (w, d, s, l, i) {
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', gtmId);
+  </script>
+)}

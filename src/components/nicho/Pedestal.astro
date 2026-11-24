@@ -1,0 +1,50 @@
+---
+// Foto do aparelho dentro de um pedestal 3:4 (o quadro é do componente pai).
+// 'giro': o giro de 360° do Hakon; 'recorte': recorte transparente alto,
+// ocupando a altura; 'contem': foto contida, apoiada na base.
+import Foto from '../Foto.astro';
+import Giro from '../fx/Giro.astro';
+import type { FotoPedestal } from '../../data/nichos/tipos';
+
+interface Props {
+  p: FotoPedestal;
+  sizes: string;
+  larguras: number[];
+  prioridade?: 'alta' | 'baixa';
+}
+const { p, sizes, larguras, prioridade } = Astro.props;
+---
+{p.encaixe === 'giro' ? (
+  <Giro sizes={sizes} />
+) : (
+  <div class:list={['produto', `encaixe-${p.encaixe}`]} style={p.escala ? `--escala:${p.escala}` : undefined}>
+    <Foto src={p.foto} alt={p.alt} larguras={larguras} sizes={sizes} prioridade={prioridade} />
+  </div>
+)}
+
+<style>
+  .produto {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .encaixe-recorte :global(img) {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    height: 92%;
+    width: auto;
+    max-width: none;
+    transform: translateX(-50%);
+  }
+  .encaixe-contem :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: 50% 100%;
+    transform: scale(var(--escala, 1));
+    transform-origin: 50% 92%;
+  }
+</style>

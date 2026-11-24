@@ -1,0 +1,9 @@
+---
+// LP 1, versão 2 (venda direta), refeita em 21/11/2026. Dados em src/data/nichos/diretas.ts.
+// Na publicação, este endereço só leva ao endereço limpo (/depilacao-a-laser).
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import Redireciona from '../components/Redireciona.astro';
+import { depilacaoDireta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <PaginaDireta v={depilacaoDireta} /> : <Redireciona para="/depilacao-a-laser" titulo="Leal Tecnologia e Saúde" />}

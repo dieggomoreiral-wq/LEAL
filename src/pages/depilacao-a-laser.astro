@@ -1,0 +1,11 @@
+---
+// LP 1: máquina de depilação a laser. Texto e fotos em src/data/nichos/depilacao.ts.
+// Publicação (22/11/2026): com MODO=publicacao este endereço limpo serve a v2
+// (venda direta), que é a que vai para o anúncio. A v1 fica só no rascunho.
+import Pagina from '../components/nicho/Pagina.astro';
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import { depilacao } from '../data/nichos/depilacao';
+import { depilacaoDireta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <Pagina n={depilacao} /> : <PaginaDireta v={depilacaoDireta} />}

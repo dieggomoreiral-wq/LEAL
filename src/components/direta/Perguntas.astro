@@ -1,0 +1,112 @@
+---
+// v2, bloco 6. No máximo seis perguntas, as que travam a compra (a do custo
+// de manter voltou da v1 em 21/11, a pedido do tráfego). A da
+// demonstração só entra com a demonstração confirmada pela rede; sem ela,
+// vai a pergunta do nicho. Uma aberta por vez (.faq em interacoes.ts).
+import { preencher } from '../../lib/direta';
+import type { ComumDireta, CondicoesRede, Pergunta, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { v, c, comum } = Astro.props;
+const lista: Pergunta[] = [
+  comum.perguntaPorQueLeal,
+  comum.perguntaOperar,
+  comum.perguntaMaisBarato,
+  v.perguntas.manter,
+  c.demonstracao.estado === 'confirmado' ? comum.perguntaDemonstracao : v.perguntas.doNicho,
+  v.perguntas.variantes,
+].slice(0, 6);
+---
+<section class="secao perguntas" id="perguntas" aria-labelledby="t-perg">
+  <div class="wrap perg-grid">
+    <h2 data-revelar="linhas" id="t-perg">{v.perguntas.titulo}</h2>
+    <div class="faq" data-revelar="subir" data-revelar-filhos>
+      {lista.map((x) => (
+        <details name="perguntas" open={x.aberta}>
+          <summary><h3 set:html={preencher(x.pergunta, v, c)} /><span class="chevron" aria-hidden="true"></span></summary>
+          <div class="abre" set:html={preencher(x.resposta, v, c)} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .perguntas {
+    background: var(--papel-2);
+  }
+  .perguntas h2 {
+    font-size: var(--t3);
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .faq {
+    margin-top: var(--esp-int);
+    border-top: 1px solid var(--linha-forte);
+  }
+  .faq details {
+    border-bottom: 1px solid var(--linha-forte);
+  }
+  .faq summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 64px;
+    padding-block: 16px;
+    cursor: pointer;
+    list-style: none;
+    color: var(--tinta);
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary h3 {
+    font-size: var(--t1);
+    font-weight: 600;
+    font-stretch: 102%;
+    transition: color 0.3s var(--curva-saida), translate 0.5s var(--curva);
+  }
+  .faq summary .chevron {
+    color: var(--petroleo);
+    flex: none;
+  }
+  .faq details[open] summary h3 {
+    color: var(--petroleo);
+  }
+  @media (hover: hover) {
+    .faq summary:hover h3 {
+      color: var(--petroleo);
+      translate: 4px 0;
+    }
+  }
+  .faq .abre {
+    padding-bottom: 22px;
+    max-width: 66ch;
+    display: grid;
+    gap: 0.8em;
+    color: var(--tinta-2);
+  }
+  @media (min-width: 900px) {
+    .perg-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+      gap: clamp(40px, 5vw, 96px);
+      align-items: start;
+    }
+    .perg-grid h2 {
+      position: sticky;
+      top: calc(var(--topo) + 40px);
+    }
+    .faq {
+      margin-top: 0;
+    }
+  }
+</style>

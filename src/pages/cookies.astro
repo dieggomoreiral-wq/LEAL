@@ -1,0 +1,33 @@
+---
+// Aviso de cookies (22/11/2026). Descreve o que a TagGoogle e o
+// Consentimento fazem: tudo negado até o aceite, sem anúncio personalizado.
+import Documento from '../layouts/Documento.astro';
+import { gtmId } from '../data/site';
+---
+<Documento titulo="Aviso de cookies" descricao="Quais cookies estas páginas usam e como mudar a sua escolha." atualizado="22/11/2026">
+  <p>Cookies são pequenos arquivos que um site guarda no seu navegador. Estas páginas usam poucos, e os de anúncio só com o seu aceite.</p>
+
+  <h2>O que usamos</h2>
+  <ul>
+    <li><strong>A sua escolha sobre cookies.</strong> Guardamos no seu navegador se você aceitou ou recusou, para não perguntar de novo. Sem isso, o site não consegue respeitar a sua escolha.</li>
+    <li><strong>Medição dos anúncios (Google Tag Manager e Google Ads), só com o seu aceite.</strong> Registram que você chegou por um anúncio, tocou no botão do WhatsApp e, se marcou, qual aparelho e prazo de compra escolheu, para sabermos quais anúncios trazem pedidos. O nome e o prazo de cada cookie seguem a <a href="https://policies.google.com/technologies/cookies?hl=pt-BR" rel="noopener">política de cookies do Google</a>.</li>
+    <li><strong>Vídeos do YouTube, em algumas páginas.</strong> A capa do vídeo vem dos servidores do YouTube. Se você tocar no play, o vídeo abre no modo de privacidade reforçada do YouTube, que pode guardar dados no seu navegador conforme a política do Google.</li>
+  </ul>
+
+  <h2>Se você recusar</h2>
+  <p>Nenhum cookie de anúncio é gravado. O Google ainda recebe avisos sem cookie quando a página abre e quando você toca no botão do WhatsApp. Eles levam a hora, o tipo de navegador, a página de onde você veio e se você chegou por um anúncio, e servem para estimar o resultado dos anúncios no total. Segundo o Google, esses avisos não identificam você. Para isso, o código do clique no anúncio pode seguir no endereço das páginas que você abrir aqui.</p>
+  <p>Não usamos os seus dados para mostrar anúncios personalizados.</p>
+
+  <h2>Como mudar a sua escolha</h2>
+  {gtmId ? (
+    <>
+      <p>Toque no botão abaixo e escolha de novo. Se você tinha aceitado e agora recusar, os cookies já gravados deixam de ser usados para medir os anúncios, mas continuam no navegador até você apagá-los nos ajustes dele.</p>
+      <button type="button" class="botao botao-linha" data-cookie-reabrir>Mudar minha escolha</button>
+    </>
+  ) : (
+    <p>Você pode apagar os cookies nos ajustes do seu navegador.</p>
+  )}
+
+  <h2>Dúvidas</h2>
+  <p>Como tratamos os seus dados e como pedir acesso ou exclusão está na <a href="/privacidade">Política de privacidade</a>.</p>
+</Documento>

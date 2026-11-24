@@ -1,0 +1,64 @@
+---
+// Selo giratório "Unidade Independente da Rede ISP". O giro é animação CSS
+// de transform, que roda no compositor sem tocar o JavaScript.
+import { contato } from '../../data/contato';
+
+interface Props {
+  class?: string;
+}
+const { class: classe } = Astro.props;
+---
+<div class:list={['selo', classe]} role="img" aria-label={contato.rede}>
+  <svg class="selo-texto" viewBox="0 0 200 200" aria-hidden="true">
+    <defs><path id="selo-circulo" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"></path></defs>
+    <text><textPath href="#selo-circulo" textLength="470" lengthAdjust="spacing">{`${contato.rede.toUpperCase()} · `}</textPath></text>
+  </svg>
+  <span class="selo-centro" aria-hidden="true"></span>
+</div>
+
+<style>
+  .selo {
+    position: relative;
+    width: var(--selo);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--petroleo);
+    color: #f4f1eb;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 0 5px var(--papel), 0 18px 30px -18px rgb(11 74 80 / 0.7);
+  }
+  .selo-texto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    animation: girar 32s linear infinite;
+  }
+  .selo-texto text {
+    font-family: var(--f);
+    font-size: 18px;
+    font-weight: 650;
+    font-stretch: 100%;
+    letter-spacing: 0.08em;
+    fill: currentColor;
+  }
+  .selo-centro {
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1.5px solid rgb(244 241 235 / 0.7);
+    display: grid;
+    place-items: center;
+  }
+  .selo-centro::after {
+    content: '';
+    width: 34%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #f4f1eb;
+  }
+  @keyframes girar {
+    to { transform: rotate(360deg); }
+  }
+</style>

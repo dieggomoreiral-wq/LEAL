@@ -1,0 +1,216 @@
+---
+// 4. Quem atende e como funciona a compra. Bloco da empresa (quem vende) antes
+// dos passos, com ícone de conversa; nenhum nome de pessoa. Linha do tempo vertical no
+// celular e horizontal no desktop; cada passo acende ao entrar na tela
+// (.desenha → .visto, movimento.ts). Sem botão. Privacidade em letra
+// pequena, nunca em pop-up.
+import { marca } from '../../lib/rico';
+import type { Nicho } from '../../data/nichos/tipos';
+
+interface Props {
+  n: Nicho;
+}
+const a = Astro.props.n.atende;
+---
+<section class="secao atende" id="atende" aria-labelledby="t-atende">
+  <div class="wrap">
+    <h2 data-revelar="linhas" id="t-atende">{a.titulo}</h2>
+
+    <div class="empresa" data-revelar="subir">
+      <span class="empresa-foto" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16v11H10l-4.5 3.5v-3.5H4z"></path><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"></path></svg>
+      </span>
+      <div class="empresa-texto">
+        <p class="empresa-rotulo">{a.pessoa.rotulo}</p>
+        <p class="empresa-nome">{a.pessoa.nome}</p>
+        {a.pessoa.linhas.map((l) => <p set:html={marca(l)} />)}
+        {a.pessoa.pendencia && <p class="empresa-pend"><span class="pend">{a.pessoa.pendencia}</span></p>}
+      </div>
+    </div>
+
+    <h3 class="passos-titulo" data-revelar="subir">{a.passosTitulo}</h3>
+    <ol class="passos" role="list" style={`--n:${a.passos.length}`}>
+      {a.passos.map((p, i) => (
+        <li class="passo desenha">
+          <span class="passo-ponto" aria-hidden="true">{i + 1}</span>
+          <p set:html={marca(p)} />
+        </li>
+      ))}
+    </ol>
+
+    <p class="privacidade" set:html={marca(a.privacidade)} />
+  </div>
+</section>
+
+<style>
+  .empresa {
+    margin-top: var(--esp-int);
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+    max-width: 560px;
+    padding: 22px;
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+  }
+  .empresa-foto {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    background: var(--petroleo);
+    color: #fff;
+  }
+  .empresa-foto svg {
+    width: 32px;
+    height: 32px;
+  }
+  .empresa-texto {
+    display: grid;
+    gap: 2px;
+    line-height: 1.45;
+    color: var(--tinta-2);
+  }
+  .empresa-rotulo {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--petroleo);
+  }
+  .empresa-nome {
+    font-size: var(--t-item);
+    font-weight: 680;
+    font-stretch: 106%;
+    color: var(--tinta);
+    margin-bottom: 4px;
+  }
+  .empresa-pend {
+    margin-top: 8px;
+    font-size: var(--t-sm);
+  }
+  @media (min-width: 48rem) {
+    .empresa {
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 24px;
+      padding: 28px;
+    }
+    .empresa-foto {
+      width: 96px;
+      height: 96px;
+    }
+    .empresa-foto svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .passos-titulo {
+    margin-top: var(--esp);
+    font-size: var(--t2);
+  }
+  .passos {
+    list-style: none;
+    margin-top: var(--esp-int);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .passo {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 16px;
+    padding-bottom: 24px;
+  }
+  .passo::before,
+  .passo::after {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 44px;
+    bottom: 0;
+    width: 2px;
+    background: var(--linha-forte);
+  }
+  /* Trilho aceso: desenha de cima para baixo quando o passo entra */
+  .passo::after {
+    background: var(--petroleo);
+    transform-origin: 50% 0;
+    transition: transform 0.9s var(--curva) 0.15s;
+  }
+  .passo:last-child::before,
+  .passo:last-child::after {
+    display: none;
+  }
+  .passo-ponto {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: var(--petroleo);
+    border: 1.5px solid var(--petroleo);
+    color: #fff;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    transition: background-color 0.5s var(--curva-saida), border-color 0.5s var(--curva-saida), color 0.5s var(--curva-saida), scale 0.6s var(--curva);
+  }
+  .passo p {
+    padding-top: 9px;
+    line-height: 1.5;
+    color: var(--tinta-2);
+  }
+  .passo strong {
+    color: var(--tinta);
+    font-weight: 650;
+  }
+  :global(.movimento:not(.sem-movimento)) .passo.desenha:not(:global(.visto)) .passo-ponto {
+    background: var(--folha);
+    border-color: var(--linha-forte);
+    color: var(--tinta-2);
+    scale: 0.9;
+  }
+  :global(.movimento:not(.sem-movimento)) .passo.desenha:not(:global(.visto))::after {
+    transform: scaleY(0);
+  }
+  @media (min-width: 900px) {
+    .passos {
+      grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+      gap: 24px;
+    }
+    .passo {
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding-bottom: 0;
+    }
+    .passo::before,
+    .passo::after {
+      left: 52px;
+      right: -16px;
+      top: 21px;
+      bottom: auto;
+      width: auto;
+      height: 2px;
+    }
+    .passo::after {
+      transform-origin: 0 50%;
+    }
+    :global(.movimento:not(.sem-movimento)) .passo.desenha:not(:global(.visto))::after {
+      transform: scaleX(0);
+    }
+    .passo p {
+      padding-top: 0;
+    }
+  }
+
+  .privacidade {
+    margin-top: 32px;
+    max-width: 80ch;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    line-height: 1.75;
+  }
+</style>

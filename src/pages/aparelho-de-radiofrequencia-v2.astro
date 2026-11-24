@@ -1,0 +1,9 @@
+---
+// LP 5, versão 2 (venda direta), refeita em 21/11/2026. Dados em src/data/nichos/diretas.ts.
+// Na publicação, este endereço só leva ao endereço limpo (/aparelho-de-radiofrequencia).
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import Redireciona from '../components/Redireciona.astro';
+import { radiofrequenciaDireta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <PaginaDireta v={radiofrequenciaDireta} /> : <Redireciona para="/aparelho-de-radiofrequencia" titulo="Leal Tecnologia e Saúde" />}

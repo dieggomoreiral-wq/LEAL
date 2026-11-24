@@ -1,0 +1,184 @@
+---
+// v2, bloco 5. Como a compra anda, em três passos numa linha que se
+// desenha, e a faixa de quem é a empresa (marca, rede, razão social, CNPJ).
+import { contato } from '../../data/contato';
+import { pilula, preencher } from '../../lib/direta';
+import type { ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { v, c, comum } = Astro.props;
+const p = (t: string) => preencher(t, v, c);
+const passos = [comum.compra.passo1, comum.compra.passo2, comum.compra.passo3];
+const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : '';
+---
+<section class="secao compra" id="compra" aria-labelledby="t-compra">
+  <div class="wrap">
+    <h2 data-revelar="linhas" id="t-compra">{v.compra.titulo}</h2>
+
+    <ol class="passos desenha" role="list">
+      {passos.map((t, i) => (
+        <li class="passo" style={`--i:${i}`}>
+          <span class="passo-n" aria-hidden="true">{i + 1}</span>
+          <p set:html={p(t)} />
+        </li>
+      ))}
+    </ol>
+
+    <div class="empresa" data-revelar="subir">
+      <p class="emp-rotulo">Quem atende</p>
+      <p class="emp-marca">{contato.marca}</p>
+      <p class="emp-rede">{contato.rede}</p>
+      <p class="emp-dados">
+        {contato.razaoSocial} · CNPJ <span class="nb">{contato.cnpj}</span>
+        {endereco ? <> · {endereco}</> : null} · {contato.cidade}
+        {c.enderecoLeal.estado === 'trava' && <Fragment set:html={' ' + pilula(c.enderecoLeal)} />}
+      </p>
+      <p class="emp-dados" set:html={p('Atendimento no WhatsApp %HORARIO%.')} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .compra h2 {
+    font-size: var(--t3);
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 20ch;
+  }
+  .passos {
+    position: relative;
+    list-style: none;
+    margin-top: var(--esp-int);
+    display: grid;
+    gap: 26px;
+    padding-left: 2px;
+  }
+  /* A linha que liga os passos se desenha quando a lista entra. */
+  .passos::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: var(--petroleo);
+    transform-origin: 50% 0;
+  }
+  .passo {
+    position: relative;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .passo-n {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--papel);
+    border: 2px solid var(--petroleo);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--petroleo);
+  }
+  .passo p {
+    padding-top: 7px;
+    font-size: var(--t1);
+    line-height: 1.45;
+    color: var(--tinta);
+    max-width: 44ch;
+  }
+  .emp-rotulo {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--petroleo);
+    margin-bottom: 4px;
+  }
+  .empresa {
+    margin-top: var(--esp);
+    padding-top: 20px;
+    border-top: 1px solid var(--linha-forte);
+    display: grid;
+    gap: 4px;
+  }
+  .emp-marca {
+    font-size: var(--t2);
+    font-weight: 700;
+    font-stretch: 90%;
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+  }
+  .emp-rede {
+    font-weight: 650;
+    color: var(--petroleo);
+  }
+  .emp-dados {
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+  }
+
+  @media (min-width: 900px) {
+    .passos {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(24px, 3vw, 48px);
+      padding-left: 0;
+    }
+    .passos::before {
+      left: 20px;
+      right: calc(33.33% - 20px);
+      top: 19px;
+      bottom: auto;
+      width: auto;
+      height: 2px;
+      transform-origin: 0 50%;
+    }
+    .passo {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+    .passo p {
+      padding-top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.movimento) .passos:not(:global(.visto))::before {
+      transform: scaleY(0);
+    }
+    :global(.movimento) .passos::before {
+      transition: transform 1.2s var(--curva);
+    }
+    :global(.movimento) .passos:not(:global(.visto)) .passo {
+      opacity: 0;
+      translate: 0 12px;
+    }
+    :global(.movimento) .passo {
+      transition: opacity 0.6s var(--curva-saida), translate 0.8s var(--curva);
+      transition-delay: calc(var(--i) * 0.28s + 0.1s);
+    }
+  }
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    :global(.movimento) .passos:not(:global(.visto))::before {
+      transform: scaleX(0);
+    }
+  }
+  /* Sem o script em 4 s, mostra tudo. */
+  :global(.sem-movimento) .passos::before,
+  :global(.sem-movimento) .passo {
+    transform: none !important;
+    opacity: 1 !important;
+    translate: none !important;
+  }
+</style>

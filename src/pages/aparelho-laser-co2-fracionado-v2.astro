@@ -1,0 +1,9 @@
+---
+// LP 6, versão 2 (venda direta), refeita em 21/11/2026. Dados em src/data/nichos/diretas.ts.
+// Na publicação, este endereço só leva ao endereço limpo (/aparelho-laser-co2-fracionado).
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import Redireciona from '../components/Redireciona.astro';
+import { laserCo2Direta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <PaginaDireta v={laserCo2Direta} /> : <Redireciona para="/aparelho-laser-co2-fracionado" titulo="Leal Tecnologia e Saúde" />}

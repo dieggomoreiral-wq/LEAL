@@ -1,0 +1,140 @@
+---
+// v2, bloco 2. A única faixa escura da página: como paga, para onde vai,
+// de quem compra e quando chega a proposta. Os valores vêm de condicoes.ts.
+import { mostrar, pilula } from '../../lib/direta';
+import type { ComumDireta, CondicoesRede } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { c, comum } = Astro.props;
+const r = comum.condicoes;
+
+const celulas = [
+  {
+    rotulo: r.pagamento,
+    grande: mostrar(c.pagamento),
+    linha: '',
+  },
+  {
+    rotulo: r.entrega,
+    grande: mostrar(c.entregaArea),
+    linha: c.entregaPrazo.estado === 'confirmado' ? c.entregaPrazo.valor : 'O prazo e o frete dependem do estado e saem na proposta.',
+  },
+  {
+    rotulo: r.quemVende,
+    grande: 'Rede ISP',
+    linha:
+      c.quemVende.estado === 'confirmado'
+        ? `${c.quemVende.valor.razaoSocial} vende e emite a nota fiscal. A Leal atende a sua compra.`
+        : `A Rede ISP vende e emite a nota fiscal. A Leal atende a sua compra. ${pilula(c.quemVende)}`,
+  },
+  {
+    rotulo: r.proposta,
+    grande: 'No WhatsApp',
+    linha: `O preço e a condição de pagamento saem ${mostrar(c.propostaEm)}.`,
+  },
+];
+// Tráfego (21/11): com menos de 3 das 4 condições confirmadas, a faixa vira
+// uma fileira de "vai na proposta" e lê como esquiva. Some até a rede responder;
+// as travas continuam no painel de pendências.
+const confirmadas = [c.pagamento, c.entregaArea, c.quemVende, c.propostaEm].filter((f) => f.estado === 'confirmado').length;
+const mostrarFaixa = confirmadas >= 3;
+---
+{mostrarFaixa && <section class="condicoes" id="condicoes" aria-labelledby="t-cond">
+  <div class="wrap">
+    <h2 class="sr" id="t-cond">Condições de compra</h2>
+    <ul class="cond-grade" role="list" data-revelar="subir" data-revelar-filhos>
+      {celulas.map((x, i) => (
+        <li class="cond">
+          <span class="cond-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <span class="cond-rotulo">{x.rotulo}</span>
+          <strong class="cond-grande" set:html={x.grande} />
+          {x.linha && <span class="cond-linha" set:html={x.linha} />}
+        </li>
+      ))}
+    </ul>
+    <p class="cond-preco">{r.precoNaProposta}</p>
+  </div>
+</section>}
+
+<style>
+  .condicoes {
+    background: var(--tinta);
+    color: #f4f1eb;
+    padding-block: clamp(2.5rem, 1.6rem + 4vw, 5.5rem);
+  }
+  .cond-grade {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: rgb(244 241 235 / 0.16);
+    border-block: 1px solid rgb(244 241 235 / 0.16);
+  }
+  .cond {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 14px 20px 0;
+    background: var(--tinta);
+    min-width: 0;
+  }
+  .cond:nth-child(even) {
+    padding-left: 14px;
+  }
+  .cond-num {
+    font-size: var(--t-xs);
+    font-variant-numeric: tabular-nums;
+    color: rgb(244 241 235 / 0.45);
+  }
+  .cond-rotulo {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #9fc9c4;
+  }
+  .cond-grande {
+    font-size: clamp(1.25rem, 1rem + 1.6vw, 2.5rem);
+    font-weight: 700;
+    font-stretch: 88%;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+    overflow-wrap: anywhere;
+  }
+  .cond-grande:empty {
+    display: none;
+  }
+  .cond-linha {
+    font-size: var(--t-sm);
+    line-height: 1.45;
+    color: #c9d2d0;
+  }
+  .cond-preco {
+    margin-top: 18px;
+    font-size: var(--t1);
+    font-weight: 600;
+    color: #fff;
+  }
+  .condicoes :global(.pend) {
+    font-size: var(--t-xs);
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  @media (min-width: 900px) {
+    .cond-grade {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .cond,
+    .cond:nth-child(even) {
+      padding: 28px 24px 32px;
+    }
+    .cond:first-child {
+      padding-left: 0;
+    }
+  }
+</style>

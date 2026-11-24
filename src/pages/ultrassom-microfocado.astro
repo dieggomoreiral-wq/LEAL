@@ -1,0 +1,11 @@
+---
+// LP 2: máquina de ultrassom microfocado. Texto e fotos em src/data/nichos/ultrassom.ts.
+// Publicação (22/11/2026): com MODO=publicacao este endereço limpo serve a v2
+// (venda direta), que é a que vai para o anúncio. A v1 fica só no rascunho.
+import Pagina from '../components/nicho/Pagina.astro';
+import PaginaDireta from '../components/direta/PaginaDireta.astro';
+import { ultrassom } from '../data/nichos/ultrassom';
+import { ultrassomDireta } from '../data/nichos/diretas';
+import { rascunho } from '../lib/direta';
+---
+{rascunho ? <Pagina n={ultrassom} /> : <PaginaDireta v={ultrassomDireta} />}

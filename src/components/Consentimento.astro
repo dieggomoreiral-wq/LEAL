@@ -1,0 +1,111 @@
+---
+// Aviso de cookies (22/11/2026). Só aparece com a tag do Google ligada e
+// enquanto a pessoa não escolheu. Aceitar libera a medição dos anúncios;
+// recusar mantém tudo negado. A página /cookies tem o botão para mudar.
+import { gtmId, CHAVE_CONSENTIMENTO } from '../data/site';
+const chave = CHAVE_CONSENTIMENTO;
+---
+{gtmId && (
+  <div class="cookie" id="cookie" role="region" aria-label="Aviso de cookies" hidden>
+    <p class="cookie-texto">
+      Usamos cookies do Google para saber quais anúncios trazem pedidos. Você escolhe.
+      <a href="/cookies">Aviso de cookies</a>
+    </p>
+    <div class="cookie-botoes">
+      <button type="button" class="botao botao-linha" data-cookie="nao">Recusar</button>
+      <button type="button" class="botao botao-linha" data-cookie="sim">Aceitar</button>
+    </div>
+  </div>
+)}
+
+{gtmId && (
+  <script is:inline define:vars={{ chave }}>
+    (function () {
+      var caixa = document.getElementById('cookie');
+      if (!caixa) return;
+      var raiz = document.documentElement;
+      function abrir() {
+        caixa.hidden = false;
+        raiz.classList.add('cookie-aberto');
+        raiz.style.setProperty('--cookie-h', caixa.offsetHeight + 'px');
+      }
+      function fechar() {
+        caixa.hidden = true;
+        raiz.classList.remove('cookie-aberto');
+      }
+      var escolha = null;
+      try { escolha = localStorage.getItem(chave); } catch (e) {}
+      if (escolha !== 'sim' && escolha !== 'nao') abrir();
+      caixa.addEventListener('click', function (e) {
+        var b = e.target instanceof Element ? e.target.closest('[data-cookie]') : null;
+        if (!b) return;
+        var sim = b.getAttribute('data-cookie') === 'sim';
+        try { localStorage.setItem(chave, sim ? 'sim' : 'nao'); } catch (err) {}
+        if (window.gtag) {
+          var v = sim ? 'granted' : 'denied';
+          window.gtag('consent', 'update', { ad_storage: v, ad_user_data: v, analytics_storage: v });
+        }
+        fechar();
+      });
+      // Botão "Mudar minha escolha" da página /cookies.
+      document.addEventListener('click', function (e) {
+        var m = e.target instanceof Element ? e.target.closest('[data-cookie-reabrir]') : null;
+        if (!m) return;
+        try { localStorage.removeItem(chave); } catch (err) {}
+        abrir();
+      });
+    })();
+  </script>
+)}
+
+<style>
+  .cookie {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 40;
+    display: grid;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--folha);
+    color: var(--tinta);
+    border: 1px solid var(--linha-forte);
+    border-radius: 16px;
+    box-shadow: 0 18px 40px -18px rgb(13 20 22 / 0.45);
+    font-size: var(--t-sm);
+    line-height: 1.45;
+  }
+  .cookie[hidden] {
+    display: none;
+  }
+  .cookie-texto a {
+    color: var(--petroleo);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+  .cookie-botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cookie-botoes .botao {
+    min-height: 44px;
+    padding-inline: 1em;
+  }
+  /* A barra fixa do WhatsApp sobe enquanto o aviso estiver aberto. */
+  :global(html.cookie-aberto .wa-fixo) {
+    bottom: calc(24px + var(--cookie-h, 120px) + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 720px) {
+    .cookie {
+      left: auto;
+      right: 20px;
+      bottom: 20px;
+      max-width: 420px;
+    }
+  }
+</style>

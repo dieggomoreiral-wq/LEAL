@@ -1,0 +1,90 @@
+---
+// Rodapé (copy v5). "usadas com autorização" só vai ao ar com a autorização
+// em mãos (trava 3 do guardião): até lá, pílula.
+import { contato } from '../data/contato';
+import { marca } from '../lib/rico';
+
+interface Props {
+  /** Marcas, imagens e vídeos de cada LP. */
+  marcas: string;
+  /** Linha de uso profissional, se diferente da padrão. */
+  uso?: string;
+  endereco?: string;
+  politicas?: { privacidade: string; cookies: string };
+}
+const {
+  marcas,
+  endereco,
+  politicas,
+  uso = 'Equipamentos destinados a uso profissional. O uso segue o registro de cada aparelho na Anvisa, o manual do fabricante e as regras do conselho de quem opera.',
+} = Astro.props;
+---
+<footer class="rodape" id="rodape">
+  <div class="wrap">
+    <p>{contato.razaoSocial} · {contato.marca} · CNPJ {contato.cnpj}{endereco ? ` · ${endereco}` : ''} · {contato.cidade}</p>
+    <p><strong>{contato.rede}.</strong></p>
+    <p class="texto">{uso}</p>
+    <p class="texto" set:html={marca(marcas)} />
+    <p class="rodape-links"><a href={politicas?.privacidade ?? '#'}>Política de privacidade</a> · <a href={politicas?.cookies ?? '#'}>Aviso de cookies</a></p>
+  </div>
+  <!-- Nome gigante: decorativo, o nome já está escrito acima -->
+  <div class="rodape-nome" aria-hidden="true"><span data-nome-gigante>{contato.marca}</span></div>
+</footer>
+
+<style>
+  .rodape {
+    position: relative;
+    overflow: clip;
+    padding-top: 40px;
+    background: var(--escuro);
+    font-size: var(--t-xs);
+    color: #b9c3c1;
+    line-height: 1.6;
+  }
+  .rodape p + p {
+    margin-top: 0.8em;
+  }
+  .rodape strong {
+    color: #f4f1eb;
+  }
+  .rodape-links a {
+    color: #f4f1eb;
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    padding-bottom: 1px;
+  }
+  .rodape-links a:hover {
+    background-size: 100% 2px;
+  }
+  .rodape :focus-visible {
+    outline-color: var(--pend);
+  }
+  .rodape-nome {
+    margin-top: clamp(32px, 6vw, 72px);
+    padding-inline: var(--pad);
+    line-height: 0;
+    overflow: hidden;
+  }
+  .rodape-nome span {
+    display: block;
+    width: max-content;
+    font-size: 9.6vw;
+    font-weight: 720;
+    font-stretch: 84%;
+    letter-spacing: -0.04em;
+    line-height: 0.8;
+    color: #3f7a7f;
+    white-space: nowrap;
+    transform-origin: 50% 100%;
+    margin-bottom: -0.06em;
+    padding-top: 0.06em;
+  }
+  @media (min-width: 48rem) {
+    .rodape {
+      padding-top: 56px;
+    }
+    .rodape-nome span {
+      font-size: 10.4vw;
+    }
+  }
+</style>

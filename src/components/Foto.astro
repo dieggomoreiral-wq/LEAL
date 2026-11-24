@@ -1,0 +1,37 @@
+---
+// Foto do produto pelo astro:assets: <picture> com AVIF e WebP, srcset nas
+// larguras pedidas (sem ampliar além do original) e sizes do uso real.
+// width e height vêm do arquivo, então o espaço fica reservado antes da carga.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** Larguras do srcset, em px. */
+  larguras: number[];
+  sizes: string;
+  /** 'alta': LCP (eager + fetchpriority high). 'baixa': eager, mas sem disputar banda. */
+  prioridade?: 'alta' | 'baixa';
+  class?: string;
+  arrastavel?: boolean;
+}
+
+const { src, alt, larguras, sizes, prioridade, class: classe, arrastavel = true } = Astro.props;
+const widths = [...new Set(larguras.map((l) => Math.min(l, src.width)))].sort((a, b) => a - b);
+const transparente = src.format === 'png';
+---
+<Picture
+  src={src}
+  alt={alt}
+  formats={['avif', 'webp']}
+  fallbackFormat={transparente ? 'png' : 'jpg'}
+  widths={widths}
+  sizes={sizes}
+  quality={62}
+  class={classe}
+  loading={prioridade ? 'eager' : 'lazy'}
+  decoding={prioridade === 'alta' ? 'sync' : 'async'}
+  fetchpriority={prioridade === 'alta' ? 'high' : prioridade === 'baixa' ? 'low' : 'auto'}
+  draggable={arrastavel ? undefined : 'false'}
+/>

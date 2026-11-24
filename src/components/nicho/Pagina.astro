@@ -1,0 +1,56 @@
+---
+// Página inteira de uma LP de equipamento: seis seções e o rodapé, a partir
+// dos dados do nicho (src/data/nichos). LP nova = arquivo de dados + página
+// de 3 linhas em src/pages.
+import Base from '../../layouts/Base.astro';
+import Abertura from './Abertura.astro';
+import Vitrine from './Vitrine.astro';
+import Comparar from './Comparar.astro';
+import Atende from './Atende.astro';
+import Confira from './Confira.astro';
+import Fechamento from './Fechamento.astro';
+import type { Nicho } from '../../data/nichos/tipos';
+import { condicoes } from '../../data/condicoes';
+import { contato } from '../../data/contato';
+import { rascunho } from '../../lib/direta';
+
+interface Props {
+  n: Nicho;
+}
+const { n } = Astro.props;
+const politicas = condicoes.politicas.estado === 'confirmado' ? condicoes.politicas.valor : undefined;
+// Publicação (MODO=publicacao): a v1 não sai com pílula [[...]] nem sem o número do WhatsApp.
+if (!rascunho) {
+  const pend = (JSON.stringify(n).match(/\[\[[^\]]*\]\]/g) ?? []).length;
+  if (pend || /CONFIRMAR/.test(contato.whatsapp)) {
+    throw new Error(`${n.slug} (v1): ${pend} pílula(s) [[...]] e WhatsApp ${contato.whatsapp} impedem a publicação`);
+  }
+}
+---
+<Base titulo={n.seo.titulo} descricao={n.seo.descricao} mensagem={n.mensagemBarra ?? n.mensagemPrincipal} rodapeMarcas={n.rodapeMarcas} rodapeUso={n.rodapeUso} politicas={politicas}>
+  <Abertura n={n} />
+  <Vitrine n={n} />
+  <Comparar n={n} />
+  <Atende n={n} />
+  <Confira n={n} />
+  <Fechamento n={n} />
+</Base>
+
+<script is:inline define:vars={{ nicho: n.slug }}>
+  // Mesmo evento da v2 (versao 'v1'), para as duas versões serem comparadas.
+  // A porta é o data-porta, o id do botão ou o id da seção onde ele está.
+  document.addEventListener('click', function (e) {
+    var a = e.target instanceof Element ? e.target.closest('a[href^="https://wa.me/"]') : null;
+    if (!a) return;
+    var secao = a.closest('section[id]');
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'pedido_whatsapp',
+      versao: 'v1',
+      nicho: nicho,
+      porta: a.getAttribute('data-porta') || a.id || (secao ? secao.id : ''),
+      aparelho: a.getAttribute('data-aparelho') || '',
+      momento: '',
+    });
+  });
+</script>

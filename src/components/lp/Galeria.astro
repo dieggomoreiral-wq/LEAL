@@ -1,0 +1,384 @@
+---
+// Galeria do aparelho: trilho com scroll-snap nativo (desliza no toque),
+// miniaturas, setas no desktop, contagem e zoom. Todas as fotos são lazy.
+import Foto from '../Foto.astro';
+import type { FotoGaleria } from '../../data/fotos';
+
+interface Props {
+  nome: string;
+  fotos: FotoGaleria[];
+  /** sizes das fotos grandes */
+  tamanho?: string;
+  /** Vídeo do fabricante como último quadro (só a capa carrega; o iframe entra no clique). */
+  video?: { id: string; titulo: string };
+}
+const { nome, fotos, tamanho = '(min-width: 900px) min(52vw, 667px), calc(100vw - 40px)', video } = Astro.props;
+const total = fotos.length + (video ? 1 : 0);
+---
+<div class="galeria" data-galeria role="group" aria-label={`Fotos do ${nome}`}>
+  <div class="galeria-palco" data-revelar="imagem" data-sem-escala>
+    <div class="galeria-trilho" tabindex="0" aria-label={`Fotos do ${nome}. Deslize ou use as setas do teclado.`}>
+      {fotos.map((f, i) => (
+        <figure class:list={['galeria-item', { ativo: i === 0, escuro: f.escura, pequena: f.pequena, grupo: f.grupo }]}>
+          {f.grupo ? (
+            <ul class="grupo-lista" role="list" aria-label={f.alt}>
+              {f.grupo.map((g) => (
+                <li>
+                  <Foto src={g.src} alt={g.alt} larguras={[160, 240, 320, 480]} sizes="(min-width: 900px) 160px, 28vw" />
+                  <span>{g.nome}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <button class="galeria-zoom" type="button" aria-haspopup="dialog">
+              <Foto src={f.src} alt={f.alt} larguras={[400, 640, 800, 1024, 1280, 1600]} sizes={tamanho} />
+            </button>
+          )}
+        </figure>
+      ))}
+      {video && (
+        <figure class="galeria-item galeria-video">
+          <button class="video-capa" type="button" data-yt={video.id} data-titulo={video.titulo} aria-label={`Reproduzir o ${video.titulo.charAt(0).toLowerCase()}${video.titulo.slice(1)}`}>
+            <img src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`} width="480" height="360" loading="lazy" decoding="async" alt="" />
+            <span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"></path></svg></span>
+          </button>
+          <figcaption class="video-legenda">{video.titulo} <span class="pend">ASSISTIR E APROVAR ANTES DE PUBLICAR</span></figcaption>
+        </figure>
+      )}
+    </div>
+    <p class="galeria-conta" aria-live="polite"><span data-atual>1</span>/{total}</p>
+    <button class="galeria-seta ant" type="button" aria-label="Foto anterior" disabled>
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M11 3.5L5.5 9l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+    <button class="galeria-seta prox" type="button" aria-label="Próxima foto">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M7 3.5L12.5 9 7 14.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </button>
+  </div>
+  <div class="galeria-minis" role="group" aria-label="Miniaturas">
+    {fotos.map((f, i) => (
+      <button class:list={['mini', { escuro: f.escura }]} type="button" aria-label={`Foto ${i + 1} de ${total}`} aria-current={i === 0 ? 'true' : 'false'}>
+        <Foto src={f.src} alt="" larguras={[64, 128]} sizes="64px" />
+      </button>
+    ))}
+    {video && (
+      <button class="mini mini-video" type="button" aria-label={`Vídeo, ${total} de ${total}`} aria-current="false">
+        <img src={`https://i.ytimg.com/vi/${video.id}/default.jpg`} width="120" height="90" loading="lazy" decoding="async" alt="" />
+        <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"></path></svg></span>
+      </button>
+    )}
+  </div>
+</div>
+
+<style>
+  .galeria {
+    min-width: 0;
+  }
+  .galeria-palco {
+    position: relative;
+    border-radius: var(--r-grande);
+  }
+  .galeria-trilho {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+    position: relative;
+  }
+  .galeria-trilho::-webkit-scrollbar {
+    display: none;
+  }
+  .galeria-trilho:focus-visible {
+    outline-offset: 3px;
+  }
+  .galeria-item {
+    flex: 0 0 100%;
+    aspect-ratio: 1 / 1;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    display: grid;
+    place-items: center;
+    transition: opacity 0.45s var(--ease);
+  }
+  :global(.js) .galeria-item:not(:global(.ativo)) {
+    opacity: 0.2;
+  }
+  .galeria-zoom {
+    appearance: none;
+    border: 0;
+    background: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    cursor: zoom-in;
+    color: inherit;
+  }
+  .galeria-zoom:focus-visible {
+    outline-offset: -6px;
+  }
+  .galeria-zoom :global(img) {
+    width: 84%;
+    height: 84%;
+    object-fit: contain;
+    transition: transform 0.45s var(--ease), scale var(--d-foto) var(--curva);
+  }
+  :global(.js) .galeria-item:not(:global(.ativo)) .galeria-zoom :global(img) {
+    transform: scale(0.96);
+  }
+  @media (hover: hover) {
+    .galeria-item:global(.ativo) .galeria-zoom:hover :global(img) {
+      scale: 1.03;
+    }
+  }
+  .galeria-item.escuro {
+    background: var(--escuro);
+  }
+  .galeria-item.escuro .galeria-zoom :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .galeria-item.pequena .galeria-zoom :global(img) {
+    width: auto;
+    height: auto;
+    max-width: 60%;
+  }
+  .galeria-conta {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    background: rgb(30 43 47 / 0.82);
+    color: #f7f4ee;
+    font-size: var(--t-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    padding: 4px 10px;
+    border-radius: 999px;
+    pointer-events: none;
+  }
+  .galeria-seta {
+    display: none;
+  }
+  .galeria-minis {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 12px 3px 4px;
+    position: relative;
+    scroll-snap-type: x proximity;
+  }
+  .galeria-minis::-webkit-scrollbar {
+    display: none;
+  }
+  .mini {
+    flex: 0 0 56px;
+    height: 56px;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1.5px solid var(--linha);
+    background: var(--folha);
+    cursor: pointer;
+    scroll-snap-align: start;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), translate 0.3s var(--curva);
+  }
+  .mini :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .mini.escuro {
+    background: var(--escuro);
+    padding: 0;
+    overflow: hidden;
+  }
+  .mini.escuro :global(img) {
+    object-fit: cover;
+  }
+  .mini[aria-current='true'] {
+    border-color: var(--petroleo);
+    box-shadow: 0 0 0 1.5px var(--petroleo);
+  }
+  @media (hover: hover) {
+    .mini:hover {
+      translate: 0 -2px;
+      border-color: var(--linha-forte);
+    }
+    .mini[aria-current='true']:hover {
+      border-color: var(--petroleo);
+    }
+  }
+  /* Quadro com peças pequenas lado a lado (aplicadores) */
+  .grupo-lista {
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(12px, 3vw, 32px);
+    padding: 8%;
+  }
+  .grupo-lista li {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 200px;
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+  }
+  .grupo-lista :global(img) {
+    width: 100%;
+    height: auto;
+    max-height: 9rem;
+    object-fit: contain;
+  }
+  .grupo-lista span {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--petroleo);
+    text-align: center;
+  }
+
+  /* Vídeo como último quadro */
+  .galeria-video {
+    position: relative;
+    background: var(--escuro);
+  }
+  .video-capa,
+  .galeria-video :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video-capa {
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--escuro);
+    color: inherit;
+  }
+  .video-capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.78;
+    transition: opacity 0.25s var(--ease), scale var(--d-foto) var(--curva);
+  }
+  .video-play {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 68px;
+    height: 68px;
+    margin: -34px 0 0 -34px;
+    border-radius: 999px;
+    background: rgb(250 247 242 / 0.94);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.6);
+    transition: scale 0.5s var(--curva);
+  }
+  .video-play svg {
+    width: 22px;
+    height: 22px;
+    margin-left: 3px;
+    color: var(--cta);
+  }
+  @media (hover: hover) {
+    .video-capa:hover img {
+      opacity: 1;
+      scale: 1.03;
+    }
+    .video-capa:hover .video-play {
+      scale: 1.08;
+    }
+  }
+  .video-capa:focus-visible {
+    outline-offset: -5px;
+    outline-color: var(--papel);
+  }
+  .video-legenda {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 14px;
+    z-index: 2;
+    color: #f4f1eb;
+    font-size: var(--t-xs);
+    font-weight: 600;
+    line-height: 1.7;
+    pointer-events: none;
+  }
+  .mini-video {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    background: var(--escuro);
+  }
+  .mini-video img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.7;
+  }
+  .mini-video span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fff;
+  }
+  .mini-video svg {
+    width: 18px;
+    height: 18px;
+  }
+  @media (min-width: 900px) {
+    .galeria-seta {
+      display: grid;
+      place-items: center;
+      position: absolute;
+      top: 50%;
+      z-index: 2;
+      width: 44px;
+      height: 44px;
+      margin-top: -22px;
+      border-radius: 999px;
+      border: 1px solid var(--linha);
+      background: rgb(255 255 255 / 0.92);
+      color: var(--petroleo);
+      cursor: pointer;
+      transition: background-color 0.18s var(--ease), scale 0.3s var(--curva), opacity 0.18s;
+    }
+    .galeria-seta:hover {
+      background: #fff;
+      scale: 1.08;
+    }
+    .galeria-seta[disabled] {
+      opacity: 0.35;
+      cursor: default;
+      scale: 1;
+    }
+    .galeria-seta.ant {
+      left: 14px;
+    }
+    .galeria-seta.prox {
+      right: 14px;
+    }
+    .mini {
+      flex-basis: 64px;
+      height: 64px;
+    }
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+// Molde de toda LP da Leal: cabeçalho, rodapé, WhatsApp fixo no celular,
+// zoom das galerias, granulado e os scripts de interação e movimento.
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import fonteLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import Cabecalho from '../components/Cabecalho.astro';
+import Rodape from '../components/Rodape.astro';
+import WhatsFixo from '../components/WhatsFixo.astro';
+import Zoom from '../components/Zoom.astro';
+import TagGoogle from '../components/TagGoogle.astro';
+import Consentimento from '../components/Consentimento.astro';
+
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  /** Mensagem pronta do WhatsApp na barra fixa do celular. */
+  mensagem: string;
+  /** Linha de marcas e imagens do rodapé (HTML de confiança). */
+  rodapeMarcas: string;
+  rodapeUso?: string;
+  /** Rótulo da barra fixa do celular. */
+  rotuloBarra?: string;
+  /** Link pronto da barra fixa (a v2 monta o seu com o número das condições). */
+  linkBarra?: string;
+  /** Endereço no rodapé, quando confirmado. */
+  endereco?: string;
+  politicas?: { privacidade: string; cookies: string };
+}
+
+const { titulo, descricao, mensagem, rodapeMarcas, rodapeUso, rotuloBarra, linkBarra, endereco, politicas } = Astro.props;
+// Com SITE_URL no build, cada página aponta o próprio endereço definitivo.
+const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/.html$/, ''), Astro.site).href : undefined;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <meta name="theme-color" content="#FAF7F2" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Leal Tecnologia e Saúde" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricao} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <TagGoogle />
+    <link rel="preload" href={fonteLatin} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+    <script is:inline>
+      // Só com JavaScript e movimento permitido o que vai ser revelado começa
+      // escondido. Se o script não ficar pronto em 4 s, .sem-movimento mostra tudo.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          d.classList.add('movimento');
+          setTimeout(function () {
+            if (!d.classList.contains('movimento-pronto')) d.classList.add('sem-movimento');
+          }, 4000);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <Cabecalho />
+    <main id="conteudo">
+      <slot />
+    </main>
+    <Rodape marcas={rodapeMarcas} uso={rodapeUso} endereco={endereco} politicas={politicas} />
+    <WhatsFixo mensagem={mensagem} rotulo={rotuloBarra} href={linkBarra} />
+    <Zoom />
+    <Consentimento />
+    <script>
+      import '../scripts/interacoes';
+      import '../scripts/movimento';
+    </script>
+  </body>
+</html>
+
+<style>
+  .pular {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 100;
+    background: var(--tinta);
+    color: var(--papel);
+    padding: 10px 16px;
+    border-radius: 8px;
+  }
+  .pular:focus {
+    top: 12px;
+  }
+</style>

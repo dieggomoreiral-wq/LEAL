@@ -1,0 +1,281 @@
+---
+// v2, bloco 4. A máquina por dentro: galeria curta, três números que mudam
+// a rotina da sala, o que vem na caixa, o registro e a fonte. A ficha
+// inteira fica num details, para quem quer conferir.
+import Galeria from '../lp/Galeria.astro';
+import { dataBR, linkDireta, pilula, rascunho } from '../../lib/direta';
+import { marca } from '../../lib/rico';
+import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  ap: AparelhoDireto;
+  c: CondicoesRede;
+  comum: ComumDireta;
+}
+const { v, ap, c, comum } = Astro.props;
+const video = ap.video?.assistidoEm ? { id: ap.video.id, titulo: ap.video.titulo } : undefined;
+const fonte = ap.fonteDados;
+// Na publicação, linha sem fato confirmado some em vez de ficar vazia.
+const verAnvisa = rascunho || ap.anvisa.estado === 'confirmado';
+const verFonte = rascunho || fonte.estado === 'confirmado';
+---
+<section class="secao maquina" id="maquina" aria-labelledby="t-maq">
+  <div class="wrap">
+    <h2 data-revelar="linhas" id="t-maq">{v.maquina.titulo}</h2>
+
+    <div class="maq-grid">
+      <div class="maq-galeria">
+        <Galeria nome={ap.nome} fotos={ap.fotos.galeria.slice(0, 3)} video={video} />
+      </div>
+
+      <div class="maq-dados">
+        <ol class="numeros" role="list" data-revelar="subir" data-revelar-filhos>
+          {ap.dados.map((d) => (
+            <li class="numero">
+              <p class="num-valor">
+                <span class="num-grande">{d.numero}</span>
+                {d.unidade && <span class="num-unidade">{d.unidade}</span>}
+              </p>
+              <p class="num-rotulo">{d.rotulo}</p>
+              <p class="num-leitura" set:html={marca(d.leitura)} />
+            </li>
+          ))}
+        </ol>
+
+        {ap.caixa.estado === 'confirmado' && (
+          <div class="caixa" data-revelar="subir">
+            <h3>Vem na caixa</h3>
+            <ul role="list">{ap.caixa.valor.map((x) => <li>{x}</li>)}</ul>
+          </div>
+        )}
+
+        {(verAnvisa || verFonte) && <dl class="registro" data-revelar="subir">
+          {verAnvisa && <div>
+            <dt>Anvisa</dt>
+            <dd>
+              {ap.anvisa.estado === 'confirmado' ? (
+                <>
+                  {ap.anvisa.valor.tipo === 'registro' ? 'Registro' : 'Notificação'} <span class="nb">nº {ap.anvisa.valor.numero}</span>
+                  <span class="reg-tec">{ap.anvisa.valor.nomeTecnico}</span>
+                </>
+              ) : (
+                <Fragment set:html={pilula(ap.anvisa)} />
+              )}
+            </dd>
+          </div>}
+          {verFonte && <div>
+            <dt>Fonte</dt>
+            <dd>
+              {fonte.estado === 'confirmado' ? (
+                <>{fonte.valor.documento}, {fonte.valor.revisao}. Conferido em {dataBR(fonte.valor.conferidoEm)}.</>
+              ) : (
+                <Fragment set:html={pilula(fonte)} />
+              )}
+            </dd>
+          </div>}
+        </dl>}
+
+        <a class="botao botao-linha maq-docs" data-porta="docs" data-aparelho={ap.id}
+          href={linkDireta(ap.mensagens.docs, c)} target="_blank" rel="noopener">{comum.botaoDocs}</a>
+
+        {ap.fichaCompleta.length > 0 && (
+          <details class="ficha">
+            <summary><span>Ver ficha completa</span><span class="chevron" aria-hidden="true"></span></summary>
+            <dl>
+              {ap.fichaCompleta.map((l) => (
+                <div class="ficha-linha">
+                  <dt>{l.rotulo}</dt>
+                  <dd set:html={marca(l.valor)} />
+                </div>
+              ))}
+            </dl>
+          </details>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .maquina {
+    background: var(--papel-2);
+  }
+  .maquina h2 {
+    font-size: var(--t3);
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  .maq-grid {
+    margin-top: var(--esp-int);
+    display: grid;
+    gap: var(--esp-int);
+  }
+  .maq-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-width: 0;
+  }
+
+  /* ---------- Os três números ---------- */
+  .numeros {
+    list-style: none;
+    border-top: 1.5px solid var(--tinta);
+  }
+  .numero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding: 16px 0 18px;
+    border-bottom: 1px solid var(--linha-forte);
+  }
+  .num-valor {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 8px;
+  }
+  .num-grande {
+    font-size: clamp(2.5rem, 1.8rem + 3vw, 4.25rem);
+    font-weight: 700;
+    font-stretch: 84%;
+    font-variant-numeric: tabular-nums lining-nums;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--petroleo);
+  }
+  .num-unidade {
+    font-size: var(--t1);
+    font-weight: 600;
+    color: var(--tinta);
+  }
+  .num-rotulo {
+    margin-top: 6px;
+    font-size: var(--t-sm);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tinta);
+  }
+  .num-leitura {
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+
+  /* ---------- Caixa e registro ---------- */
+  .caixa h3 {
+    font-size: var(--t-sm);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .caixa ul {
+    margin-top: 8px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .caixa li {
+    padding: 5px 11px;
+    border: 1px solid var(--linha-forte);
+    border-radius: 99px;
+    background: var(--folha);
+    font-size: var(--t-sm);
+  }
+  .registro {
+    display: grid;
+    gap: 10px;
+    font-size: var(--t-sm);
+  }
+  .registro > div {
+    display: grid;
+    grid-template-columns: 68px minmax(0, 1fr);
+    gap: 10px;
+  }
+  .registro dt {
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--petroleo);
+    padding-top: 2px;
+  }
+  .registro dd {
+    color: var(--tinta);
+  }
+  .reg-tec {
+    display: block;
+    color: var(--tinta-2);
+  }
+  .maq-docs {
+    align-self: flex-start;
+    min-height: 48px;
+  }
+
+  /* ---------- Ficha completa ---------- */
+  .ficha {
+    border-top: 1px solid var(--linha-forte);
+    border-bottom: 1px solid var(--linha-forte);
+  }
+  .ficha summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    cursor: pointer;
+    list-style: none;
+    font-weight: 600;
+    color: var(--tinta);
+  }
+  .ficha summary::-webkit-details-marker {
+    display: none;
+  }
+  .ficha summary .chevron {
+    color: var(--petroleo);
+  }
+  .ficha dl {
+    padding-bottom: 14px;
+    font-size: var(--t-sm);
+  }
+  .ficha-linha {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 12px;
+    padding: 8px 0;
+    border-top: 1px dashed var(--linha);
+  }
+  .ficha-linha dt {
+    color: var(--tinta-2);
+  }
+  .ficha-linha dd {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 900px) {
+    .maq-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: clamp(40px, 5vw, 88px);
+      align-items: start;
+    }
+    .maq-galeria {
+      position: sticky;
+      top: calc(var(--topo) + 32px);
+    }
+    .numero {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      column-gap: 20px;
+      align-items: end;
+    }
+    .num-valor {
+      grid-row: span 2;
+    }
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+// Foto ampliada das galerias (um <dialog> só para a página inteira).
+---
+<dialog class="zoom" id="zoom" aria-label="Foto ampliada">
+  <img src="data:," alt="" />
+  <button class="zoom-fechar" type="button" aria-label="Fechar a foto ampliada">
+    <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+  </button>
+</dialog>
+
+<style>
+  .zoom {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(250 247 242 / 0.97);
+  }
+  .zoom[open] {
+    display: grid;
+    place-items: center;
+  }
+  .zoom::backdrop {
+    background: rgb(250 247 242 / 0.97);
+  }
+  .zoom img {
+    width: auto;
+    height: auto;
+    max-width: 92%;
+    max-height: 86%;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  .zoom img:global(.escura) {
+    mix-blend-mode: normal;
+    border-radius: var(--r-medio);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .zoom[open] img {
+      animation: zoomin 0.5s var(--curva);
+    }
+  }
+  @keyframes zoomin {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: none; }
+  }
+  .zoom-fechar {
+    position: absolute;
+    top: calc(12px + env(safe-area-inset-top));
+    right: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    border: 1px solid var(--linha-forte);
+    background: #fff;
+    color: var(--tinta);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+</style>
