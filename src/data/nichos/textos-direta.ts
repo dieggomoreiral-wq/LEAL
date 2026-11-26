@@ -51,10 +51,10 @@ export const comumDireta: ComumDireta = {
       pergunta: 'O que acontece com a parcela durante o conserto e se há bloqueio por atraso',
     },
   },
-  carimbo: 'Pergunte na conversa',
+  carimbo: 'Tirar dúvida',
   compromisso:
-    'Faça as seis perguntas na conversa do WhatsApp. A Leal responde antes de você fechar a compra.',
-  ctaPosVenda: 'Fazer estas perguntas no WhatsApp',
+    'A Leal responde cada um destes pontos no WhatsApp, por escrito, antes de você fechar a compra.',
+  ctaPosVenda: 'Tirar dúvida com a Leal',
 
   perguntaPorQueLeal: {
     pergunta: 'Por que comprar pela Leal e não direto do fabricante?',
@@ -65,23 +65,23 @@ export const comumDireta: ComumDireta = {
   perguntaOperar: {
     pergunta: 'Quem pode operar?',
     resposta:
-      '<p>Quem pode operar segue o que consta na Anvisa para o aparelho, o manual do fabricante e as regras da sua profissão. A Leal não define quem opera, e nenhum treinamento substitui a habilitação. Peça o número Anvisa e o manual no WhatsApp antes de comprar.</p>',
+      '<p>Quem pode operar segue o que consta na Anvisa para o aparelho, o manual do fabricante e as regras da sua profissão. A Leal não define quem opera, e nenhum treinamento substitui a habilitação. A Leal manda o número Anvisa e o manual no WhatsApp antes de você comprar.</p>',
   },
   perguntaMaisBarato: {
     pergunta: 'Vi mais barato em outra loja. Vale falar com a Leal?',
     resposta:
-      '<p>Vale. Mande o link junto com a mensagem. A Leal confere se é o mesmo modelo e o que vem na caixa, e responde com a proposta dela por escrito. Use a lista <a href="#comparar">Compare antes de fechar</a> para pôr as duas lojas lado a lado: preço igual não quer dizer pós-venda igual.</p>',
+      '<p>Vale. É só mandar o link junto com a mensagem. A Leal confere se é o mesmo modelo e o que vem na caixa, e responde com a proposta dela por escrito. Use a lista <a href="#comparar">Compare antes de fechar</a> para pôr as duas lojas lado a lado: preço igual não quer dizer pós-venda igual.</p>',
   },
   perguntaDemonstracao: {
     pergunta: 'Posso ver a máquina funcionando antes de comprar?',
     resposta:
-      '<p>Peça na mensagem. A Leal responde se há demonstração do modelo e onde ela acontece.</p>',
+      '<p>A Leal responde no WhatsApp se há demonstração do modelo e onde ela acontece.</p>',
   },
 
   compra: {
     passo1: '<strong>Você manda a mensagem.</strong> A Leal responde %RESPOSTA%, %HORARIO%.',
     passo2:
-      '<strong>A proposta sai %PROPOSTA%.</strong> Nela vêm o preço e a condição de pagamento. Antes de fechar, faça as seis perguntas do pós-venda e peça a ficha, o número Anvisa e o manual.',
+      '<strong>A proposta sai %PROPOSTA%.</strong> Nela vêm o preço e a condição de pagamento. Antes de você fechar, a Leal responde o pós-venda por escrito e manda a ficha, o número Anvisa e o manual.',
     passo3:
       '<strong>Você confirma.</strong> Quem vende e emite a nota fiscal é %QUEMVENDE%. A Leal atende a sua compra.',
   },
@@ -126,7 +126,7 @@ const mensagens = (nome: string) => ({
 /** "Existe mais de um X?" para os modelos sem variante conhecida. */
 const variantePadrao = (curto: string, nome: string) => ({
   pergunta: `Existe mais de um ${curto}?`,
-  resposta: `<p>Esta página trata do ${nome} vendido pela Rede ISP. Se você viu um nome parecido, mande o link e peça o modelo exato e o número dele na Anvisa, para conferir no portal.</p>`,
+  resposta: `<p>Esta página trata do ${nome} vendido pela Rede ISP. Se você viu um nome parecido, mande o link: a Leal confirma o modelo exato e o número dele na Anvisa, para você conferir no portal.</p>`,
 });
 
 /* ============================================================
@@ -138,7 +138,7 @@ export const depilacaoTextos: TextosNicho = {
   seo: {
     titulo: 'Máquina de depilação a laser Hakon 4D Premium | Leal',
     descricao:
-      'Proposta do Hakon 4D Premium no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, reposição do aplicador, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Hakon 4D Premium no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, reposição do aplicador, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'depilação a laser',
@@ -151,7 +151,7 @@ export const depilacaoTextos: TextosNicho = {
     sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
+    titulo: 'O que acontece depois da entrega',
     abertura: `${DOR} Numa máquina de depilação a laser, entra também o aplicador: quanto custa repor e se há em estoque.`,
   },
   maquina: { titulo: 'O Hakon 4D Premium em três números' },
@@ -161,17 +161,17 @@ export const depilacaoTextos: TextosNicho = {
     doNicho: {
       pergunta: 'O Hakon 4D Premium atende todos os fototipos?',
       resposta:
-        '<p>A indicação por fototipo do Hakon 4D Premium está no manual do fabricante. Peça o manual e confira se ele cobre o fototipo das clientes que você mais atende. A Leal envia o manual e o número Anvisa pelo WhatsApp, antes de você comprar.</p>',
+        '<p>A indicação por fototipo do Hakon 4D Premium está no manual do fabricante. A Leal manda o manual para você conferir se ele cobre o fototipo das clientes que você mais atende. A Leal envia o manual e o número Anvisa pelo WhatsApp, antes de você comprar.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter a máquina funcionando?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: o aplicador de reposição, o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>Pergunte na conversa o preço do aplicador, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina, entram na conta depois da compra: o aplicador de reposição, o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço do aplicador, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Hakon?',
       resposta:
-        '<p>Sim. O nome circula em mais de uma versão, com fichas diferentes. Esta página trata do Hakon 4D Premium vendido pela Rede ISP. Peça na conversa o modelo exato e o número dele na Anvisa, para conferir no portal.</p>',
+        '<p>Sim. O nome circula em mais de uma versão, com fichas diferentes. Esta página trata do Hakon 4D Premium vendido pela Rede ISP. A Leal passa na conversa o modelo exato e o número dele na Anvisa, para você conferir no portal.</p>',
     },
   },
   pedido: {
@@ -258,7 +258,7 @@ export const ultrassomTextos: TextosNicho = {
   seo: {
     titulo: 'Máquina de ultrassom microfocado Ultramed MPT | Leal',
     descricao:
-      'Proposta do Ultramed MPT no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, preço dos cartuchos, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Ultramed MPT no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, preço dos cartuchos, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'ultrassom microfocado',
@@ -271,7 +271,7 @@ export const ultrassomTextos: TextosNicho = {
     sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
+    titulo: 'O que acontece depois da entrega',
     abertura: `${DOR} No ultrassom microfocado, entra também a conta do cartucho que acaba.`,
   },
   maquina: { titulo: 'O Ultramed MPT em três números' },
@@ -281,17 +281,17 @@ export const ultrassomTextos: TextosNicho = {
     doNicho: {
       pergunta: 'Quanto dura cada cartucho do Ultramed MPT?',
       resposta:
-        '<p>Cada cartucho tem um número de disparos. O 2D, por exemplo, tem 20.000. Pergunte na conversa quais cartuchos vêm com a máquina, o preço da reposição e se há em estoque.</p>',
+        '<p>Cada cartucho tem um número de disparos. O 2D, por exemplo, tem 20.000. No WhatsApp, a Leal informa quais cartuchos vêm com a máquina, o preço da reposição e se há em estoque.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter a máquina funcionando?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: os cartuchos que se trocam por número de disparos (quais são e quantos disparos fazem, o fabricante informa), o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>Pergunte na conversa o preço de cada cartucho, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina, entram na conta depois da compra: os cartuchos que se trocam por número de disparos (quais são e quantos disparos fazem, o fabricante informa), o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço de cada cartucho, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Ultramed?',
       resposta:
-        '<p>Sim. A Rede ISP vende duas versões do Ultramed MPT, com códigos de modelo diferentes: o Ultramed MPT e o Ultramed MPT Versão Especial. Pergunte na conversa o que muda entre elas, como kit e cartuchos, e o número de cada uma na Anvisa, para conferir no portal.</p>',
+        '<p>Sim. A Rede ISP vende duas versões do Ultramed MPT, com códigos de modelo diferentes: o Ultramed MPT e o Ultramed MPT Versão Especial. No WhatsApp, a Leal informa o que muda entre elas, como kit e cartuchos, e o número de cada uma na Anvisa, para conferir no portal.</p>',
     },
   },
   pedido: {
@@ -308,7 +308,7 @@ export const ultrassomTextos: TextosNicho = {
           numero: '1,5 a 16',
           unidade: 'mm',
           rotulo: 'Profundidades, conforme o cartucho',
-          leitura: 'Cada profundidade pede o seu cartucho. Pergunte quais vêm com a máquina.',
+          leitura: 'Cada profundidade pede o seu cartucho. A Leal informa quais vêm com a máquina.',
         },
         {
           numero: '20.000',
@@ -381,7 +381,7 @@ export const criolipoliseTextos: TextosNicho = {
   seo: {
     titulo: 'Máquina de criolipólise Criodermis Smart | Leal',
     descricao:
-      'Proposta do Criodermis Smart no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, reposição dos aplicadores, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Criodermis Smart no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, reposição dos aplicadores, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'criolipólise',
@@ -391,10 +391,10 @@ export const criolipoliseTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de criolipólise Criodermis Smart',
-    sub: 'Criolipólise por placas e refrigeração sem água, num aparelho de {6,5 kg}. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço dos aplicadores de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Criolipólise por placas e refrigeração sem água, num aparelho de {6,5 kg}. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, a Leal responde o pós-venda: garantia, assistência, preço dos aplicadores de reposição, treinamento, instalação e o que acontece se a máquina parar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
+    titulo: 'O que acontece depois da entrega',
     abertura: `${DOR} Na criolipólise, entra também uma pergunta: o aparelho gasta algum material a cada atendimento?`,
   },
   maquina: { titulo: 'O Criodermis Smart em três números' },
@@ -404,12 +404,12 @@ export const criolipoliseTextos: TextosNicho = {
     doNicho: {
       pergunta: 'O Criodermis Smart usa membrana?',
       resposta:
-        '<p>Usa. A membrana é vendida à parte. Pergunte na conversa se alguma vem na caixa, quanto se usa a cada atendimento, o preço da reposição e se há em estoque.</p>',
+        '<p>Usa. A membrana é vendida à parte. No WhatsApp, a Leal informa se alguma vem na caixa, quanto se usa a cada atendimento, o preço da reposição e se há em estoque.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter a máquina funcionando?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: o preço de um aplicador, se precisar repor, a membrana, vendida à parte, e a manutenção fora da garantia.</p><p>Pergunte na conversa o preço dos aplicadores, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina, entram na conta depois da compra: o preço de um aplicador, se precisar repor, a membrana, vendida à parte, e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço dos aplicadores, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: variantePadrao('Criodermis', 'Criodermis Smart'),
   },
@@ -437,7 +437,7 @@ export const criolipoliseTextos: TextosNicho = {
         {
           numero: 'Placas',
           rotulo: 'Tipo de aplicador',
-          leitura: 'Pergunte quais aplicadores e quantos vêm na caixa.',
+          leitura: 'A Leal informa quais aplicadores e quantos vêm na caixa.',
         },
       ],
       fonteDados: trava('Criodermis Smart'),
@@ -456,7 +456,7 @@ export const criolipoliseTextos: TextosNicho = {
         {
           numero: '360°',
           rotulo: 'Aplicador de sucção',
-          leitura: 'Há também aplicadores de placas. Pergunte quais vêm na caixa.',
+          leitura: 'Há também aplicadores de placas. A Leal informa quais vêm na caixa.',
         },
         {
           numero: 'Água',
@@ -491,7 +491,7 @@ export const pigmentosTextos: TextosNicho = {
   seo: {
     titulo: 'Laser para remoção de pigmentos Syrius | Leal',
     descricao:
-      'Proposta do Syrius no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, reposição das ponteiras, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Syrius no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, reposição das ponteiras, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'laser para remoção de pigmentos',
@@ -501,10 +501,10 @@ export const pigmentosTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de laser para remoção de pigmentos Syrius',
-    sub: 'Laser de {4 comprimentos de onda}, de 532 a {1320 nm}, num aparelho só. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço das ponteiras de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Laser de {4 comprimentos de onda}, de 532 a {1320 nm}, num aparelho só. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, a Leal responde o pós-venda: garantia, assistência, preço das ponteiras de reposição, treinamento, instalação e o que acontece se a máquina parar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
+    titulo: 'O que acontece depois da entrega',
     abertura: `${DOR} Num laser, entra também o que a sala precisa ter para a instalação, como tensão e espaço.`,
   },
   maquina: { titulo: 'O Syrius em três números' },
@@ -514,12 +514,12 @@ export const pigmentosTextos: TextosNicho = {
     doNicho: {
       pergunta: 'Que tomada a sala precisa para o Syrius?',
       resposta:
-        '<p>O Syrius trabalha em 220 V. Pergunte na conversa o que a sala precisa ter para a instalação, como tensão e espaço, e quem instala, e peça o manual.</p>',
+        '<p>O Syrius trabalha em 220 V. No WhatsApp, a Leal informa o que a sala precisa ter para a instalação, como tensão e espaço, e quem instala, e manda o manual.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter a máquina funcionando?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: as peças que o manual mandar trocar com o uso, o cuidado com o circuito de água e a manutenção fora da garantia.</p><p>Pergunte na conversa o preço das ponteiras, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina, entram na conta depois da compra: as peças que o manual mandar trocar com o uso, o cuidado com o circuito de água e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço das ponteiras, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: variantePadrao('Syrius', 'Syrius'),
   },
@@ -543,7 +543,7 @@ export const pigmentosTextos: TextosNicho = {
           numero: '220',
           unidade: 'V',
           rotulo: 'Tensão',
-          leitura: 'A sala precisa de tomada 220 V. Pergunte o que a instalação pede.',
+          leitura: 'A sala precisa de tomada 220 V. A Leal informa o que a instalação pede.',
         },
         {
           numero: 'Água',
@@ -575,7 +575,7 @@ export const pigmentosTextos: TextosNicho = {
           numero: '110 a 130',
           unidade: 'V',
           rotulo: 'Tensão',
-          leitura: 'Liga em rede de 110 a 130 V. Pergunte o que a instalação pede.',
+          leitura: 'Liga em rede de 110 a 130 V. A Leal informa o que a instalação pede.',
         },
         {
           numero: '20',
@@ -607,7 +607,7 @@ export const radiofrequenciaTextos: TextosNicho = {
   seo: {
     titulo: 'Aparelho de radiofrequência Novo Hooke | Leal',
     descricao:
-      'Proposta do Novo Hooke no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, reposição dos aplicadores, treinamento, instalação e o que acontece se o aparelho parar.',
+      'Proposta do Novo Hooke no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, reposição dos aplicadores, treinamento, instalação e o que acontece se o aparelho parar.',
   },
   nicho: {
     nome: 'radiofrequência',
@@ -617,11 +617,11 @@ export const radiofrequenciaTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Aparelho de radiofrequência Novo Hooke',
-    sub: 'Radiofrequência nos modos monopolar e bipolar, bivolt, de {100 a 240 V}. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço dos aplicadores de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
+    sub: 'Radiofrequência nos modos monopolar e bipolar, bivolt, de {100 a 240 V}. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, a Leal responde o pós-venda: garantia, assistência, preço dos aplicadores de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
-    abertura: `${DOR} Por isso vale perguntar antes de assinar.`,
+    titulo: 'O que acontece depois da entrega',
+    abertura: `${DOR} Por isso a Leal responde antes de você assinar.`,
   },
   maquina: { titulo: 'O Novo Hooke em três números' },
   compra: { titulo: 'Como a compra anda' },
@@ -630,17 +630,17 @@ export const radiofrequenciaTextos: TextosNicho = {
     doNicho: {
       pergunta: 'O Novo Hooke liga em 110 ou em 220 V?',
       resposta:
-        '<p>Nos dois: ele é bivolt, de 100 a 240 V. Pergunte na conversa o que a sala precisa ter para a instalação e quem instala, e peça o manual.</p>',
+        '<p>Nos dois: ele é bivolt, de 100 a 240 V. No WhatsApp, a Leal informa o que a sala precisa ter para a instalação e quem instala, e manda o manual.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter o aparelho funcionando?',
       resposta:
-        '<p>Além do preço do aparelho, entram na conta depois da compra: as peças que o fabricante mandar trocar com o uso, se houver, o gel ou creme que o manual pedir e a manutenção fora da garantia.</p><p>Pergunte na conversa o preço de cada peça de reposição, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço do aparelho, entram na conta depois da compra: as peças que o fabricante mandar trocar com o uso, se houver, o gel ou creme que o manual pedir e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço de cada peça de reposição, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Hooke?',
       resposta:
-        '<p>O “Novo” do nome indica que houve uma versão anterior. Esta página trata do Novo Hooke vendido pela Rede ISP. Peça na conversa o modelo exato e o número dele na Anvisa, para conferir no portal.</p>',
+        '<p>O “Novo” do nome indica que houve uma versão anterior. Esta página trata do Novo Hooke vendido pela Rede ISP. A Leal passa na conversa o modelo exato e o número dele na Anvisa, para você conferir no portal.</p>',
     },
   },
   pedido: {
@@ -726,7 +726,7 @@ export const laserCo2Textos: TextosNicho = {
   seo: {
     titulo: 'Aparelho de laser CO₂ fracionado Hegon | Leal',
     descricao:
-      'Proposta do Hegon no WhatsApp. Na conversa, pergunte sobre o pós-venda: garantia, assistência, tubo e ponteiras de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
+      'Proposta do Hegon no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, tubo e ponteiras de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
   },
   nicho: {
     nome: 'laser CO₂ fracionado',
@@ -736,10 +736,10 @@ export const laserCo2Textos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Aparelho de laser CO₂ fracionado Hegon',
-    sub: 'Laser CO₂ fracionado de {1 a 30 W}, refrigerado por água em circuito fechado. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço do tubo e das ponteiras de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
+    sub: 'Laser CO₂ fracionado de {1 a 30 W}, refrigerado por água em circuito fechado. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, a Leal responde o pós-venda: garantia, assistência, preço do tubo e das ponteiras de reposição, treinamento, instalação e o que acontece se o aparelho parar.',
   },
   posVenda: {
-    titulo: 'Pergunte antes da compra o que acontece depois da entrega',
+    titulo: 'O que acontece depois da entrega',
     abertura: `${DOR} No Hegon, entra também a revisão anual que o manual pede.`,
   },
   maquina: { titulo: 'O Hegon em três números' },
@@ -749,12 +749,12 @@ export const laserCo2Textos: TextosNicho = {
     doNicho: {
       pergunta: 'Os óculos de proteção vêm com o Hegon?',
       resposta:
-        '<p>Pelo manual do fabricante, a caixa traz um protetor ocular para o paciente e um par de óculos para quem opera. Quem mais na sala precisa de proteção, o manual diz. Pergunte na conversa o que vem na caixa e quanto custa cada par a mais.</p>',
+        '<p>Pelo manual do fabricante, a caixa traz um protetor ocular para o paciente e um par de óculos para quem opera. Quem mais na sala precisa de proteção, o manual diz. No WhatsApp, a Leal informa o que vem na caixa e quanto custa cada par a mais.</p>',
     },
     manter: {
       pergunta: 'Quanto custa manter o aparelho funcionando?',
       resposta:
-        '<p>Além do preço do aparelho, entram na conta depois da compra: o tubo e as ponteiras, quando precisarem de troca, e a manutenção fora da garantia, com a preventiva e a calibração anuais que o manual pede.</p><p>Pergunte na conversa o preço do tubo e das ponteiras, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço do aparelho, entram na conta depois da compra: o tubo e as ponteiras, quando precisarem de troca, e a manutenção fora da garantia, com a preventiva e a calibração anuais que o manual pede.</p><p>No WhatsApp, a Leal informa o preço do tubo e das ponteiras, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: variantePadrao('Hegon', 'Hegon'),
   },
@@ -778,7 +778,7 @@ export const laserCo2Textos: TextosNicho = {
           numero: '110 a 230',
           unidade: 'V',
           rotulo: 'Tensão',
-          leitura: 'Liga nessa faixa de tensão. Pergunte o que a instalação pede.',
+          leitura: 'Liga nessa faixa de tensão. A Leal informa o que a instalação pede.',
         },
         {
           numero: '40',
@@ -823,7 +823,7 @@ export const laserCo2Textos: TextosNicho = {
           numero: '230',
           unidade: 'V',
           rotulo: 'Tensão',
-          leitura: 'A sala precisa de tomada 230 V. Pergunte o que a instalação pede.',
+          leitura: 'A sala precisa de tomada 230 V. A Leal informa o que a instalação pede.',
         },
         {
           numero: '7',

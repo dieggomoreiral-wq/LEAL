@@ -63,7 +63,7 @@ function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<stri
       caixa: { estado: 'na-proposta' },
       posVenda: {
         // Formulário do Diego (22/11): ele confere a garantia e responde na conversa,
-        // como as outras cinco. Na página vira 'Pergunte na conversa'.
+        // como as outras cinco. Na página vira o botão 'Tirar dúvida' (WhatsApp).
         garantia: { estado: 'na-proposta' },
         assistencia: { estado: 'na-proposta' },
         pecas: { estado: 'na-proposta' },

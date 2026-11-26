@@ -1,9 +1,11 @@
 ---
 // v2, bloco 3 (o coração da página). As seis perguntas de pós-venda numa
 // folha pautada: confirmada (fato, quem responde, data) ou carimbo
-// "pergunte na conversa". Versão compacta, uma folha só: enquanto 4 ou
+// botão de WhatsApp "Tirar dúvida" (26/11: o carimbo "pergunte na conversa"
+// mandava o visitante trabalhar; o botão convida sem mandar). Versão compacta, uma folha só: enquanto 4 ou
 // mais itens estiverem na proposta, a seção horizontal fixa cansaria.
-import { dataBR, pilula, preencher } from '../../lib/direta';
+import { dataBR, linkDireta, pilula, preencher } from '../../lib/direta';
+import IconeWhats from './IconeWhats.astro';
 import { ITENS_POS_VENDA } from '../../data/nichos/tipos-direta';
 import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
 
@@ -15,7 +17,10 @@ interface Props {
 }
 const { v, ap, c, comum } = Astro.props;
 const p = (t: string) => preencher(t, v, c);
+const assunto = (r: string) => r.replace(/%PECA%/g, v.nicho.peca.toLowerCase()).replace(/[{}]|[[|]]/g, '').toLowerCase();
 const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2, '0'), t: comum.posVenda[id], f: ap.posVenda[id] }));
+const msgGeral = `Olá! Quero tirar uma dúvida sobre o pós-venda do ${ap.nome}.`;
+const msgItem = (r: string) => `Olá! Quero tirar uma dúvida sobre o ${ap.nome}. Assunto: ${assunto(r)}.`;
 ---
 <section class="secao posvenda" id="pos-venda" aria-labelledby="t-pos">
   <div class="wrap pos-grid">
@@ -25,13 +30,14 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
       <p class="pos-compromisso" data-revelar="subir">
         <Fragment set:html={p(comum.compromisso)} />
       </p>
-      <a class="pos-cta" href="#pedido" data-porta="pos-venda">{comum.ctaPosVenda}<span aria-hidden="true">↓</span></a>
+      <a class="botao botao-whats pos-cta" data-magnetico="0.2" data-porta="pos-venda" data-aparelho={ap.id}
+        href={linkDireta(msgGeral, c)} target="_blank" rel="noopener"><IconeWhats />{comum.ctaPosVenda}</a>
     </header>
 
     <div class="folha">
       <div class="folha-topo">
         <span>Pós-venda · {ap.nome}</span>
-        <span>Para perguntar antes de fechar</span>
+        <span>Respondido antes de você fechar</span>
       </div>
       <ol class="folha-itens" role="list" data-revelar="subir" data-revelar-filhos>
         {itens.map((x) => (
@@ -51,7 +57,8 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
                   </p>
                 </>
               ) : x.f.estado === 'na-proposta' ? (
-                <span class="carimbo">{comum.carimbo}</span>
+                <a class="tirar" data-porta="pos-venda-item" data-aparelho={ap.id} href={linkDireta(msgItem(x.t.rotulo), c)}
+                  target="_blank" rel="noopener" aria-label={`${comum.carimbo} sobre ${assunto(x.t.rotulo)} no WhatsApp`}><IconeWhats />{comum.carimbo}</a>
               ) : (
                 <Fragment set:html={pilula(x.f)} />
               )}
@@ -66,6 +73,16 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
 <style>
   .posvenda {
     position: relative;
+    --whats: #157a43;
+  }
+  .botao-whats {
+    --varre: #0f5f33;
+    background: var(--whats);
+    color: #fff;
+  }
+  .botao-whats :global(svg) {
+    width: 20px;
+    height: 20px;
   }
   .pos-grid {
     display: grid;
@@ -93,23 +110,7 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
     max-width: 52ch;
   }
   .pos-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    min-height: 44px;
-    margin-top: 1.1em;
-    font-weight: 650;
-    color: var(--cta);
-    text-decoration: none;
-    background: linear-gradient(currentColor, currentColor) 0 calc(100% - 8px) / 100% 1.5px no-repeat;
-  }
-  .pos-cta span {
-    transition: translate 0.4s var(--curva);
-  }
-  @media (hover: hover) {
-    .pos-cta:hover span {
-      translate: 0 3px;
-    }
+    margin-top: 1.3em;
   }
 
   /* ---------- A folha ---------- */
@@ -216,21 +217,38 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
     padding: 0;
     font-size: var(--t-xs);
   }
-  .carimbo {
-    display: inline-block;
-    padding: 6px 12px 5px;
-    border: 2px solid currentColor;
-    border-radius: 6px;
-    color: var(--cta);
-    font-size: var(--t-xs);
-    font-weight: 700;
-    font-stretch: 90%;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .tirar {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--whats);
+    color: var(--whats);
+    background: rgb(21 122 67 / 0.05);
+    font-size: var(--t-sm);
+    font-weight: 650;
     line-height: 1.2;
-    rotate: -2.5deg;
-    mix-blend-mode: multiply;
-    background: rgb(184 72 31 / 0.04);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.25s var(--curva-saida), color 0.25s var(--curva-saida), translate 0.25s var(--curva-saida);
+  }
+  .tirar :global(svg) {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
+  @media (hover: hover) {
+    .tirar:hover {
+      background: var(--whats);
+      color: #fff;
+      translate: 0 -1px;
+    }
+  }
+  .tirar:focus-visible {
+    outline: 2px solid var(--whats);
+    outline-offset: 3px;
   }
 
   @media (min-width: 900px) {
@@ -269,14 +287,14 @@ const itens = ITENS_POS_VENDA.map((id, i) => ({ id, n: String(i + 1).padStart(2,
     }
   }
 
-  /* Carimbo entra com uma batida curta quando o item aparece. */
+  /* Botão entra com uma batida curta quando o item aparece. */
   @media (prefers-reduced-motion: no-preference) {
-    :global(.movimento) .item:not(:global(.visto)) .carimbo {
+    :global(.movimento) .item:not(:global(.visto)) .tirar {
       opacity: 0;
-      scale: 1.5;
+      scale: 0.85;
     }
-    :global(.movimento) .item:global(.visto) .carimbo {
-      transition: opacity 0.25s var(--curva-saida) 0.35s, scale 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.35s;
+    :global(.movimento) .item:global(.visto) .tirar {
+      transition: opacity 0.25s var(--curva-saida) 0.3s, scale 0.45s cubic-bezier(0.3, 1.6, 0.5, 1) 0.3s, background-color 0.25s, color 0.25s;
     }
   }
 </style>
