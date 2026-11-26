@@ -47,7 +47,7 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
         <p class="preco-avista"><strong>{preco.aVista}</strong> <span>à vista</span></p>
         <p class="preco-prazo">ou parcelado em</p>
         <ul class="preco-chips" role="list" aria-label="Parcelas">{prazos.map((n) => <li>{n}x</li>)}</ul>
-        <p class="preco-linha"><strong>1ª parcela para 90 dias</strong>, pela financeira ou pela Medical San. Exemplo: {preco.parcelado}.</p>
+        <p class="preco-linha"><strong>1ª parcela para 90 dias</strong>, pela financeira ou pela Medical San.</p>
       </div>}
       <a class="botao botao-cta" id="cta-hero" data-magnetico="0.25" data-porta="abertura" data-aparelho={ap.id}
         href={linkDireta(ap.mensagens.topo, c)} target="_blank" rel="noopener">{comum.botaoPrincipal}</a>

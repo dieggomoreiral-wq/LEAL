@@ -23,7 +23,7 @@ const POR_ESCRITO = 'Responde por escrito, antes de você fechar';
 const linhas: { rotulo: string; leal: string; preco?: boolean }[] = [
   ...(preco
     ? [
-        { rotulo: 'Preço', leal: 'Mesmo preço da loja da Rede ISP', preco: true },
+        { rotulo: 'Preço', leal: `${preco.aVista} à vista`, preco: true },
         { rotulo: 'Parcelas', leal: `${prazosTexto}, com a 1ª para 90 dias`, preco: true },
       ]
     : []),

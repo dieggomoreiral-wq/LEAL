@@ -7,7 +7,7 @@
 
 export interface PrecoPagina {
   aVista: string;          // "R$ 67.499,99"
-  parcelado: string;       // exemplo de 12x: "12x de R$ 6.250,00 sem juros (total R$ 74.999,99)"
+  parcelado: string;       // exemplo de 12x: "12x de R$ 6.250,00 (total R$ 74.999,99)"
   validoAte: string;       // AAAA-MM-DD
   fonte: string;
 }
@@ -21,19 +21,19 @@ export const prazosTexto = '12, 24, 36 ou 48x';
 export const financiamento = `Em ${prazosTexto} pela financeira ou pela Medical San, com a 1ª parcela para 90 dias.`;
 export const validade = (p: PrecoPagina) => {
   const [a, m, d] = p.validoAte.split('-');
-  return `Condição de Black Friday válida até ${d}/${m}/${a}. Mesmo preço da loja da Rede ISP.`;
+  return `Condição de Black Friday válida até ${d}/${m}/${a}.`;
 };
 
 export const precos: Record<string, PrecoPagina> = {
   'depilacao-a-laser': {
     aVista: 'R$ 67.499,99',
-    parcelado: '12x de R$ 6.250,00 sem juros (total R$ 74.999,99)',
+    parcelado: '12x de R$ 6.250,00 (total R$ 74.999,99)',
     validoAte: '2026-11-30',
     fonte: FONTE,
   },
   'ultrassom-microfocado': {
     aVista: 'R$ 255.550,01',
-    parcelado: '12x de R$ 22.416,67 sem juros (total R$ 269.000,01)',
+    parcelado: '12x de R$ 22.416,67 (total R$ 269.000,01)',
     validoAte: '2026-11-30',
     fonte: FONTE,
   },
