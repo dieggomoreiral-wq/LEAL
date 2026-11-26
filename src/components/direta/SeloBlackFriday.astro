@@ -1,0 +1,156 @@
+---
+// Selo de Black Friday (26/11). O Vinicius achou a linha de validade "muito fria" e
+// pediu um selo com cara de presente. A data é a real (precos.ts); sem contagem
+// regressiva, que lê como urgência falsa. Some junto com o preço depois da data.
+import type { PrecoPagina } from '../../data/precos';
+
+interface Props {
+  preco: PrecoPagina;
+  tom?: 'claro' | 'escuro';
+}
+const { preco, tom = 'claro' } = Astro.props;
+const [, m, d] = preco.validoAte.split('-');
+---
+<p class={`selo selo-${tom}`} data-preco-ate={preco.validoAte}>
+  <span class="caixa" aria-hidden="true">
+    <svg viewBox="0 0 40 40" width="40" height="40">
+      <g class="brilhos">
+        <circle cx="6" cy="9" r="1.6" />
+        <circle cx="35" cy="6" r="1.3" />
+        <circle cx="36" cy="17" r="1.1" />
+      </g>
+      <rect x="8" y="20" width="24" height="15" rx="2" class="corpo" />
+      <rect x="18" y="20" width="4" height="15" class="fita" />
+      <g class="tampa">
+        <rect x="6" y="14" width="28" height="7" rx="2" class="corpo" />
+        <rect x="18" y="14" width="4" height="7" class="fita" />
+        <path d="M20 14c-3-6-10-6-9-1.5.6 2.5 6 1.5 9 1.5z" class="laco" />
+        <path d="M20 14c3-6 10-6 9-1.5-.6 2.5-6 1.5-9 1.5z" class="laco" />
+      </g>
+    </svg>
+  </span>
+  <span class="texto">
+    <strong>Black Friday · até {d}/{m}</strong>
+    <span>Mesmo preço da loja da Rede ISP</span>
+  </span>
+</p>
+
+<style>
+  .selo {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px 8px 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    isolation: isolate;
+    line-height: 1.2;
+  }
+  .selo[hidden] {
+    display: none;
+  }
+  .selo-claro {
+    background: var(--tinta);
+    color: #fff;
+  }
+  .selo-escuro {
+    background: var(--cta);
+    color: #fff;
+  }
+  .caixa {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.1);
+  }
+  .caixa svg {
+    width: 34px;
+    height: 34px;
+    overflow: visible;
+  }
+  .corpo {
+    fill: var(--cta);
+  }
+  .selo-escuro .corpo {
+    fill: #fff;
+  }
+  .fita,
+  .laco {
+    fill: #f4c96b;
+  }
+  .selo-escuro .fita,
+  .selo-escuro .laco {
+    fill: var(--tinta);
+  }
+  .brilhos {
+    fill: #f4c96b;
+    opacity: 0;
+  }
+  .texto {
+    display: grid;
+    gap: 2px;
+  }
+  .texto strong {
+    font-size: var(--t1);
+    font-weight: 750;
+    letter-spacing: 0.01em;
+  }
+  .texto span {
+    font-size: var(--t-xs);
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.82);
+  }
+  /* Brilho que passa pelo selo */
+  .selo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.18) 50%, transparent 65%);
+    transform: translateX(-120%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .selo::after {
+      animation: varre 4.5s var(--curva) 1.2s infinite;
+    }
+    .tampa {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: abre 4.5s var(--curva) 1s infinite;
+    }
+    .brilhos {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: brilha 4.5s ease-out 1s infinite;
+    }
+    .caixa {
+      animation: pula 4.5s var(--curva) 1s infinite;
+    }
+  }
+  @keyframes varre {
+    0%, 40% { transform: translateX(-120%); }
+    70%, 100% { transform: translateX(120%); }
+  }
+  @keyframes abre {
+    0%, 6% { transform: translateY(0) rotate(0); }
+    12% { transform: translateY(-5px) rotate(-8deg); }
+    18% { transform: translateY(-4px) rotate(6deg); }
+    24% { transform: translateY(-2px) rotate(-3deg); }
+    32%, 100% { transform: translateY(0) rotate(0); }
+  }
+  @keyframes brilha {
+    0%, 8% { opacity: 0; transform: scale(0.4); }
+    16% { opacity: 1; transform: scale(1.15); }
+    34%, 100% { opacity: 0; transform: scale(0.8); }
+  }
+  @keyframes pula {
+    0%, 4% { transform: translateY(0); }
+    10% { transform: translateY(-2px); }
+    20%, 100% { transform: translateY(0); }
+  }
+</style>

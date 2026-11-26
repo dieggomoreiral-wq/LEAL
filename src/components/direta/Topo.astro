@@ -4,7 +4,8 @@
 import Pedestal from '../nicho/Pedestal.astro';
 import { linkDireta, pilula, preencher } from '../../lib/direta';
 import { marca } from '../../lib/rico';
-import { financiamento, precoDa, validade } from '../../data/precos';
+import { prazos, precoDa } from '../../data/precos';
+import SeloBlackFriday from './SeloBlackFriday.astro';
 import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
 
 interface Props {
@@ -42,12 +43,14 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
         ? <Fragment set:html={marca(subAntes) + '<span class="sub-lista">: ' + marca(subLista) + '</span>.' + pend} />
         : <Fragment set:html={marca(v.topo.sub) + pend} />}</p>
       {preco && <div class="topo-preco" data-preco-ate={preco.validoAte}>
+        <SeloBlackFriday preco={preco} />
         <p class="preco-avista"><strong>{preco.aVista}</strong> <span>à vista</span></p>
-        <p class="preco-linha">ou {preco.parcelado}</p>
+        <p class="preco-prazo">ou parcelado em</p>
+        <ul class="preco-chips" role="list" aria-label="Parcelas">{prazos.map((n) => <li>{n}x</li>)}</ul>
+        <p class="preco-linha"><strong>1ª parcela para 90 dias</strong>, pela financeira ou pela Medical San. Exemplo: {preco.parcelado}.</p>
       </div>}
       <a class="botao botao-cta" id="cta-hero" data-magnetico="0.25" data-porta="abertura" data-aparelho={ap.id}
         href={linkDireta(ap.mensagens.topo, c)} target="_blank" rel="noopener">{comum.botaoPrincipal}</a>
-      {preco && <p class="preco-extra" data-preco-ate={preco.validoAte}>{financiamento} {validade(preco)}</p>}
       <p class="topo-resposta" set:html={preencher(resposta, v, c)} />
       <p class="topo-filtro">{comum.filtro}</p>
       <p class="topo-fabricante">A Leal não é a fabricante: o {ap.nome} é da {ap.fabricante} e vendido pela Rede ISP.</p>
@@ -143,6 +146,9 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
     border-radius: 12px;
     background: var(--folha);
   }
+  .topo-preco :global(.selo) {
+    margin-bottom: 12px;
+  }
   .preco-avista {
     display: flex;
     align-items: baseline;
@@ -163,19 +169,39 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
     font-weight: 600;
     color: var(--petroleo);
   }
+  .preco-prazo {
+    margin-top: 0.6em;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--tinta);
+  }
+  .preco-chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.4em;
+  }
+  .preco-chips li {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--petroleo);
+    color: #fff;
+    font-size: var(--t1);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.3;
+  }
+  .preco-linha strong {
+    font-weight: 700;
+    color: var(--petroleo);
+  }
   .preco-linha {
-    margin-top: 0.35em;
+    margin-top: 0.6em;
     font-size: var(--t-sm);
     color: var(--tinta);
     line-height: 1.45;
     font-variant-numeric: tabular-nums;
-  }
-  .preco-extra {
-    margin-top: 0.7em;
-    font-size: var(--t-xs);
-    color: var(--tinta-2);
-    line-height: 1.5;
-    max-width: 46ch;
   }
   .topo-texto .botao {
     margin-top: 1.1em;
