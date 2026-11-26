@@ -27,15 +27,13 @@ const {
     <p class="texto" set:html={marca(marcas)} />
     <p class="rodape-links"><a href={politicas?.privacidade ?? '#'}>Política de privacidade</a> · <a href={politicas?.cookies ?? '#'}>Aviso de cookies</a></p>
   </div>
-  <!-- Nome gigante: decorativo, o nome já está escrito acima -->
-  <div class="rodape-nome" aria-hidden="true"><span data-nome-gigante>{contato.marca}</span></div>
 </footer>
 
 <style>
   .rodape {
     position: relative;
     overflow: clip;
-    padding-top: 40px;
+    padding-block: 40px calc(40px + env(safe-area-inset-bottom));
     background: var(--escuro);
     font-size: var(--t-xs);
     color: #b9c3c1;
@@ -59,32 +57,9 @@ const {
   .rodape :focus-visible {
     outline-color: var(--pend);
   }
-  .rodape-nome {
-    margin-top: clamp(32px, 6vw, 72px);
-    padding-inline: var(--pad);
-    line-height: 0;
-    overflow: hidden;
-  }
-  .rodape-nome span {
-    display: block;
-    width: max-content;
-    font-size: 9.6vw;
-    font-weight: 720;
-    font-stretch: 84%;
-    letter-spacing: -0.04em;
-    line-height: 0.8;
-    color: #3f7a7f;
-    white-space: nowrap;
-    transform-origin: 50% 100%;
-    margin-bottom: -0.06em;
-    padding-top: 0.06em;
-  }
   @media (min-width: 48rem) {
     .rodape {
-      padding-top: 56px;
-    }
-    .rodape-nome span {
-      font-size: 10.4vw;
+      padding-block: 56px;
     }
   }
 </style>
