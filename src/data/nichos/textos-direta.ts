@@ -70,7 +70,7 @@ export const comumDireta: ComumDireta = {
   perguntaMaisBarato: {
     pergunta: 'Vi mais barato em outra loja. Vale falar com a Leal?',
     resposta:
-      '<p>Vale. Mande o link junto com a mensagem. A Leal responde com a proposta dela, e você faz as mesmas seis perguntas às duas lojas para pôr uma ao lado da outra.</p>',
+      '<p>Vale. Mande o link junto com a mensagem. A Leal confere se é o mesmo modelo e o que vem na caixa, e responde com a proposta dela por escrito. Use a lista <a href="#comparar">Compare antes de fechar</a> para pôr as duas lojas lado a lado: preço igual não quer dizer pós-venda igual.</p>',
   },
   perguntaDemonstracao: {
     pergunta: 'Posso ver a máquina funcionando antes de comprar?',
@@ -148,7 +148,7 @@ export const depilacaoTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de depilação a laser Hakon 4D Premium',
-    sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. Mesmo preço da loja da Rede ISP, com a proposta por escrito no WhatsApp. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço do aplicador de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
     titulo: 'Pergunte antes da compra o que acontece depois da entrega',
@@ -268,7 +268,7 @@ export const ultrassomTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de ultrassom microfocado Ultramed MPT',
-    sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. Mesmo preço da loja da Rede ISP, com a proposta por escrito no WhatsApp. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço de cada cartucho de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
     titulo: 'Pergunte antes da compra o que acontece depois da entrega',

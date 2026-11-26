@@ -10,6 +10,7 @@ import Condicoes from './Condicoes.astro';
 import PosVenda from './PosVenda.astro';
 import Maquina from './Maquina.astro';
 import Compra from './Compra.astro';
+import Comparar from './Comparar.astro';
 import Perguntas from './Perguntas.astro';
 import Pedido from './Pedido.astro';
 import Pendencias from './Pendencias.astro';
@@ -50,8 +51,9 @@ const nicho = v.slug.replace(/-v2$/, '');
   <div class="faixa-pos"><Faixa itens={faixa} segundos={38} /></div>
   <Maquina v={v} ap={ap} c={c} comum={comum} />
   <Compra v={v} c={c} comum={comum} />
+  <Comparar v={v} ap={ap} c={c} comum={comum} nicho={nicho} />
   <Perguntas v={v} c={c} comum={comum} />
-  <Pedido v={v} c={c} comum={comum} />
+  <Pedido v={v} c={c} comum={comum} nicho={nicho} />
   <Pendencias v={v} c={c} />
 </Base>
 
@@ -82,6 +84,7 @@ const nicho = v.slug.replace(/-v2$/, '');
       porta: a.getAttribute('data-porta'),
       aparelho: a.getAttribute('data-aparelho') || '',
       momento: a.getAttribute('data-momento') || '',
+      parcela: a.getAttribute('data-parcela') || '',
     });
   });
 </script>

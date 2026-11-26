@@ -5,14 +5,27 @@
 // Todas as mensagens saem prontas do servidor, num JSON no próprio bloco.
 import Foto from '../Foto.astro';
 import { linkDireta, montarMensagem, preencher } from '../../lib/direta';
+import { precoDa, prazos } from '../../data/precos';
 import type { ComumDireta, CondicoesRede, Momento, VersaoDireta } from '../../data/nichos/tipos-direta';
 
 interface Props {
   v: VersaoDireta;
   c: CondicoesRede;
   comum: ComumDireta;
+  nicho?: string;
 }
-const { v, c, comum } = Astro.props;
+const { v, c, comum, nicho = '' } = Astro.props;
+// Concorrentes (26/11): nenhuma loja deixa escolher a parcela antes de chamar.
+// Onde há preço, um toque opcional diz como a pessoa quer pagar, e a mensagem
+// já chega ao WhatsApp com a forma de pagamento. Some junto com o preço.
+const preco = precoDa(nicho);
+const pagamentos = preco
+  ? [
+      { id: 'avista', rotulo: 'À vista', frase: 'Prefiro pagar à vista.' },
+      ...prazos.map((n) => ({ id: String(n), rotulo: `${n}x`, frase: `Prefiro pagar em ${n}x, com a 1ª parcela para 90 dias.` })),
+    ]
+  : [];
+const idsPag = ['', ...pagamentos.map((p) => p.id)];
 const t = comum.pedido;
 const principal = v.principal;
 // Tráfego (21/11): a página vende um aparelho; o concorrente não entra no
@@ -24,18 +37,22 @@ const links: Record<string, string> = {};
 const textos: Record<string, string> = {};
 for (const e of escolhas) {
   for (const m of momentos) {
-    const msg = montarMensagem(v, e, m || undefined, comum);
-    textos[`${e}|${m}`] = msg;
-    links[`${e}|${m}`] = linkDireta(msg, c);
+    for (const p of idsPag) {
+      const frase = pagamentos.find((x) => x.id === p)?.frase;
+      const msg = montarMensagem(v, e, m || undefined, comum) + (frase ? ` ${frase}` : '');
+      textos[`${e}|${m}|${p}`] = msg;
+      links[`${e}|${m}|${p}`] = linkDireta(msg, c);
+    }
   }
 }
-const inicial = `${principal}|`;
+const inicial = `${principal}||`;
+const titulo = preco ? v.pedido.titulo.replace('dois toques', 'três toques') : v.pedido.titulo;
 const dados = JSON.stringify({ links, textos });
 ---
 <section class="secao pedido" id="pedido" aria-labelledby="t-pedido">
   <div class="wrap ped-grid">
     <header class="ped-cabeca">
-      <h2 data-revelar="linhas" id="t-pedido">{v.pedido.titulo}</h2>
+      <h2 data-revelar="linhas" id="t-pedido">{titulo}</h2>
       <p class="ped-texto" data-revelar="subir" set:html={preencher(v.pedido.texto, v, c)} />
     </header>
 
@@ -61,8 +78,21 @@ const dados = JSON.stringify({ links, textos });
         </div>
       </fieldset>
 
+      {preco && <fieldset class="toque" data-preco-ate={preco.validoAte}>
+        <legend><span class="toque-n" aria-hidden="true">2</span>Como prefere pagar? <span class="opcional">(opcional)</span></legend>
+        <div class="opcoes opcoes-pag">
+          {pagamentos.map((p) => (
+            <label class="opcao opcao-pag">
+              <input type="radio" name="pagamento" value={p.id} />
+              <span class="op-nome">{p.rotulo}</span>
+            </label>
+          ))}
+        </div>
+        <p class="pag-nota">Parcelas pela financeira ou pela Medical San, com a 1ª para 90 dias.</p>
+      </fieldset>}
+
       <fieldset class="toque">
-        <legend><span class="toque-n" aria-hidden="true">2</span>{t.tituloToque2} <span class="opcional">(opcional)</span></legend>
+        <legend><span class="toque-n" aria-hidden="true">{preco ? 3 : 2}</span>{t.tituloToque2} <span class="opcional">(opcional)</span></legend>
         <div class="opcoes opcoes-momento">
           {comum.momentos.map((m) => (
             <label class="opcao opcao-momento">
@@ -78,7 +108,7 @@ const dados = JSON.stringify({ links, textos });
         <p class="balao" aria-live="polite" data-previa>{textos[inicial]}</p>
       </div>
 
-      <a class="botao botao-cta ped-botao" data-magnetico="0.2" data-porta="pedido" data-aparelho={principal} data-momento=""
+      <a class="botao botao-cta ped-botao" data-magnetico="0.2" data-porta="pedido" data-aparelho={principal} data-momento="" data-parcela=""
         href={links[inicial]} target="_blank" rel="noopener" data-pedido-botao>{t.botao}</a>
       <p class="ped-nota" set:html={preencher(t.nota, v, c)} />
     </form>
@@ -92,16 +122,17 @@ const dados = JSON.stringify({ links, textos });
     const previa = form.querySelector<HTMLElement>('[data-previa]')!;
     const valor = (nome: string) => (form.querySelector<HTMLInputElement>(`input[name="${nome}"]:checked`)?.value ?? '');
     const atualiza = () => {
-      const chave = `${valor('maquina')}|${valor('momento')}`;
+      const chave = `${valor('maquina')}|${valor('momento')}|${valor('pagamento')}`;
       if (!links[chave]) return;
       botao.href = links[chave];
       botao.dataset.aparelho = valor('maquina');
       botao.dataset.momento = valor('momento');
+      botao.dataset.parcela = valor('pagamento');
       previa.textContent = textos[chave];
     };
     form.addEventListener('change', atualiza);
-    // Segundo toque no mesmo momento desmarca (o toque 2 é opcional).
-    form.querySelectorAll<HTMLInputElement>('input[name="momento"]').forEach((r) => {
+    // Segundo toque na mesma opção desmarca (momento e pagamento são opcionais).
+    form.querySelectorAll<HTMLInputElement>('input[name="momento"], input[name="pagamento"]').forEach((r) => {
       let estava = false;
       r.addEventListener('pointerdown', () => (estava = r.checked));
       r.addEventListener('click', () => {
@@ -262,6 +293,29 @@ const dados = JSON.stringify({ links, textos });
   .opcao-momento .op-nome {
     font-weight: 600;
   }
+  .opcoes-pag {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .opcao-pag:first-child {
+    grid-column: 1 / -1;
+  }
+  .opcao-pag {
+    justify-content: center;
+    padding: 8px 2px;
+    text-align: center;
+  }
+  .opcao-pag .op-nome {
+    flex: none;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .pag-nota {
+    margin-top: 8px;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+  }
 
   .previa {
     display: grid;
@@ -306,6 +360,12 @@ const dados = JSON.stringify({ links, textos });
   }
 
   @media (min-width: 600px) {
+    .opcoes-pag {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .opcao-pag:first-child {
+      grid-column: auto;
+    }
     .opcoes-momento {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }

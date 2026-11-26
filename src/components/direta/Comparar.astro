@@ -1,0 +1,194 @@
+---
+// v2, bloco "Compare antes de fechar" (26/11). Lidas 14 páginas de concorrentes:
+// nenhuma responde o pós-venda na página. Quem compara em várias abas leva esta
+// lista para a outra loja; a coluna da Leal mostra o que ela responde por escrito.
+// Não promete garantia nem prazo: só o que a Leal já faz (responder antes de fechar).
+import { linkDireta, preencher } from '../../lib/direta';
+import { precoDa, prazosTexto } from '../../data/precos';
+import { ITENS_POS_VENDA } from '../../data/nichos/tipos-direta';
+import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
+
+interface Props {
+  v: VersaoDireta;
+  ap: AparelhoDireto;
+  c: CondicoesRede;
+  comum: ComumDireta;
+  nicho?: string;
+}
+const { v, ap, c, comum, nicho = '' } = Astro.props;
+const preco = precoDa(nicho);
+const limpa = (t: string) => t.replace(/%PECA%/g, v.nicho.peca.toLowerCase()).replace(/[{}]|\[\[|\]\]/g, '');
+const POR_ESCRITO = 'Responde por escrito, antes de você fechar';
+
+const linhas: { rotulo: string; leal: string; preco?: boolean }[] = [
+  ...(preco
+    ? [
+        { rotulo: 'Preço', leal: 'Mesmo preço da loja da Rede ISP', preco: true },
+        { rotulo: 'Parcelas', leal: `${prazosTexto}, com a 1ª para 90 dias`, preco: true },
+      ]
+    : []),
+  { rotulo: 'Quem vende e emite a nota', leal: 'A Rede ISP, com nota fiscal' },
+  { rotulo: 'Quem responde', leal: preencher('Uma pessoa no WhatsApp, %RESPOSTA%', v, c) },
+  ...ITENS_POS_VENDA.map((id) => ({ rotulo: limpa(comum.posVenda[id].rotulo), leal: POR_ESCRITO })),
+];
+const msg = `Olá! Estou comparando o ${ap.nome} com outra loja. Vou mandar o link para vocês conferirem e responderem o pós-venda por escrito.`;
+---
+<section class="secao comparar" id="comparar" aria-labelledby="t-comparar">
+  <div class="wrap">
+    <header class="cmp-cabeca">
+      <p class="cmp-sobre">Está olhando outras lojas?</p>
+      <h2 data-revelar="linhas" id="t-comparar">Compare antes de fechar</h2>
+      <p class="cmp-texto" data-revelar="subir">Leve esta lista para a outra loja. Onde ela não responder por escrito, você já sabe a diferença.</p>
+    </header>
+
+    <div class="cmp-tabela" role="table" aria-label={`Comparação da compra do ${ap.nome}`}>
+      <div class="cmp-linha cmp-titulos" role="row">
+        <span role="columnheader">O que comparar</span>
+        <span role="columnheader">Na Leal</span>
+        <span role="columnheader">Na outra loja</span>
+      </div>
+      <div role="rowgroup" data-revelar="subir" data-revelar-filhos>
+        {linhas.map((l) => (
+          <div class="cmp-linha" role="row" {...(l.preco ? { 'data-preco-ate': preco!.validoAte } : {})}>
+            <span class="cmp-rotulo" role="rowheader">{l.rotulo}</span>
+            <span class="cmp-leal" role="cell"><span class="ok" aria-hidden="true"></span><span set:html={l.leal} /></span>
+            <span class="cmp-outra" role="cell"><span class="cmp-outra-rotulo">Outra loja:</span><span class="risco" aria-label="em branco para você preencher"></span></span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <a class="botao botao-linha cmp-botao" data-magnetico="0.2" data-porta="comparar" data-aparelho={ap.id}
+      href={linkDireta(msg, c)} target="_blank" rel="noopener">Mandar o link da outra loja no WhatsApp</a>
+  </div>
+</section>
+
+<style>
+  .comparar {
+    background: var(--papel-2);
+  }
+  .cmp-sobre {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--petroleo);
+  }
+  .comparar h2 {
+    margin-top: 0.3em;
+    font-size: var(--t3);
+    font-weight: 680;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .cmp-texto {
+    margin-top: 0.7em;
+    color: var(--tinta-2);
+    max-width: 50ch;
+  }
+  .cmp-tabela {
+    margin-top: var(--esp-int);
+    background: var(--folha);
+    border: 1px solid var(--linha);
+    border-radius: var(--r-grande);
+    overflow: hidden;
+  }
+  .cmp-linha {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--linha);
+  }
+  .cmp-linha[hidden] {
+    display: none;
+  }
+  .cmp-titulos {
+    display: none;
+  }
+  [role='rowgroup'] > .cmp-linha:first-child {
+    border-top: 0;
+  }
+  .cmp-rotulo {
+    font-size: var(--t-xs);
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tinta-2);
+  }
+  .cmp-leal {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--tinta);
+    line-height: 1.4;
+  }
+  .ok {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    border-radius: 50%;
+    background: var(--petroleo);
+    position: relative;
+  }
+  .ok::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 4px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .cmp-outra {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+  }
+  .risco {
+    flex: 1;
+    max-width: 220px;
+    height: 1.1em;
+    border-bottom: 1.5px dashed var(--linha-forte);
+  }
+  .cmp-botao {
+    margin-top: 20px;
+    width: 100%;
+    min-height: 52px;
+  }
+
+  @media (min-width: 760px) {
+    .cmp-linha {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 4fr);
+      gap: 20px;
+      align-items: center;
+      padding: 16px 24px;
+    }
+    .cmp-titulos {
+      display: grid;
+      border-top: 0;
+      background: var(--tinta);
+      color: #fff;
+      font-size: var(--t-xs);
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .cmp-outra-rotulo {
+      display: none;
+    }
+    .risco {
+      max-width: none;
+    }
+    .cmp-botao {
+      width: auto;
+    }
+  }
+</style>
