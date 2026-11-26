@@ -2,13 +2,18 @@
 // v2, bloco 2. A única faixa escura da página: como paga, para onde vai,
 // de quem compra e quando chega a proposta. Os valores vêm de condicoes.ts.
 import { mostrar, pilula } from '../../lib/direta';
+import { financiamento, precoDa, validade } from '../../data/precos';
 import type { ComumDireta, CondicoesRede } from '../../data/nichos/tipos-direta';
 
 interface Props {
   c: CondicoesRede;
   comum: ComumDireta;
+  nicho?: string;
 }
-const { c, comum } = Astro.props;
+const { c, comum, nicho = '' } = Astro.props;
+// Preço na página (26/11): onde houver, a 4ª célula vira o preço. A célula da
+// proposta fica escondida e volta sozinha no navegador quando a condição vence.
+const preco = precoDa(nicho);
 const r = comum.condicoes;
 
 const celulas = [
@@ -36,6 +41,11 @@ const celulas = [
     linha: `O preço e a condição de pagamento saem ${mostrar(c.propostaEm)}.`,
   },
 ];
+const celulaPreco = preco && {
+  rotulo: 'Preço',
+  grande: preco.aVista,
+  linha: `à vista, ou ${preco.parcelado}. ${financiamento}`,
+};
 // Tráfego (21/11): com menos de 3 das 4 condições confirmadas, a faixa vira
 // uma fileira de "vai na proposta" e lê como esquiva. Some até a rede responder;
 // as travas continuam no painel de pendências.
@@ -47,15 +57,23 @@ const mostrarFaixa = confirmadas >= 3;
     <h2 class="sr" id="t-cond">Condições de compra</h2>
     <ul class="cond-grade" role="list" data-revelar="subir" data-revelar-filhos>
       {celulas.map((x, i) => (
-        <li class="cond">
+        <li class="cond" {...(celulaPreco && i === 3 ? { hidden: true, 'data-sem-preco': '' } : {})}>
           <span class="cond-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
           <span class="cond-rotulo">{x.rotulo}</span>
           <strong class="cond-grande" set:html={x.grande} />
           {x.linha && <span class="cond-linha" set:html={x.linha} />}
         </li>
       ))}
+      {celulaPreco && <li class="cond" data-preco-ate={preco!.validoAte}>
+        <span class="cond-num" aria-hidden="true">04</span>
+        <span class="cond-rotulo">{celulaPreco.rotulo}</span>
+        <strong class="cond-grande cond-valor">{celulaPreco.grande}</strong>
+        <span class="cond-linha">{celulaPreco.linha}</span>
+      </li>}
     </ul>
-    <p class="cond-preco">{r.precoNaProposta}</p>
+    {preco
+      ? <><p class="cond-preco" data-preco-ate={preco.validoAte}>{validade(preco)}</p><p class="cond-preco" hidden data-sem-preco>{r.precoNaProposta}</p></>
+      : <p class="cond-preco">{r.precoNaProposta}</p>}
   </div>
 </section>}
 
@@ -83,6 +101,15 @@ const mostrarFaixa = confirmadas >= 3;
   }
   .cond:nth-child(even) {
     padding-left: 14px;
+  }
+  .cond[hidden],
+  .cond-preco[hidden] {
+    display: none;
+  }
+  .cond-valor {
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: normal;
+    white-space: nowrap;
   }
   .cond-num {
     font-size: var(--t-xs);

@@ -45,7 +45,7 @@ const nicho = v.slug.replace(/-v2$/, '');
 >
   <meta slot="head" name="robots" content="noindex, follow" />
   <Topo v={v} ap={ap} c={c} comum={comum} />
-  <Condicoes c={c} comum={comum} />
+  <Condicoes c={c} comum={comum} nicho={nicho} />
   <PosVenda v={v} ap={ap} c={c} comum={comum} />
   <div class="faixa-pos"><Faixa itens={faixa} segundos={38} /></div>
   <Maquina v={v} ap={ap} c={c} comum={comum} />
@@ -54,6 +54,19 @@ const nicho = v.slug.replace(/-v2$/, '');
   <Pedido v={v} c={c} comum={comum} />
   <Pendencias v={v} c={c} />
 </Base>
+
+<script is:inline>
+  // Preço com validade (26/11): passou da data, some e volta "o preço vai na proposta".
+  (function () {
+    var d = new Date();
+    var hoje = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    var venceu = false;
+    document.querySelectorAll('[data-preco-ate]').forEach(function (el) {
+      if (hoje > el.getAttribute('data-preco-ate')) { el.remove(); venceu = true; }
+    });
+    if (venceu) document.querySelectorAll('[data-sem-preco]').forEach(function (el) { el.hidden = false; });
+  })();
+</script>
 
 <script is:inline define:vars={{ nicho }}>
   // Conversão: todo clique que abre o WhatsApp vai para o dataLayer com a

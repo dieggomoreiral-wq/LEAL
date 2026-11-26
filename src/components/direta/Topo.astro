@@ -4,6 +4,7 @@
 import Pedestal from '../nicho/Pedestal.astro';
 import { linkDireta, pilula, preencher } from '../../lib/direta';
 import { marca } from '../../lib/rico';
+import { financiamento, precoDa, validade } from '../../data/precos';
 import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
 
 interface Props {
@@ -20,6 +21,9 @@ const resposta = 'A Leal responde %RESPOSTA%, %HORARIO%.';
 // botão cabe na primeira tela; a lista vem logo abaixo, no bloco do pós-venda.
 const [subAntes, subLista] = v.topo.sub.replace(/\.$/, '').split(/: (.+)/s);
 const pend = ap.fonteDados.estado === 'trava' ? ' ' + pilula(ap.fonteDados) : '';
+// Preço na página (26/11): só onde precos.ts tem condição válida. No celular o
+// preço fica antes do botão em duas linhas; parcelamento longo e validade, logo depois.
+const preco = precoDa(v.slug.replace(/-v2$/, ''));
 ---
 <section class="topo" id="hero" aria-labelledby="h1">
   <div class="wrap topo-grid">
@@ -37,8 +41,13 @@ const pend = ap.fonteDados.estado === 'trava' ? ' ' + pilula(ap.fonteDados) : ''
       <p class="topo-sub">{subLista
         ? <Fragment set:html={marca(subAntes) + '<span class="sub-lista">: ' + marca(subLista) + '</span>.' + pend} />
         : <Fragment set:html={marca(v.topo.sub) + pend} />}</p>
+      {preco && <div class="topo-preco" data-preco-ate={preco.validoAte}>
+        <p class="preco-avista"><strong>{preco.aVista}</strong> <span>à vista</span></p>
+        <p class="preco-linha">ou {preco.parcelado}</p>
+      </div>}
       <a class="botao botao-cta" id="cta-hero" data-magnetico="0.25" data-porta="abertura" data-aparelho={ap.id}
         href={linkDireta(ap.mensagens.topo, c)} target="_blank" rel="noopener">{comum.botaoPrincipal}</a>
+      {preco && <p class="preco-extra" data-preco-ate={preco.validoAte}>{financiamento} {validade(preco)}</p>}
       <p class="topo-resposta" set:html={preencher(resposta, v, c)} />
       <p class="topo-filtro">{comum.filtro}</p>
       <p class="topo-fabricante">A Leal não é a fabricante: o {ap.nome} é da {ap.fabricante} e vendido pela Rede ISP.</p>
@@ -122,6 +131,50 @@ const pend = ap.fonteDados.estado === 'trava' ? ' ' + pilula(ap.fonteDados) : ''
     font-size: var(--t1);
     color: var(--tinta-2);
     line-height: 1.45;
+    max-width: 46ch;
+  }
+  .topo-preco {
+    margin-top: 1em;
+    padding: 12px 16px 14px;
+    width: 100%;
+    max-width: 46ch;
+    border: 1px solid var(--linha);
+    border-left: 4px solid var(--petroleo);
+    border-radius: 12px;
+    background: var(--folha);
+  }
+  .preco-avista {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0 8px;
+    color: var(--tinta);
+    line-height: 1.1;
+  }
+  .preco-avista strong {
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
+    font-weight: 750;
+    font-stretch: 90%;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .preco-avista span {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--petroleo);
+  }
+  .preco-linha {
+    margin-top: 0.35em;
+    font-size: var(--t-sm);
+    color: var(--tinta);
+    line-height: 1.45;
+    font-variant-numeric: tabular-nums;
+  }
+  .preco-extra {
+    margin-top: 0.7em;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    line-height: 1.5;
     max-width: 46ch;
   }
   .topo-texto .botao {

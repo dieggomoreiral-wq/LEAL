@@ -148,7 +148,7 @@ export const depilacaoTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de depilação a laser Hakon 4D Premium',
-    sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço do aplicador de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. Mesmo preço da loja da Rede ISP, com a proposta por escrito no WhatsApp. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço do aplicador de reposição, treinamento, instalação e o que acontece se a máquina parar.',
   },
   posVenda: {
     titulo: 'Pergunte antes da compra o que acontece depois da entrega',
@@ -268,7 +268,7 @@ export const ultrassomTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de ultrassom microfocado Ultramed MPT',
-    sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. A proposta sai no WhatsApp, com o preço e a condição de pagamento. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço de cada cartucho de reposição, treinamento, instalação e o que acontece se a máquina parar.',
+    sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. Mesmo preço da loja da Rede ISP, com a proposta por escrito no WhatsApp. Na mesma conversa, pergunte sobre o pós-venda: garantia, assistência, preço de cada cartucho de reposição, treinamento, instalação e o que acontece se a máquina parar.',
   },
   posVenda: {
     titulo: 'Pergunte antes da compra o que acontece depois da entrega',
