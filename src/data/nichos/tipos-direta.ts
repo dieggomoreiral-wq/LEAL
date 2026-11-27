@@ -35,7 +35,6 @@ export interface CondicoesRede {
   propostaEm: FatoObrigatorio<string>;        // "na própria conversa"
   pagamento: FatoObrigatorio<string>;         // só formas; sem parcelas, carência ou desconto
   quemVende: FatoObrigatorio<{ razaoSocial: string; cnpj: string }>;
-  enderecoLeal: FatoObrigatorio<string>;
   entregaArea: FatoObrigatorio<string>;       // "Para todo o Brasil" ou a área
   entregaPrazo: Fato<string>;
   lgpd: FatoObrigatorio<{ controlador: string; canal: string; prazo: string }>; // prazo: por quanto tempo a conversa fica guardada
@@ -86,7 +85,7 @@ export interface TextosAparelho {
 /** Aparelho completo: textos + o que depende de terceiro (Maestro). */
 export interface AparelhoDireto extends TextosAparelho {
   id: string;            // "hakon" (mesmo id da v1, para reaproveitar fotos)
-  anvisa: FatoObrigatorio<{ numero: string; tipo: 'registro' | 'notificação'; nomeTecnico: string }>;
+  anvisa?: FatoObrigatorio<{ numero: string; tipo: 'registro' | 'notificação'; nomeTecnico: string }>;
   fotos: {
     destaque: FotoPedestal;              // bloco 1
     miniatura: ImageMetadata;            // toque 1 do pedido

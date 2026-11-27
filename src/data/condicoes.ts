@@ -25,11 +25,6 @@ export const condicoes: CondicoesRede = {
     pergunta: 'A nota sai pela Smart BR Soluções Tecnológicas, CNPJ 06.981.980/0001-37 (a empresa que aparece na política da shopvita.com.br)? Se não, qual razão social e CNPJ?',
     dono: 'diego',
   },
-  enderecoLeal: {
-    estado: 'trava',
-    pergunta: 'O endereço do cartão CNPJ (R. Henrique Bucoski, 191, Porto Meira, Foz do Iguaçu) pode ir no rodapé?',
-    dono: 'vinicius',
-  },
   // "Depende do estado, mas assim que fatura o equipamento já sai pra envio."
   // A política da shopvita.com.br diz envio e rastreamento para todo o Brasil (lida em 22/11).
   entregaArea: { estado: 'confirmado', valor: 'Todo o Brasil', fonte: 'shopvita.com.br + Formulário do Diego', em: EM },

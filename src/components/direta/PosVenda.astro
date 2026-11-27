@@ -4,7 +4,7 @@
 // botão de WhatsApp "Tirar dúvida" (26/11: o carimbo "pergunte na conversa"
 // mandava o visitante trabalhar; o botão convida sem mandar). Versão compacta, uma folha só: enquanto 4 ou
 // mais itens estiverem na proposta, a seção horizontal fixa cansaria.
-import { dataBR, linkDireta, pilula, preencher } from '../../lib/direta';
+import { linkDireta, pilula, preencher } from '../../lib/direta';
 import IconeWhats from './IconeWhats.astro';
 import { ITENS_POS_VENDA } from '../../data/nichos/tipos-direta';
 import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
@@ -53,7 +53,6 @@ const msgItem = (r: string) => `Olá! Quero tirar uma dúvida sobre o ${ap.nome}
                   <p class="r-texto" set:html={p(x.f.valor.texto)} />
                   <p class="r-meta">
                     <span class="r-quem">{x.f.valor.responsavel}</span>
-                    <span>confirmado por {x.f.fonte} em {dataBR(x.f.em)}</span>
                   </p>
                 </>
               ) : x.f.estado === 'na-proposta' ? (

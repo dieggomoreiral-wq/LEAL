@@ -16,9 +16,10 @@ const FONTE = 'shopvita.com.br (loja da rede), lida em 26/11/2026; liberado pelo
 
 // 26/11, 12h27: o Vinicius pediu as quatro opções no mesmo peso. Não é "12x e, em letra
 // miúda, o resto": 12, 24, 36 e 48x valem todas pela financeira ou pela Medical San.
+// 27/11: o Vinicius mandou tirar do site a menção a quem financia.
 export const prazos = [12, 24, 36, 48];
 export const prazosTexto = '12, 24, 36 ou 48x';
-export const financiamento = `Em ${prazosTexto} pela financeira ou pela Medical San, com a 1ª parcela para 90 dias.`;
+export const financiamento = `Em ${prazosTexto}, com a 1ª parcela para 90 dias.`;
 export const validade = (p: PrecoPagina) => {
   const [a, m, d] = p.validoAte.split('-');
   return `Condição de Black Friday válida até ${d}/${m}/${a}.`;

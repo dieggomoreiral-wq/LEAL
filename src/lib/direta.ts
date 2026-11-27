@@ -96,13 +96,13 @@ export function travas(v: VersaoDireta, c: CondicoesRede): Trava[] {
   };
   const rotulos: Record<string, string> = {
     whatsapp: 'WhatsApp', horario: 'Horário', respostaEm: 'Prazo de resposta', propostaEm: 'Prazo da proposta', pagamento: 'Pagamento', quemVende: 'Quem vende',
-    enderecoLeal: 'Endereço', entregaArea: 'Área de entrega', entregaPrazo: 'Prazo de entrega', lgpd: 'Dados (LGPD)', politicas: 'Privacidade e cookies',
+    entregaArea: 'Área de entrega', entregaPrazo: 'Prazo de entrega', lgpd: 'Dados (LGPD)', politicas: 'Privacidade e cookies',
     demonstracao: 'Demonstração',
   };
   for (const [k, f] of Object.entries(c)) junta(rotulos[k] ?? k, f as Fato<unknown>);
   const ap = v.aparelhos.find((a) => a.id === v.principal)!;
   // Só o carro-chefe aparece na página (o segundo saiu do pedido em 21/11).
-  junta(`${ap.nome}: registro Anvisa`, ap.anvisa);
+  if (ap.anvisa) junta(`${ap.nome}: registro Anvisa`, ap.anvisa);
   junta(`${ap.nome}: imagens`, ap.fotos.autorizacao);
   junta(`${ap.nome}: fonte dos dados`, ap.fonteDados);
   junta(`${ap.nome}: caixa`, ap.caixa);

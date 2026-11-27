@@ -18,7 +18,6 @@ interface Props {
 const { titulo, descricao, atualizado } = Astro.props;
 const c = condicoes;
 const politicas = c.politicas.estado === 'confirmado' ? c.politicas.valor : undefined;
-const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : undefined;
 const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/\.html$/, ''), Astro.site).href : undefined;
 ---
 <!doctype html>
@@ -44,7 +43,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/\.html$/, '')
         <slot />
       </div>
     </main>
-    <Rodape marcas="" endereco={endereco} politicas={politicas} />
+    <Rodape marcas="" politicas={politicas} />
     <Consentimento />
     <Origem />
   </body>

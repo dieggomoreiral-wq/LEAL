@@ -13,7 +13,6 @@ interface Props {
 const { v, c, comum } = Astro.props;
 const p = (t: string) => preencher(t, v, c);
 const passos = [comum.compra.passo1, comum.compra.passo2, comum.compra.passo3];
-const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : '';
 ---
 <section class="secao compra" id="compra" aria-labelledby="t-compra">
   <div class="wrap">
@@ -34,8 +33,7 @@ const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor :
       <p class="emp-rede">{contato.rede}</p>
       <p class="emp-dados">
         {contato.razaoSocial} · CNPJ <span class="nb">{contato.cnpj}</span>
-        {endereco ? <> · {endereco}</> : null} · {contato.cidade}
-        {c.enderecoLeal.estado === 'trava' && <Fragment set:html={' ' + pilula(c.enderecoLeal)} />}
+         · {contato.cidade}
       </p>
       <p class="emp-dados" set:html={p('Atendimento no WhatsApp %HORARIO%.')} />
     </div>

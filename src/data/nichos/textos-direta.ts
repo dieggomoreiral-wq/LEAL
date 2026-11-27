@@ -32,7 +32,7 @@ export const comumDireta: ComumDireta = {
     },
     assistencia: {
       rotulo: 'Assistência técnica',
-      pergunta: 'Onde fica, em quantos dias a máquina volta e quem paga o frete',
+      pergunta: 'Onde há atendimento',
     },
     pecas: {
       rotulo: 'Reposição de %PECA%',
@@ -48,7 +48,7 @@ export const comumDireta: ComumDireta = {
     },
     parada: {
       rotulo: 'Se a máquina parar',
-      pergunta: 'O que acontece com a parcela durante o conserto e se há bloqueio por atraso',
+      pergunta: 'Como fica o pagamento durante o conserto',
     },
   },
   carimbo: 'Tirar dúvida',
@@ -59,7 +59,7 @@ export const comumDireta: ComumDireta = {
   perguntaPorQueLeal: {
     pergunta: 'Por que comprar pela Leal e não direto do fabricante?',
     resposta:
-      '<p>Na Leal, você fala com um atendimento só, do pedido à entrega, e tira na conversa as dúvidas do pós-venda antes de fechar: garantia, assistência, reposição, treinamento, instalação e o que acontece se a máquina parar. A Rede ISP vende e emite a nota.</p>',
+      '<p>A Leal concentra o seu atendimento em um único contato, do pedido à entrega, e esclarece as condições de pós-venda antes do fechamento. Havendo alguma ocorrência depois da entrega, apoia você no encaminhamento da solução.</p>',
     aberta: true,
   },
   perguntaOperar: {
@@ -83,7 +83,7 @@ export const comumDireta: ComumDireta = {
     passo2:
       '<strong>A proposta sai %PROPOSTA%.</strong> Nela vêm o preço e a condição de pagamento. Antes de você fechar, a Leal responde o pós-venda por escrito e manda a ficha, o número Anvisa e o manual.',
     passo3:
-      '<strong>Você confirma.</strong> Quem vende e emite a nota fiscal é %QUEMVENDE%. A Leal atende a sua compra.',
+      '<strong>Você confirma.</strong> Quem vende e emite a nota fiscal é %QUEMVENDE%. A Leal acompanha a compra e presta apoio caso haja alguma ocorrência com o equipamento.',
   },
 
   momentos: [
@@ -148,11 +148,11 @@ export const depilacaoTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de depilação a laser Hakon 4D Premium',
-    sub: 'Laser de {4 comprimentos de onda} com ponteira resfriada a {−12 °C}. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
+    sub: 'Laser de {4 comprimentos de onda} com aplicador resfriado a até {−12 °C}. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
     titulo: 'O que acontece depois da entrega',
-    abertura: `${DOR} Numa máquina de depilação a laser, entra também o aplicador: quanto custa repor e se há em estoque.`,
+    abertura: DOR,
   },
   maquina: { titulo: 'O Hakon 4D Premium em três números' },
   compra: { titulo: 'Como a compra anda' },
@@ -166,7 +166,7 @@ export const depilacaoTextos: TextosNicho = {
     manter: {
       pergunta: 'Quanto custa manter a máquina funcionando?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: o aplicador de reposição, o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço do aplicador, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina, entram na conta depois da compra: o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>O aplicador não tem limite de disparos. No WhatsApp, a Leal informa quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Hakon?',
@@ -193,22 +193,31 @@ export const depilacaoTextos: TextosNicho = {
         {
           numero: '−12',
           unidade: '°C',
-          rotulo: 'Resfriamento da ponteira',
-          leitura: 'O frio vem da própria ponteira, refrigerada por água.',
+          rotulo: 'Resfriamento do aplicador, até',
+          leitura: 'O sistema de resfriamento fica no próprio aplicador.',
         },
         {
-          numero: '8',
+          numero: '12,1',
           unidade: 'polegadas',
-          rotulo: 'Tela touch',
-          leitura: 'Os parâmetros de cada atendimento se ajustam na tela.',
+          rotulo: 'Display',
+          leitura: 'Fototipo, fluência e frequência aparecem no painel.',
         },
       ],
-      fonteDados: trava('Hakon 4D Premium'),
+      fonteDados: {
+        estado: 'confirmado',
+        valor: {
+          documento: 'Manual do usuário do Hakon (Medical San)',
+          revisao: 'REV05',
+          conferidoEm: '2026-11-27',
+        },
+        fonte: 'Drive da Medical San',
+        em: '2026-11-27',
+      },
       fichaCompleta: [
         { rotulo: 'Comprimentos de onda', valor: '4: 694, 755, 808 e {1064 nm}' },
-        { rotulo: 'Resfriamento da ponteira', valor: '{−12 °C}, por água' },
-        { rotulo: 'Aplicador', valor: 'Refrigerado, com suporte antiquedas' },
-        { rotulo: 'Tela', valor: 'Touch de {8 polegadas}' },
+        { rotulo: 'Resfriamento do aplicador', valor: 'Até {−12 °C}' },
+        { rotulo: 'Líquido de resfriamento', valor: 'Água destilada' },
+        { rotulo: 'Display', valor: '{12,1 polegadas}' },
         { rotulo: 'Fabricante', valor: 'Medical San' },
       ],
       mensagens: mensagens('Hakon 4D Premium'),

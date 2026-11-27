@@ -47,13 +47,12 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
         <p class="preco-avista"><strong>{preco.aVista}</strong> <span>à vista</span></p>
         <p class="preco-prazo">ou parcelado em</p>
         <ul class="preco-chips" role="list" aria-label="Parcelas">{prazos.map((n) => <li>{n}x</li>)}</ul>
-        <p class="preco-linha"><strong>1ª parcela para 90 dias</strong>, pela financeira ou pela Medical San.</p>
+        <p class="preco-linha"><strong>1ª parcela para 90 dias</strong>.</p>
       </div>}
       <a class="botao botao-cta" id="cta-hero" data-magnetico="0.25" data-porta="abertura" data-aparelho={ap.id}
         href={linkDireta(ap.mensagens.topo, c)} target="_blank" rel="noopener">{comum.botaoPrincipal}</a>
       <p class="topo-resposta" set:html={preencher(resposta, v, c)} />
       <p class="topo-filtro">{comum.filtro}</p>
-      <p class="topo-fabricante">A Leal não é a fabricante: o {ap.nome} é da {ap.fabricante} e vendido pela Rede ISP.</p>
     </div>
   </div>
 </section>
@@ -222,13 +221,6 @@ const preco = precoDa(v.slug.replace(/-v2$/, ''));
     font-size: var(--t-xs);
     color: var(--tinta-2);
     width: 100%;
-    max-width: 46ch;
-  }
-  /* Parecer de plataformas (24/11): a relação com o fabricante fica clara no topo. */
-  .topo-fabricante {
-    margin-top: 0.4em;
-    font-size: var(--t-xs);
-    color: var(--tinta-2);
     max-width: 46ch;
   }
   .topo-sub :global(.sub-lista) {

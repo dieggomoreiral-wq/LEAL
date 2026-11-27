@@ -1,7 +1,7 @@
 ---
 // v2, bloco 2. A única faixa escura da página: como paga, para onde vai,
 // de quem compra e quando chega a proposta. Os valores vêm de condicoes.ts.
-import { mostrar, pilula } from '../../lib/direta';
+import { mostrar } from '../../lib/direta';
 import { precoDa, prazosTexto } from '../../data/precos';
 import SeloBlackFriday from './SeloBlackFriday.astro';
 import type { ComumDireta, CondicoesRede } from '../../data/nichos/tipos-direta';
@@ -29,12 +29,10 @@ const celulas = [
     linha: c.entregaPrazo.estado === 'confirmado' ? c.entregaPrazo.valor : 'O prazo e o frete dependem do estado e saem na proposta.',
   },
   {
-    rotulo: r.quemVende,
-    grande: 'Rede ISP',
-    linha:
-      c.quemVende.estado === 'confirmado'
-        ? `${c.quemVende.valor.razaoSocial} vende e emite a nota fiscal. A Leal atende a sua compra.`
-        : `A Rede ISP vende e emite a nota fiscal. A Leal atende a sua compra. ${pilula(c.quemVende)}`,
+    // 27/11, pedido do Vinicius: o diferencial é a Leal ajudar se der problema (não promete resolver tudo).
+    rotulo: 'Pós-venda',
+    grande: 'Suporte Leal',
+    linha: 'Acompanhamento do pedido à entrega e apoio caso haja alguma ocorrência com o equipamento.',
   },
   {
     rotulo: r.proposta,
@@ -45,7 +43,7 @@ const celulas = [
 const celulaPreco = preco && {
   rotulo: 'Preço',
   grande: preco.aVista,
-  linha: `à vista, ou em ${prazosTexto} pela financeira ou pela Medical San, com a 1ª parcela para 90 dias.`,
+  linha: `à vista, ou em ${prazosTexto}, com a 1ª parcela para 90 dias.`,
 };
 // Tráfego (21/11): com menos de 3 das 4 condições confirmadas, a faixa vira
 // uma fileira de "vai na proposta" e lê como esquiva. Some até a rede responder;

@@ -17,7 +17,9 @@ const { v, ap, c, comum } = Astro.props;
 const video = ap.video?.assistidoEm ? { id: ap.video.id, titulo: ap.video.titulo } : undefined;
 const fonte = ap.fonteDados;
 // Na publicação, linha sem fato confirmado some em vez de ficar vazia.
-const verAnvisa = rascunho || ap.anvisa.estado === 'confirmado';
+// Sem o campo, a página não mostra registro.
+const anvisa = ap.anvisa;
+const verAnvisa = anvisa && (rascunho || anvisa.estado === 'confirmado');
 const verFonte = rascunho || fonte.estado === 'confirmado';
 ---
 <section class="secao maquina" id="maquina" aria-labelledby="t-maq">
@@ -54,13 +56,13 @@ const verFonte = rascunho || fonte.estado === 'confirmado';
           {verAnvisa && <div>
             <dt>Anvisa</dt>
             <dd>
-              {ap.anvisa.estado === 'confirmado' ? (
+              {anvisa.estado === 'confirmado' ? (
                 <>
-                  {ap.anvisa.valor.tipo === 'registro' ? 'Registro' : 'Notificação'} <span class="nb">nº {ap.anvisa.valor.numero}</span>
-                  <span class="reg-tec">{ap.anvisa.valor.nomeTecnico}</span>
+                  {anvisa.valor.tipo === 'registro' ? 'Registro' : 'Notificação'} <span class="nb">nº {anvisa.valor.numero}</span>
+                  <span class="reg-tec">{anvisa.valor.nomeTecnico}</span>
                 </>
               ) : (
-                <Fragment set:html={pilula(ap.anvisa)} />
+                <Fragment set:html={pilula(anvisa)} />
               )}
             </dd>
           </div>}

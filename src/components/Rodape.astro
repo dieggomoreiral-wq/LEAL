@@ -9,19 +9,17 @@ interface Props {
   marcas: string;
   /** Linha de uso profissional, se diferente da padrão. */
   uso?: string;
-  endereco?: string;
   politicas?: { privacidade: string; cookies: string };
 }
 const {
   marcas,
-  endereco,
   politicas,
   uso = 'Equipamentos destinados a uso profissional. O uso segue o registro de cada aparelho na Anvisa, o manual do fabricante e as regras do conselho de quem opera.',
 } = Astro.props;
 ---
 <footer class="rodape" id="rodape">
   <div class="wrap">
-    <p>{contato.razaoSocial} · {contato.marca} · CNPJ {contato.cnpj}{endereco ? ` · ${endereco}` : ''} · {contato.cidade}</p>
+    <p>{contato.razaoSocial} · {contato.marca} · CNPJ {contato.cnpj} · {contato.cidade}</p>
     <p><strong>{contato.rede}.</strong></p>
     <p class="texto">{uso}</p>
     <p class="texto" set:html={marca(marcas)} />

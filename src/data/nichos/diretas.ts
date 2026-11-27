@@ -32,6 +32,15 @@ const anvisaConferir = (nome: string, fabricante: string, numero: string): Anvis
   dono: 'shark',
 });
 
+// Áudio do Diego repassado em 27/11: há treinamento para quem compra, dado na
+// chegada; quem instala é o comprador, nesse treinamento; equipamentos em estoque.
+const DIEGO = { estado: 'confirmado', fonte: 'Áudio do Diego', em: '2026-11-27' } as const;
+// Só do Hakon: 18 meses de fábrica (mandado publicar em 27/11) e disparo ilimitado.
+const SO_HAKON: Partial<AparelhoDireto['posVenda']> = {
+  garantia: { ...DIEGO, valor: { texto: '18 meses de garantia de fábrica no equipamento e 6 meses no aplicador, conforme o termo do fabricante. A validade pede a manutenção preventiva em dia.', responsavel: 'Fabricante' } },
+  pecas: { ...DIEGO, valor: { texto: 'Aplicador sem limite de disparos: não há troca por contagem.', responsavel: 'Fabricante' } },
+};
+
 function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<string, Anvisa>): VersaoDireta {
   const ids = n.comparar.aparelhos.map((a) => a.id).sort((a, b) => (a === principal ? -1 : b === principal ? 1 : 0));
   const aparelhos = ids.map((id) => {
@@ -65,11 +74,15 @@ function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<stri
         // Formulário do Diego (22/11): ele confere a garantia e responde na conversa,
         // como as outras cinco. Na página vira o botão 'Tirar dúvida' (WhatsApp).
         garantia: { estado: 'na-proposta' },
-        assistencia: { estado: 'na-proposta' },
+        // 27/11, Vinicius: assistência em todo o Brasil; a página não fala de quem paga frete.
+        assistencia: { estado: 'confirmado', fonte: 'Vinicius', em: '2026-11-27', valor: { texto: 'Assistência técnica em todo o Brasil.', responsavel: 'Rede ISP' } },
         pecas: { estado: 'na-proposta' },
-        treinamento: { estado: 'na-proposta' },
-        instalacao: { estado: 'na-proposta' },
-        parada: { estado: 'na-proposta' },
+        treinamento: { ...DIEGO, valor: { texto: 'Treinamento para quem compra, realizado na chegada da máquina.', responsavel: 'Leal' } },
+        instalacao: { ...DIEGO, valor: { texto: 'Instalação feita pelo próprio comprador, com orientação no treinamento.', responsavel: 'Leal' } },
+        // 27/11, Vinicius: máquina parada por defeito tem valor reduzido no período. A página
+        // não diz "redução" e não pode dar a entender que a parcela some. Bloqueio por atraso não é citado.
+        parada: { estado: 'confirmado', fonte: 'Vinicius', em: '2026-11-27', valor: { texto: 'Máquina parada por defeito tem condição especial de pagamento no período, para aliviar o caixa da clínica. As regras vão na proposta.', responsavel: 'Rede ISP' } },
+        ...(id === 'hakon' ? SO_HAKON : {}),
       },
     };
     return ap;
@@ -91,11 +104,7 @@ function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<stri
 }
 
 export const depilacaoDireta = montar(depilacaoTextos, depilacao, 'hakon', {
-  hakon: {
-    estado: 'trava',
-    pergunta: 'Qual registro vale para o Hakon 4D Premium vendido pela rede: 81243810015 (site da Medical San) ou 81243810012? Conferir nome técnico no portal',
-    dono: 'shark',
-  },
+  // 27/11, Vinicius: a LP do Hakon não mostra o registro Anvisa.
   acrus: { estado: 'trava', pergunta: 'Conferir no portal da Anvisa o número, o nome técnico e se é registro ou notificação do Ácrus (HTM)', dono: 'shark' },
 });
 

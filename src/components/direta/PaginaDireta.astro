@@ -29,7 +29,6 @@ const comum = comumDireta;
 const ap = v.aparelhos.find((a) => a.id === v.principal)!;
 const limpa = (t: string) => t.replace(/%PECA%/g, v.nicho.peca.toLowerCase()).replace(/[{}]|\[\[|\]\]/g, '');
 const faixa = [...Object.values(comum.posVenda).map((x) => limpa(x.rotulo)), 'Perguntado antes de fechar'];
-const endereco = c.enderecoLeal.estado === 'confirmado' ? c.enderecoLeal.valor : undefined;
 const politicas = c.politicas.estado === 'confirmado' ? c.politicas.valor : undefined;
 const nicho = v.slug.replace(/-v2$/, '');
 ---
@@ -41,7 +40,6 @@ const nicho = v.slug.replace(/-v2$/, '');
   rotuloBarra={comum.botaoPrincipal}
   rodapeMarcas={v.rodape.marcas}
   rodapeUso={v.rodape.uso}
-  endereco={endereco}
   politicas={politicas}
 >
   <meta slot="head" name="robots" content="noindex, follow" />

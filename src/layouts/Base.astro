@@ -25,12 +25,10 @@ interface Props {
   rotuloBarra?: string;
   /** Link pronto da barra fixa (a v2 monta o seu com o número das condições). */
   linkBarra?: string;
-  /** Endereço no rodapé, quando confirmado. */
-  endereco?: string;
   politicas?: { privacidade: string; cookies: string };
 }
 
-const { titulo, descricao, mensagem, rodapeMarcas, rodapeUso, rotuloBarra, linkBarra, endereco, politicas } = Astro.props;
+const { titulo, descricao, mensagem, rodapeMarcas, rodapeUso, rotuloBarra, linkBarra, politicas } = Astro.props;
 // Com SITE_URL no build, cada página aponta o próprio endereço definitivo.
 const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/.html$/, ''), Astro.site).href : undefined;
 ---
@@ -74,7 +72,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname.replace(/.html$/, ''),
     <main id="conteudo">
       <slot />
     </main>
-    <Rodape marcas={rodapeMarcas} uso={rodapeUso} endereco={endereco} politicas={politicas} />
+    <Rodape marcas={rodapeMarcas} uso={rodapeUso} politicas={politicas} />
     <WhatsFixo mensagem={mensagem} rotulo={rotuloBarra} href={linkBarra} />
     <Zoom />
     <Consentimento />
