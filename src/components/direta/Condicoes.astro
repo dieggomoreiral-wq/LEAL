@@ -26,13 +26,14 @@ const celulas = [
   {
     rotulo: r.entrega,
     grande: mostrar(c.entregaArea),
-    linha: c.entregaPrazo.estado === 'confirmado' ? c.entregaPrazo.valor : 'O prazo e o frete dependem do estado e saem na proposta.',
+    // 27/11, Vinicius: a página não fala de frete.
+    linha: c.entregaPrazo.estado === 'confirmado' ? c.entregaPrazo.valor : 'O prazo depende do estado e sai na proposta.',
   },
   {
     // 27/11, pedido do Vinicius: o diferencial é a Leal ajudar se der problema (não promete resolver tudo).
     rotulo: 'Pós-venda',
     grande: 'Suporte Leal',
-    linha: 'Acompanhamento do pedido à entrega e apoio caso haja alguma ocorrência com o equipamento.',
+    linha: 'Acompanhamento do pedido à entrega e, depois dela, apoio no mesmo WhatsApp caso haja alguma ocorrência com o equipamento.',
   },
   {
     rotulo: r.proposta,

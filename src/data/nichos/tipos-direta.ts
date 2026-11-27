@@ -76,6 +76,10 @@ export interface TextosAparelho {
   /** Dever de casa nosso: sem o manual lido, é trava (dono shark). */
   fonteDados: FatoObrigatorio<FonteDados>;
   fichaCompleta: { rotulo: string; valor: string }[];
+  /** Linha sob o "Vem na caixa" (27/11): de onde vem a lista e o que é opcional. */
+  caixaNota?: string;
+  /** "O que a sala precisa" (27/11), recolhido no bloco 4. Itens do manual, passam pela marca(). */
+  sala?: { titulo: string; abertura: string; itens: string[]; fecho?: string };
   mensagens: {
     topo: string;        // "Olá! Quero a proposta do Hakon 4D Premium."
     docs: string;        // "Olá! Quero receber o manual e a ficha do Hakon 4D Premium."
@@ -95,15 +99,14 @@ export interface AparelhoDireto extends TextosAparelho {
   };
   video?: { id: string; titulo: string; assistidoEm: string };   // sem assistidoEm, não entra
   caixa: Fato<string[]>;                 // na-proposta: a lista some do bloco 4
-  posVenda: { garantia: FatoObrigatorio<RespostaPosVenda> } &
-            Record<Exclude<ItemPosVenda, 'garantia'>, Fato<RespostaPosVenda>>;
+  // Desde 22/11 a garantia também pode ir "na-proposta" (o Diego responde na conversa).
+  posVenda: Record<ItemPosVenda, Fato<RespostaPosVenda>>;
 }
 
 /* ---------- Textos padrão (comum), iguais nos 6 nichos ---------- */
 
 export interface TextoItemPosVenda {
-  rotulo: string;        // "Assistência técnica"  ("pecas" usa {peca})
-  pergunta: string;      // "Onde fica, em quantos dias a máquina volta e quem paga o frete"
+  rotulo: string;        // "Assistência técnica"  ("pecas" usa {peca}). 27/11: sem pergunta nem botão.
 }
 
 export interface Pergunta { pergunta: string; resposta: string; aberta?: boolean }
@@ -114,10 +117,7 @@ export interface ComumDireta {
   /** Faixa escura: rótulos das 4 células e a linha de baixo. */
   condicoes: { pagamento: string; entrega: string; quemVende: string; proposta: string; precoNaProposta: string };
   posVenda: Record<ItemPosVenda, TextoItemPosVenda>;
-  /** Carimbo dos itens sem resposta confirmada. */
-  carimbo: string;
   compromisso: string;
-  ctaPosVenda: string;                              // "Pedir a proposta com estas respostas"
   perguntaPorQueLeal: Pergunta;
   perguntaOperar: Pergunta;
   perguntaMaisBarato: Pergunta;

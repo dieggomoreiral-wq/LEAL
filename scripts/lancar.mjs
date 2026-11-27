@@ -3,7 +3,7 @@
 // Uso: node scripts/lancar.mjs https://dominio [GTM-XXXXXXX]
 // Depois: a pasta dist/ é o site inteiro, pronta para subir (Vercel ou outro).
 import { execSync } from 'node:child_process';
-import { copyFileSync, readdirSync, readFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 
 // Na Vercel (buildCommand do vercel.json) roda sem argumentos: pega SITE_URL e
 // PUBLIC_GTM_ID das variáveis do projeto, ou o endereço de produção da Vercel.
@@ -24,6 +24,15 @@ execSync('npx astro build', {
   env: { ...process.env, MODO: 'publicacao', LANCAR: '1', SITE_URL: site, PUBLIC_GTM_ID: gtm },
 });
 copyFileSync('vercel.json', 'dist/vercel.json');
+
+// Página congelada (27/11/2026): o Hakon fica na versão que já estava no ar
+// (commit 36d8c06) até a Leal responder C1 e C2 da ata das melhorias. A pasta
+// congelado/ guarda o HTML daquele build e os arquivos de /_astro que ele usa,
+// e entra por cima do build novo. Para soltar o Hakon, apague congelado/.
+if (existsSync('congelado')) {
+  cpSync('congelado', 'dist', { recursive: true });
+  console.log('Congelado: ' + readdirSync('congelado').filter((x) => x.endsWith('.html')).join(', '));
+}
 
 // Conferência por código: nada de pendência na página, todo botão no número certo.
 const problemas = [];

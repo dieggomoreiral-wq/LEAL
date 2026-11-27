@@ -50,7 +50,7 @@ export function preencher(texto: string, v: VersaoDireta, c: CondicoesRede): str
       .replace(/%RESPOSTA%/g, mostrarMarca(c.respostaEm))
       .replace(/%PROPOSTA%/g, mostrarMarca(c.propostaEm))
       .replace(/%HORARIO%/g, c.horario.estado === 'confirmado' ? c.horario.valor : pilulaMarca(c.horario))
-      .replace(/%QUEMVENDE%/g, c.quemVende.estado === 'trava' ? (rascunho ? pilulaMarca(c.quemVende) : 'a Rede ISP') : qv),
+      .replace(/%QUEMVENDE%/g, c.quemVende.estado === 'trava' ? (rascunho ? pilulaMarca(c.quemVende) : 'uma empresa da Rede ISP, com razão social e CNPJ na proposta') : qv),
   );
 }
 // Dentro de preencher() a pílula vai como [[...]] para a marca() montar.

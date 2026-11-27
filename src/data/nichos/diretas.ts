@@ -35,10 +35,38 @@ const anvisaConferir = (nome: string, fabricante: string, numero: string): Anvis
 // Áudio do Diego repassado em 27/11: há treinamento para quem compra, dado na
 // chegada; quem instala é o comprador, nesse treinamento; equipamentos em estoque.
 const DIEGO = { estado: 'confirmado', fonte: 'Áudio do Diego', em: '2026-11-27' } as const;
-// Só do Hakon: 18 meses de fábrica (mandado publicar em 27/11) e disparo ilimitado.
-const SO_HAKON: Partial<AparelhoDireto['posVenda']> = {
-  garantia: { ...DIEGO, valor: { texto: '18 meses de garantia de fábrica no equipamento e 6 meses no aplicador, conforme o termo do fabricante. A validade pede a manutenção preventiva em dia.', responsavel: 'Fabricante' } },
-  pecas: { ...DIEGO, valor: { texto: 'Aplicador sem limite de disparos: não há troca por contagem.', responsavel: 'Fabricante' } },
+// Garantia de fábrica de 18 meses, mandada publicar pelo Vinicius em 27/11. O "disparo
+// ilimitado" do áudio saiu (H1): o manual REV05 não traz, e a preventiva conta disparos.
+// Ultramed: manual REV03, seção 12 (18 meses no equipamento a contar da nota, 6 nos
+// aplicadores, preventiva com inspeção e calibração na fábrica a cada 6 meses).
+// Nas outras 4 LPs a garantia não tem resposta confirmada, e o item não aparece.
+const GARANTIA: Record<string, AparelhoDireto['posVenda']['garantia']> = {
+  hakon: { ...DIEGO, valor: { texto: '18 meses de garantia de fábrica no equipamento.', responsavel: 'Fabricante' } },
+  ultramed: {
+    estado: 'confirmado',
+    fonte: 'Manual do usuário do Ultramed MPT, REV03',
+    em: '2026-11-27',
+    valor: { texto: '18 meses de garantia de fábrica no equipamento, a contar da nota fiscal.', responsavel: 'Fabricante' },
+  },
+};
+
+// Estoque é fato perecível (parecer de conformidade 27/11, G6): vale 7 dias a partir
+// do áudio. Sem renovação por escrito, a linha "Disponibilidade" some da página,
+// no build e no navegador. Para renovar, troque "em" e "validoAte".
+export const ESTOQUE = {
+  ...DIEGO,
+  valor: 'Em estoque na Rede ISP, com a disponibilidade confirmada por escrito antes do pagamento',
+  validoAte: '2026-12-04',
+} as const;
+
+// Manual do fabricante lido em 27/11 (REV05, item 5.3). A caixa do Ultramed espera o kit real.
+const CAIXA: Record<string, AparelhoDireto['caixa']> = {
+  hakon: {
+    estado: 'confirmado',
+    valor: ['Aplicador de depilação', 'Pedal de acionamento', 'Óculos de proteção do operador', 'Óculos de proteção do paciente'],
+    fonte: 'Manual do usuário do Hakon, REV05',
+    em: '2026-11-27',
+  },
 };
 
 function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<string, Anvisa>): VersaoDireta {
@@ -69,20 +97,18 @@ function montar(t: TextosNicho, n: Nicho, principal: string, anvisa: Record<stri
         autorizacao,
       },
       // Vídeo só entra depois de assistido inteiro (assistidoEm).
-      caixa: { estado: 'na-proposta' },
+      caixa: CAIXA[id] ?? { estado: 'na-proposta' },
       posVenda: {
-        // Formulário do Diego (22/11): ele confere a garantia e responde na conversa,
-        // como as outras cinco. Na página vira o botão 'Tirar dúvida' (WhatsApp).
-        garantia: { estado: 'na-proposta' },
+        // 27/11: item sem resposta confirmada (na-proposta) não aparece na página.
+        garantia: GARANTIA[id] ?? { estado: 'na-proposta' },
         // 27/11, Vinicius: assistência em todo o Brasil; a página não fala de quem paga frete.
         assistencia: { estado: 'confirmado', fonte: 'Vinicius', em: '2026-11-27', valor: { texto: 'Assistência técnica em todo o Brasil.', responsavel: 'Rede ISP' } },
         pecas: { estado: 'na-proposta' },
-        treinamento: { ...DIEGO, valor: { texto: 'Treinamento para quem compra, realizado na chegada da máquina.', responsavel: 'Leal' } },
+        treinamento: { ...DIEGO, valor: { texto: 'Treinamento para quem compra, marcado para a chegada da máquina.', responsavel: 'Leal' } },
         instalacao: { ...DIEGO, valor: { texto: 'Instalação feita pelo próprio comprador, com orientação no treinamento.', responsavel: 'Leal' } },
         // 27/11, Vinicius: máquina parada por defeito tem valor reduzido no período. A página
         // não diz "redução" e não pode dar a entender que a parcela some. Bloqueio por atraso não é citado.
-        parada: { estado: 'confirmado', fonte: 'Vinicius', em: '2026-11-27', valor: { texto: 'Máquina parada por defeito tem condição especial de pagamento no período, para aliviar o caixa da clínica. As regras vão na proposta.', responsavel: 'Rede ISP' } },
-        ...(id === 'hakon' ? SO_HAKON : {}),
+        parada: { estado: 'confirmado', fonte: 'Vinicius', em: '2026-11-27', valor: { texto: 'Máquina parada por defeito tem condição especial de pagamento no período.', responsavel: 'Rede ISP' } },
       },
     };
     return ap;

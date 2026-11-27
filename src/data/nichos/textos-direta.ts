@@ -25,41 +25,23 @@ export const comumDireta: ComumDireta = {
     proposta: 'Proposta',
     precoNaProposta: 'O preço vai na proposta.',
   },
+  // 27/11, Vinicius: a página responde. Nada de botão "Tirar dúvida" nem de pergunta
+  // sem resposta: cada item mostra o rótulo e a resposta confirmada, e o que não tem
+  // resposta confirmada não aparece.
   posVenda: {
-    garantia: {
-      rotulo: 'Garantia',
-      pergunta: 'Quantos meses, o que cobre e se exige revisão',
-    },
-    assistencia: {
-      rotulo: 'Assistência técnica',
-      pergunta: 'Onde há atendimento',
-    },
-    pecas: {
-      rotulo: 'Reposição de %PECA%',
-      pergunta: 'Quanto custa a reposição e se há em estoque',
-    },
-    treinamento: {
-      rotulo: 'Treinamento',
-      pergunta: 'Quem dá, onde, quantas horas e quanto tempo depois da entrega',
-    },
-    instalacao: {
-      rotulo: 'Instalação',
-      pergunta: 'O que a sala precisa (tensão, espaço, água) e quem instala',
-    },
-    parada: {
-      rotulo: 'Se a máquina parar',
-      pergunta: 'Como fica o pagamento durante o conserto',
-    },
+    garantia: { rotulo: 'Garantia' },
+    assistencia: { rotulo: 'Assistência técnica' },
+    pecas: { rotulo: 'Reposição de %PECA%' },
+    treinamento: { rotulo: 'Treinamento' },
+    instalacao: { rotulo: 'Instalação' },
+    parada: { rotulo: 'Se a máquina parar' },
   },
-  carimbo: 'Tirar dúvida',
-  compromisso:
-    'A Leal responde cada um destes pontos no WhatsApp, por escrito, antes de você fechar a compra.',
-  ctaPosVenda: 'Tirar dúvida com a Leal',
+  compromisso: 'A Leal confirma cada um destes pontos por escrito antes de você fechar a compra.',
 
   perguntaPorQueLeal: {
     pergunta: 'Por que comprar pela Leal e não direto do fabricante?',
     resposta:
-      '<p>A Leal concentra o seu atendimento em um único contato, do pedido à entrega, e esclarece as condições de pós-venda antes do fechamento. Havendo alguma ocorrência depois da entrega, apoia você no encaminhamento da solução.</p>',
+      '<p>A Leal concentra o seu atendimento em um único contato, do pedido ao pós-venda, e responde por escrito as condições de pós-venda antes do fechamento. Depois da entrega, o contato continua sendo o mesmo WhatsApp. Havendo alguma ocorrência com o equipamento, a Leal apoia você no encaminhamento da solução.</p>',
     aberta: true,
   },
   perguntaOperar: {
@@ -70,7 +52,7 @@ export const comumDireta: ComumDireta = {
   perguntaMaisBarato: {
     pergunta: 'Vi mais barato em outra loja. Vale falar com a Leal?',
     resposta:
-      '<p>Vale. É só mandar o link junto com a mensagem. A Leal confere se é o mesmo modelo e o que vem na caixa, e responde com a proposta dela por escrito. Use a lista <a href="#comparar">Compare antes de fechar</a> para pôr as duas lojas lado a lado: preço igual não quer dizer pós-venda igual.</p>',
+      '<p>Vale. É só mandar o link junto com a mensagem. A Leal confere se é o mesmo modelo e o que vem na caixa, e responde com a proposta dela por escrito. A lista <a href="#comparar">Compare antes de fechar</a> põe as duas lojas lado a lado: preço igual não quer dizer pós-venda igual.</p>',
   },
   perguntaDemonstracao: {
     pergunta: 'Posso ver a máquina funcionando antes de comprar?',
@@ -81,7 +63,7 @@ export const comumDireta: ComumDireta = {
   compra: {
     passo1: '<strong>Você manda a mensagem.</strong> A Leal responde %RESPOSTA%, %HORARIO%.',
     passo2:
-      '<strong>A proposta sai %PROPOSTA%.</strong> Nela vêm o preço e a condição de pagamento. Antes de você fechar, a Leal responde o pós-venda por escrito e manda a ficha, o número Anvisa e o manual.',
+      '<strong>A proposta sai %PROPOSTA%.</strong> Nela vêm o preço e a condição de pagamento. Antes de você fechar, a Leal confirma o pós-venda por escrito e manda a ficha, o número Anvisa e o manual.',
     passo3:
       '<strong>Você confirma.</strong> Quem vende e emite a nota fiscal é %QUEMVENDE%. A Leal acompanha a compra e presta apoio caso haja alguma ocorrência com o equipamento.',
   },
@@ -138,7 +120,7 @@ export const depilacaoTextos: TextosNicho = {
   seo: {
     titulo: 'Máquina de depilação a laser Hakon 4D Premium | Leal',
     descricao:
-      'Proposta do Hakon 4D Premium no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, reposição do aplicador, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Hakon 4D Premium no WhatsApp, com o pós-venda respondido na página: garantia de fábrica, assistência técnica em todo o Brasil, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'depilação a laser',
@@ -159,14 +141,14 @@ export const depilacaoTextos: TextosNicho = {
   perguntas: {
     titulo: 'O que ainda falta saber',
     doNicho: {
-      pergunta: 'O Hakon 4D Premium atende todos os fototipos?',
+      pergunta: 'Como o Hakon 4D Premium trabalha com o fototipo da cliente?',
       resposta:
-        '<p>A indicação por fototipo do Hakon 4D Premium está no manual do fabricante. A Leal manda o manual para você conferir se ele cobre o fototipo das clientes que você mais atende. A Leal envia o manual e o número Anvisa pelo WhatsApp, antes de você comprar.</p>',
+        '<p>O painel do Hakon 4D Premium tem seleção de fototipo em três faixas: baixo, médio e alto. Os parâmetros de cada atendimento seguem as orientações do manual do fabricante e a avaliação de quem opera.</p><p>A Leal envia o manual pelo WhatsApp antes da compra.</p>',
     },
     manter: {
-      pergunta: 'Quanto custa manter a máquina funcionando?',
+      pergunta: 'O que entra na conta depois da compra?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>O aplicador não tem limite de disparos. No WhatsApp, a Leal informa quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>Além do preço da máquina: a manutenção preventiva que o manual do fabricante pede para manter a garantia (anual ou a cada 500.000 disparos), que não é coberta pela garantia; a água destilada do resfriamento; e a manutenção fora da garantia. A assistência técnica é indicada pela Rede ISP, em todo o Brasil.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Hakon?',
@@ -213,13 +195,34 @@ export const depilacaoTextos: TextosNicho = {
         fonte: 'Drive da Medical San',
         em: '2026-11-27',
       },
+      // 27/11: ficha do manual REV05, 12 linhas, sem volts nem Hz (parecer de conformidade, 6.2).
       fichaCompleta: [
+        { rotulo: 'Tecnologia', valor: 'Laser de diodo e Nd-YAG, classe 4' },
         { rotulo: 'Comprimentos de onda', valor: '4: 694, 755, 808 e {1064 nm}' },
-        { rotulo: 'Resfriamento do aplicador', valor: 'Até {−12 °C}' },
-        { rotulo: 'Líquido de resfriamento', valor: 'Água destilada' },
+        { rotulo: 'Energia', valor: 'Até {200 J}' },
+        { rotulo: 'Largura de pulso', valor: 'De {10 a 400 ms}' },
+        { rotulo: 'Área do feixe', valor: '{15 × 12 mm}' },
+        { rotulo: 'Resfriamento do aplicador', valor: 'Até {−12 °C}, com água destilada' },
+        { rotulo: 'Seleção de fototipo', valor: 'Baixo, médio e alto, no painel' },
         { rotulo: 'Display', valor: '{12,1 polegadas}' },
+        { rotulo: 'Alimentação elétrica', valor: 'Bifásica, {1.760 VA}' },
+        { rotulo: 'Peso', valor: '{18 kg}' },
+        { rotulo: 'Dimensões', valor: '{351 × 455 × 480 mm}' },
         { rotulo: 'Fabricante', valor: 'Medical San' },
       ],
+      caixaNota: 'Lista do manual do fabricante. O rack é opcional: a proposta informa se acompanha.',
+      sala: {
+        titulo: 'O que a sala precisa',
+        abertura: 'Para receber o Hakon 4D Premium, o manual do fabricante pede:',
+        itens: [
+          'Circuito elétrico próprio, com disjuntor exclusivo, conferido por um eletricista qualificado',
+          'Tomada aterrada, para a alimentação bifásica do equipamento',
+          'Sala climatizada, entre {10 e 40 °C}, com umidade até {70%}',
+          '{50 cm} livres em volta da máquina e {15 cm} atrás',
+          'Água destilada para o resfriamento',
+        ],
+        fecho: 'A instalação é feita por você, com orientação no treinamento.',
+      },
       mensagens: mensagens('Hakon 4D Premium'),
     },
     acrus: {
@@ -267,7 +270,7 @@ export const ultrassomTextos: TextosNicho = {
   seo: {
     titulo: 'Máquina de ultrassom microfocado Ultramed MPT | Leal',
     descricao:
-      'Proposta do Ultramed MPT no WhatsApp. Na conversa, a Leal responde o pós-venda: garantia, assistência, preço dos cartuchos, treinamento, instalação e o que acontece se a máquina parar.',
+      'Proposta do Ultramed MPT no WhatsApp, com o pós-venda respondido na página: garantia de fábrica, assistência técnica em todo o Brasil, treinamento, instalação e o que acontece se a máquina parar.',
   },
   nicho: {
     nome: 'ultrassom microfocado',
@@ -277,30 +280,30 @@ export const ultrassomTextos: TextosNicho = {
   topo: {
     sobre: SOBRE,
     h1: 'Máquina de ultrassom microfocado Ultramed MPT',
-    sub: 'Ultrassom microfocado que trabalha de {1,5 a 16 mm} de profundidade, conforme o cartucho. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
+    sub: 'Ultrassom microfocado que trabalha de {1,5 a 13 mm} de profundidade, conforme o cartucho. Proposta por escrito no WhatsApp, com o pós-venda respondido antes de você fechar.',
   },
   posVenda: {
     titulo: 'O que acontece depois da entrega',
-    abertura: `${DOR} No ultrassom microfocado, entra também a conta do cartucho que acaba.`,
+    abertura: DOR,
   },
   maquina: { titulo: 'O Ultramed MPT em três números' },
   compra: { titulo: 'Como a compra anda' },
   perguntas: {
     titulo: 'O que ainda falta saber',
     doNicho: {
-      pergunta: 'Quanto dura cada cartucho do Ultramed MPT?',
+      pergunta: 'Quais cartuchos o Ultramed MPT usa?',
       resposta:
-        '<p>Cada cartucho tem um número de disparos. O 2D, por exemplo, tem 20.000. No WhatsApp, a Leal informa quais cartuchos vêm com a máquina, o preço da reposição e se há em estoque.</p>',
+        '<p>O manual do fabricante lista cinco cartuchos: três faciais, de 1,5, 3,0 e 4,5 mm, e dois corporais, de 8,0 e 13,0 mm. A proposta traz por escrito quais deles vêm com a máquina.</p>',
     },
     manter: {
-      pergunta: 'Quanto custa manter a máquina funcionando?',
+      pergunta: 'O que entra na conta depois da compra?',
       resposta:
-        '<p>Além do preço da máquina, entram na conta depois da compra: os cartuchos que se trocam por número de disparos (quais são e quantos disparos fazem, o fabricante informa), o material de rotina, se o manual indicar algum, e a manutenção fora da garantia.</p><p>No WhatsApp, a Leal informa o preço de cada cartucho, quem faz a manutenção fora da garantia e como ela é cobrada. Com esses números, você faz a conta da sua clínica.</p>',
+        '<p>O manual do fabricante pede dois cuidados: conferir o feixe pelo menos uma vez por semana, e sempre depois de qualquer impacto, e fazer a inspeção e a calibração na fábrica pelo menos a cada 6 meses. A assistência técnica é indicada pela Rede ISP, em contato com o fabricante.</p><p>Além do preço da máquina, entram na conta: a reposição dos cartuchos, a inspeção semestral e a manutenção fora da garantia.</p>',
     },
     variantes: {
       pergunta: 'Existe mais de um Ultramed?',
       resposta:
-        '<p>Sim. A Rede ISP vende duas versões do Ultramed MPT, com códigos de modelo diferentes: o Ultramed MPT e o Ultramed MPT Versão Especial. No WhatsApp, a Leal informa o que muda entre elas, como kit e cartuchos, e o número de cada uma na Anvisa, para conferir no portal.</p>',
+        '<p>Sim. O manual do fabricante descreve mais de uma versão do Ultramed MPT, e o que muda entre elas é o número de aplicadores. Na Rede ISP, o aparelho aparece com dois nomes: Ultramed MPT e Ultramed MPT Versão Especial. A proposta traz por escrito o modelo e os aplicadores que acompanham.</p>',
     },
   },
   pedido: {
@@ -314,32 +317,58 @@ export const ultrassomTextos: TextosNicho = {
       fabricante: 'Medical San',
       dados: [
         {
-          numero: '1,5 a 16',
+          numero: '1,5 a 13',
           unidade: 'mm',
           rotulo: 'Profundidades, conforme o cartucho',
-          leitura: 'Cada profundidade pede o seu cartucho. A Leal informa quais vêm com a máquina.',
+          leitura: 'Cada profundidade pede o seu cartucho. A proposta traz quais vêm com a máquina.',
         },
         {
-          numero: '20.000',
-          unidade: 'disparos',
-          rotulo: 'Por cartucho 2D',
-          leitura: 'É a conta da reposição: depois disso, o cartucho 2D se troca.',
+          numero: '100 a 240',
+          unidade: 'V',
+          rotulo: 'Bivolt automático',
+          leitura: 'Tomada aterrada, com o cabo original e sem adaptador.',
         },
         {
-          numero: '5',
+          numero: '3,5',
           unidade: 'kg',
-          rotulo: 'Peso',
-          leitura: 'Cabe numa bancada e muda de sala com facilidade.',
+          rotulo: 'Peso líquido',
+          leitura: 'Pelo manual, o próprio usuário pode transportar o equipamento.',
         },
       ],
-      fonteDados: trava('Ultramed MPT'),
+      fonteDados: {
+        estado: 'confirmado',
+        valor: {
+          documento: 'Manual do usuário do Ultramed MPT (Medical San)',
+          revisao: 'REV03',
+          conferidoEm: '2026-11-27',
+        },
+        fonte: 'Drive da Medical San',
+        em: '2026-11-27',
+      },
+      // 27/11: ficha do manual REV03, 10 linhas. Sem versões, sem íntimo, sem Hz (parecer, 6.3).
       fichaCompleta: [
-        { rotulo: 'Aplicadores', valor: 'Entre eles 2D MPT, Pen MPT e 9D' },
-        { rotulo: 'Profundidades', valor: '{1,5 a 16 mm}, conforme o cartucho' },
-        { rotulo: 'Disparos por cartucho', valor: '2D: {20.000}; 9D: {525}' },
-        { rotulo: 'Peso', valor: '{5 kg}' },
+        { rotulo: 'Tecnologia', valor: 'Ultrassom microfocado de alta intensidade' },
+        { rotulo: 'Indicação de uso, conforme o manual', valor: 'Auxílio no tratamento de gordura localizada e flacidez' },
+        { rotulo: 'Frequência do ultrassom', valor: '{4 MHz}' },
+        { rotulo: 'Potência acústica', valor: '{30 W}' },
+        { rotulo: 'Cartuchos', valor: 'Faciais de {1,5, 3,0 e 4,5 mm}; corporais de {8,0 e 13,0 mm}' },
+        { rotulo: 'Alimentação elétrica', valor: 'Bivolt automático, de {100 a 240 V}' },
+        { rotulo: 'Consumo', valor: '{300 W}' },
+        { rotulo: 'Peso líquido', valor: '{3,5 kg}' },
+        { rotulo: 'Dimensões (largura × altura × profundidade)', valor: '{440 × 220 × 420 mm}' },
         { rotulo: 'Fabricante', valor: 'Medical San, Estrela (RS)' },
       ],
+      sala: {
+        titulo: 'O que a sala precisa',
+        abertura: 'Para receber o Ultramed MPT, o manual do fabricante pede:',
+        itens: [
+          'Tomada aterrada, de {100 a 240 V}, com o cabo original e sem adaptador',
+          'Bancada ou mesa firme e plana',
+          '{15 cm} livres atrás do equipamento, para a ventilação',
+          'Ambiente entre {10 e 40 °C}, com umidade até {70%}, sem condensação',
+        ],
+        fecho: 'A instalação é feita por você, com orientação no treinamento.',
+      },
       mensagens: mensagens('Ultramed MPT'),
     },
     iasis: {

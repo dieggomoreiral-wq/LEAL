@@ -49,6 +49,7 @@ const verFonte = rascunho || fonte.estado === 'confirmado';
           <div class="caixa" data-revelar="subir">
             <h3>Vem na caixa</h3>
             <ul role="list">{ap.caixa.valor.map((x) => <li>{x}</li>)}</ul>
+            {ap.caixaNota && <p class="caixa-nota" set:html={marca(ap.caixaNota)} />}
           </div>
         )}
 
@@ -81,8 +82,19 @@ const verFonte = rascunho || fonte.estado === 'confirmado';
         <a class="botao botao-linha maq-docs" data-porta="docs" data-aparelho={ap.id}
           href={linkDireta(ap.mensagens.docs, c)} target="_blank" rel="noopener">{comum.botaoDocs}</a>
 
+        {ap.sala && (
+          <details class="ficha sala" data-detalhe="sala" data-aparelho={ap.id}>
+            <summary><span>{ap.sala.titulo}</span><span class="chevron" aria-hidden="true"></span></summary>
+            <div class="sala-corpo">
+              <p set:html={marca(ap.sala.abertura)} />
+              <ul role="list">{ap.sala.itens.map((x) => <li set:html={marca(x)} />)}</ul>
+              {ap.sala.fecho && <p class="sala-fecho" set:html={marca(ap.sala.fecho)} />}
+            </div>
+          </details>
+        )}
+
         {ap.fichaCompleta.length > 0 && (
-          <details class="ficha">
+          <details class="ficha" data-detalhe="ficha" data-aparelho={ap.id}>
             <summary><span>Ver ficha completa</span><span class="chevron" aria-hidden="true"></span></summary>
             <dl>
               {ap.fichaCompleta.map((l) => (
@@ -191,6 +203,18 @@ const verFonte = rascunho || fonte.estado === 'confirmado';
     background: var(--folha);
     font-size: var(--t-sm);
   }
+  .caixa-nota {
+    margin-top: 8px;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+    line-height: 1.45;
+    max-width: 52ch;
+  }
+  .caixa-nota {
+    margin-top: 8px;
+    font-size: var(--t-xs);
+    color: var(--tinta-2);
+  }
   .registro {
     display: grid;
     gap: 10px;
@@ -259,6 +283,42 @@ const verFonte = rascunho || fonte.estado === 'confirmado';
   .ficha-linha dd {
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+  }
+  /* Sala e ficha empilhadas: uma linha só entre as duas. */
+  .ficha + .ficha {
+    margin-top: -22px;
+    border-top: 0;
+  }
+
+  /* ---------- O que a sala precisa ---------- */
+  .sala-corpo {
+    --whats: #157a43;
+    display: grid;
+    gap: 10px;
+    padding-bottom: 18px;
+    font-size: var(--t-sm);
+    color: var(--tinta-2);
+    line-height: 1.5;
+  }
+  .sala-corpo ul {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    color: var(--tinta);
+  }
+  .sala-corpo li {
+    position: relative;
+    padding-left: 18px;
+  }
+  .sala-corpo li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.62em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--petroleo);
   }
 
   @media (min-width: 900px) {

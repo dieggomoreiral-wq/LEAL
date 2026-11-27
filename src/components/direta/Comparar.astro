@@ -5,6 +5,7 @@
 // Não promete prazo nem número de garantia.
 import { linkDireta, preencher } from '../../lib/direta';
 import { precoDa, prazosTexto } from '../../data/precos';
+import { ESTOQUE } from '../../data/nichos/diretas';
 import type { AparelhoDireto, ComumDireta, CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
 
 interface Props {
@@ -17,31 +18,36 @@ interface Props {
 const { v, ap, c, comum, nicho = '' } = Astro.props;
 const preco = precoDa(nicho);
 
-const linhas: { rotulo: string; leal: string; preco?: boolean }[] = [
+const hojeBuild = new Date().toISOString().slice(0, 10);
+// 27/11: 18 meses de fábrica no Hakon (áudio) e no Ultramed (manual REV03).
+const GARANTIA_CURTA: Record<string, string> = {
+  hakon: 'De fábrica: 18 meses no equipamento',
+  ultramed: 'De fábrica: 18 meses no equipamento',
+};
+const linhas: { rotulo: string; leal: string; preco?: boolean; ate?: string }[] = [
   ...(preco
     ? [
         { rotulo: 'Preço', leal: `${preco.aVista} à vista`, preco: true },
         { rotulo: 'Parcelas', leal: `${prazosTexto}, com a 1ª para 90 dias`, preco: true },
       ]
     : []),
-  { rotulo: 'Quem responde', leal: preencher('Uma pessoa no WhatsApp, %RESPOSTA%', v, c) },
-  // 27/11: só entra o que está confirmado.
-  { rotulo: 'Disponibilidade', leal: 'Equipamento em estoque' },
-  { rotulo: 'Garantia', leal: ap.id === 'hakon' ? 'De fábrica: 18 meses no equipamento e 6 no aplicador' : 'De fábrica, conforme o termo do fabricante' },
-  ...(ap.id === 'hakon' ? [{ rotulo: 'Disparos', leal: 'Aplicador sem limite de disparos' }] : []),
-  { rotulo: 'Treinamento', leal: 'Para quem compra, na chegada da máquina' },
+  { rotulo: 'Quem responde', leal: preencher('Uma pessoa no WhatsApp, %RESPOSTA%. Depois da compra, o mesmo número.', v, c) },
+  // 27/11: só entra o que está confirmado. O estoque tem validade (G6).
+  ...(hojeBuild <= ESTOQUE.validoAte ? [{ rotulo: 'Disponibilidade', leal: ESTOQUE.valor, ate: ESTOQUE.validoAte }] : []),
+  { rotulo: 'Garantia', leal: GARANTIA_CURTA[ap.id] ?? 'De fábrica, conforme o termo do fabricante' },
+  { rotulo: 'Treinamento', leal: 'Para quem compra, marcado para a chegada da máquina' },
   { rotulo: 'Instalação', leal: 'Feita por você, com orientação no treinamento' },
   { rotulo: 'Assistência técnica', leal: 'Em todo o Brasil, indicada pela Rede ISP' },
   { rotulo: 'Se a máquina parar', leal: 'Condição especial de pagamento no período e apoio da Leal no acionamento da assistência' },
 ];
-const msg = `Olá! Estou comparando o ${ap.nome} com outra loja. Envio o link para a conferência das duas propostas.`;
+const msg = `Olá! Estou comparando o ${ap.nome} com outra loja e quero a proposta escrita da Leal. Envio o link da outra loja em seguida.`;
 ---
 <section class="secao comparar" id="comparar" aria-labelledby="t-comparar">
   <div class="wrap">
     <header class="cmp-cabeca">
       <p class="cmp-sobre">Está olhando outras lojas?</p>
       <h2 data-revelar="linhas" id="t-comparar">Compare antes de fechar</h2>
-      <p class="cmp-texto" data-revelar="subir">Avalie estes pontos em cada proposta antes de decidir.</p>
+      <p class="cmp-texto" data-revelar="subir">Os pontos abaixo servem de régua para qualquer proposta, a da Leal e a das outras lojas.</p>
     </header>
 
     <div class="cmp-tabela" role="table" aria-label={`Comparação da compra do ${ap.nome}`}>
@@ -52,7 +58,7 @@ const msg = `Olá! Estou comparando o ${ap.nome} com outra loja. Envio o link pa
       </div>
       <div role="rowgroup" data-revelar="subir" data-revelar-filhos>
         {linhas.map((l) => (
-          <div class="cmp-linha" role="row" {...(l.preco ? { 'data-preco-ate': preco!.validoAte } : {})}>
+          <div class="cmp-linha" role="row" {...(l.preco ? { 'data-preco-ate': preco!.validoAte } : {})} {...(l.ate ? { 'data-valido-ate': l.ate } : {})}>
             <span class="cmp-rotulo" role="rowheader">{l.rotulo}</span>
             <span class="cmp-leal" role="cell"><span class="ok" aria-hidden="true"></span><span set:html={l.leal} /></span>
             <span class="cmp-outra" role="cell"><span class="cmp-outra-rotulo">Outra loja:</span><span class="risco" aria-label="em branco para você preencher"></span></span>

@@ -17,6 +17,7 @@ import Pendencias from './Pendencias.astro';
 import { condicoes } from '../../data/condicoes';
 import { comumDireta } from '../../data/nichos/textos-direta';
 import { exigirPublicavel, linkDireta } from '../../lib/direta';
+import { ITENS_POS_VENDA } from '../../data/nichos/tipos-direta';
 import type { CondicoesRede, VersaoDireta } from '../../data/nichos/tipos-direta';
 
 interface Props {
@@ -28,7 +29,9 @@ exigirPublicavel(v, c);
 const comum = comumDireta;
 const ap = v.aparelhos.find((a) => a.id === v.principal)!;
 const limpa = (t: string) => t.replace(/%PECA%/g, v.nicho.peca.toLowerCase()).replace(/[{}]|\[\[|\]\]/g, '');
-const faixa = [...Object.values(comum.posVenda).map((x) => limpa(x.rotulo)), 'Perguntado antes de fechar'];
+// 27/11 (H5): só os rótulos do pós-venda; "Perguntado antes de fechar" saiu.
+// 27/11, Vinicius: só entra o item com resposta confirmada, como na folha.
+const faixa = ITENS_POS_VENDA.filter((id) => ap.posVenda[id].estado === 'confirmado').map((id) => limpa(comum.posVenda[id].rotulo));
 const politicas = c.politicas.estado === 'confirmado' ? c.politicas.valor : undefined;
 const nicho = v.slug.replace(/-v2$/, '');
 ---
@@ -65,6 +68,10 @@ const nicho = v.slug.replace(/-v2$/, '');
       if (hoje > el.getAttribute('data-preco-ate')) { el.remove(); venceu = true; }
     });
     if (venceu) document.querySelectorAll('[data-sem-preco]').forEach(function (el) { el.hidden = false; });
+    // Fato com validade (27/11, estoque): passou da data, a linha some.
+    document.querySelectorAll('[data-valido-ate]').forEach(function (el) {
+      if (hoje > el.getAttribute('data-valido-ate')) el.remove();
+    });
   })();
 </script>
 
@@ -85,6 +92,19 @@ const nicho = v.slug.replace(/-v2$/, '');
       parcela: a.getAttribute('data-parcela') || '',
     });
   });
+  // 27/11 (advogado): quem abre a ficha ou a sala? O toggle não sobe, por isso a captura.
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (!(d instanceof HTMLDetailsElement) || !d.open || !d.hasAttribute('data-detalhe')) return;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'abrir_detalhe',
+      versao: 'v2',
+      nicho: nicho,
+      detalhe: d.getAttribute('data-detalhe'),
+      aparelho: d.getAttribute('data-aparelho') || '',
+    });
+  }, true);
 </script>
 
 <style>
